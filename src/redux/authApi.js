@@ -5,7 +5,7 @@ const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     addLogin: builder.mutation({
       query: (addNew) => ({
-        url: "/login",
+        url: "/auth/login",
         method: "POST",
         body: addNew,
       }),
@@ -14,7 +14,7 @@ const authApi = baseApi.injectEndpoints({
 
     getProfile: builder.query({
       query: () => ({
-        url: "/getProfile",
+        url: "/auth/getProfile",
         method: "GET",
       }),
       providesTags: ["Auth"],
@@ -22,7 +22,7 @@ const authApi = baseApi.injectEndpoints({
 
     addLogout: builder.mutation({
       query: () => ({
-        url: "/logout",
+        url: "/auth/logout",
         method: "POST",
       }),
       invalidatesTags: ["Auth"],
