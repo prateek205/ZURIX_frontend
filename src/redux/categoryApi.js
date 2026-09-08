@@ -4,8 +4,12 @@ const categoryApi = baseApi.injectEndpoints({
   tagTypes: ["Category"],
   endpoints: (builder) => ({
     getAllCategory: builder.query({
-      query: () => ({
+      query: ({ search, filter }) => ({
         url: "/category/getAllCategory",
+        params: {
+          search,
+          filter,
+        },
         method: "GET",
       }),
       providesTags: ["Category"],
