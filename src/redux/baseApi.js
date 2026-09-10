@@ -7,7 +7,10 @@ export const baseApi = createApi({
 
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
+    credentials: "include",
   }),
+
+  tagTypes: ["Auth", "Product", "Category", "Cart", "Order"],
 
   endpoints: () => ({}),
 });

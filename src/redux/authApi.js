@@ -1,7 +1,7 @@
 import { baseApi } from "./baseApi";
 
 const authApi = baseApi.injectEndpoints({
-  tagTypes: ["Auth"],
+  
   endpoints: (builder) => ({
     addLogin: builder.mutation({
       query: (addNew) => ({

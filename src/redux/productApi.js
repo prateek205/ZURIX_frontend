@@ -1,7 +1,7 @@
 import { baseApi } from "./baseApi";
 
 const productApi = baseApi.injectEndpoints({
-  tagTypes: ["Product"],
+  
   endpoints: (builder) => ({
     getProducts: builder.query({
       query: ({

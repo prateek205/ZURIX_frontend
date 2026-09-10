@@ -1,7 +1,7 @@
 import { baseApi } from "./baseApi";
 
 const categoryApi = baseApi.injectEndpoints({
-  tagTypes: ["Category"],
+  
   endpoints: (builder) => ({
     getAllCategory: builder.query({
       query: ({ search, filter }) => ({

@@ -1,7 +1,7 @@
 import { baseApi } from "./baseApi";
 
 const cartApi = baseApi.injectEndpoints({
-  tagTypes: ["Cart"],
+  
   endpoints: (builder) => ({
     addToCart: builder.mutation({
       query: (newData) => ({
