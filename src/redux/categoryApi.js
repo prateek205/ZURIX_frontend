@@ -4,7 +4,7 @@ const categoryApi = baseApi.injectEndpoints({
   
   endpoints: (builder) => ({
     getAllCategory: builder.query({
-      query: ({ search, filter }) => ({
+      query: ({ search, filter } = {}) => ({
         url: "/category/getAllCategory",
         params: {
           search,
@@ -24,7 +24,7 @@ const categoryApi = baseApi.injectEndpoints({
     }),
 
     updateCategoryById: builder.mutation({
-      query: (id, newData) => ({
+      query: ({id, newData}) => ({
         url: `/category/updateCategoryById/${id}`,
         method: "PUT",
         body: newData,

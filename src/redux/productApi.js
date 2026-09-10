@@ -13,7 +13,7 @@ const productApi = baseApi.injectEndpoints({
         colors,
         size,
         category,
-      }) => ({
+      }={}) => ({
         url: "/products/getAllProducts",
         params: {
           sort,
@@ -27,7 +27,7 @@ const productApi = baseApi.injectEndpoints({
         },
         method: "GET",
       }),
-      provideTags: ["Product"],
+      providesTags: ["Product"],
     }),
 
     addProduct: builder.mutation({
@@ -40,7 +40,7 @@ const productApi = baseApi.injectEndpoints({
     }),
 
     getProductById: builder.query({
-      query: () => ({
+      query: (id) => ({
         url: `/products/getProductById/${id}`,
         method: "GET",
       }),
@@ -48,7 +48,7 @@ const productApi = baseApi.injectEndpoints({
     }),
 
     updateProductById: builder.mutation({
-      query: (id, updateData) => ({
+      query: ({id, updateData}) => ({
         url: `/products/updateProductById/${id}`,
         method: "PUT",
         body: updateData,
@@ -57,7 +57,7 @@ const productApi = baseApi.injectEndpoints({
     }),
 
     deleteProductById: builder.mutation({
-      query: ({ id }) => ({
+      query: (id) => ({
         url: `/products/deleteProductById/${id}`,
         method: "DELETE",
       }),
@@ -67,7 +67,7 @@ const productApi = baseApi.injectEndpoints({
 });
 
 export const {
-  useGetProductQuery,
+  useGetProductsQuery,
   useAddProductMutation,
   useGetProductByIdQuery,
   useUpdateProductByIdMutation,

@@ -13,7 +13,7 @@ const cartApi = baseApi.injectEndpoints({
     }),
 
     updateCart: builder.mutation({
-      query: (id, newData) => ({
+      query: ({id, newData}) => ({
         url: `/cart/updateCart/${id}`,
         method: "PUT",
         body: newData,
