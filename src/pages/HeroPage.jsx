@@ -11,16 +11,16 @@ import Testimonials from "../components/homePage/Testimonail";
 
 const HeroPage = () => {
   return (
-    <div className="absolute top-0 w-full h-full">
+    <div className="w-full">
       <HeroSection />
-      <Category/>
-      <PaletteEdit/>
-      <CuratedCollections/>
-      <TrendingProducts/>
-      <StylingGuide/>
-      <CollectionBanner/>
-      <EditorialCollections/>
-      <Testimonials/>
+      <Category />
+      <PaletteEdit />
+      <CuratedCollections />
+      <TrendingProducts />
+      <StylingGuide />
+      <CollectionBanner />
+      <EditorialCollections />
+      <Testimonials />
     </div>
   );
 };

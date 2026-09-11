@@ -1,9 +1,9 @@
 import React from "react";
 import HeroPage from "./pages/HeroPage";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 import { Route, Routes } from "react-router-dom";
 import ProductsPage from "./pages/ProductsPage";
+import Footer from "./components/Footer";
 
 const App = () => {
   return (

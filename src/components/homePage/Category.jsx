@@ -8,25 +8,37 @@ const Category = () => {
 
   const categories = data?.data || [];
 
-  console.log("CATEGORY_DATA:", data);
-
   return (
-    <section className="mx-auto w-[85%] pt-[100px] pb-[100px]">
+    <section className="mx-auto w-[92%] py-[60px] sm:w-[90%] sm:py-[75px] md:w-[88%] md:py-[90px] lg:w-[85%] lg:py-[100px]">
+      {/* =========================
+          TOP LABEL
+      ========================== */}
+
       <div>
-        <h1 className="font-zurixFont text-[16px] font-normal uppercase tracking-[3px] text-[rgb(222,89,34)]">
+        <h1 className="font-zurixFont text-[12px] font-normal uppercase tracking-[2.5px] text-[rgb(222,89,34)] sm:text-[14px] sm:tracking-[3px] md:text-[16px]">
           browse
         </h1>
       </div>
 
-      <div className="mt-[20px] flex items-center justify-between">
-        <h2 className="font-zurixFont text-[46px] font-bold leading-none capitalize tracking-[-1.5px]">
+      {/* =========================
+          HEADING + TABS
+      ========================== */}
+
+      <div className="mt-[15px] flex flex-col gap-[25px] md:mt-[20px] md:flex-row md:items-center md:justify-between md:gap-5">
+        {/* Heading */}
+
+        <h2 className="font-zurixFont text-[32px] font-bold leading-[1] capitalize tracking-[-1px] sm:text-[38px] md:text-[42px] lg:text-[46px] lg:tracking-[-1.5px]">
           Explore Categories
         </h2>
 
-        <div className="flex items-center gap-[10px]">
+        {/* Tabs */}
+
+        <div className="flex items-center gap-[8px] sm:gap-[10px]">
+          {/* Women */}
+
           <button
             onClick={() => setActiveTab("women")}
-            className={`flex items-center gap-[10px] rounded-full border px-[20px] py-[10px] text-[16px] font-semibold transition-all duration-300 ${
+            className={`flex items-center gap-[8px] rounded-full border px-[14px] py-[8px] text-[13px] font-semibold transition-all duration-300 sm:gap-[10px] sm:px-[18px] sm:py-[9px] sm:text-[14px] md:px-[20px] md:py-[10px] md:text-[16px] ${
               activeTab === "women"
                 ? "border-black bg-black text-white"
                 : "border-[#e5e5e5] bg-white text-black"
@@ -35,7 +47,7 @@ const Category = () => {
             <span>Women</span>
 
             <span
-              className={`flex h-[25px] w-[25px] items-center justify-center rounded-full text-[12px] ${
+              className={`flex h-[22px] w-[22px] items-center justify-center rounded-full text-[10px] sm:h-[24px] sm:w-[24px] sm:text-[11px] md:h-[25px] md:w-[25px] md:text-[12px] ${
                 activeTab === "women"
                   ? "bg-[rgb(222,89,34)] text-white"
                   : "bg-[#eef0f4] text-gray-600"
@@ -45,9 +57,11 @@ const Category = () => {
             </span>
           </button>
 
+          {/* Men */}
+
           <button
             onClick={() => setActiveTab("men")}
-            className={`flex items-center gap-[10px] rounded-full border px-[20px] py-[10px] text-[16px] font-semibold transition-all duration-300 ${
+            className={`flex items-center gap-[8px] rounded-full border px-[14px] py-[8px] text-[13px] font-semibold transition-all duration-300 sm:gap-[10px] sm:px-[18px] sm:py-[9px] sm:text-[14px] md:px-[20px] md:py-[10px] md:text-[16px] ${
               activeTab === "men"
                 ? "border-black bg-black text-white"
                 : "border-[#e5e5e5] bg-white text-black"
@@ -56,7 +70,7 @@ const Category = () => {
             <span>Men</span>
 
             <span
-              className={`flex h-[25px] w-[25px] items-center justify-center rounded-full text-[12px] ${
+              className={`flex h-[22px] w-[22px] items-center justify-center rounded-full text-[10px] sm:h-[24px] sm:w-[24px] sm:text-[11px] md:h-[25px] md:w-[25px] md:text-[12px] ${
                 activeTab === "men"
                   ? "bg-[rgb(222,89,34)] text-white"
                   : "bg-[#eef0f4] text-gray-600"
@@ -68,44 +82,172 @@ const Category = () => {
         </div>
       </div>
 
-      <div className="mt-[75px]">
+      {/* =========================
+          CATEGORY LIST
+      ========================== */}
+
+      <div className="mt-[45px] sm:mt-[55px] md:mt-[65px] lg:mt-[75px]">
+        {/* Loading */}
+
         {isLoading && (
-          <div className="flex gap-[20px] overflow-hidden">
+          <div className="flex gap-[12px] overflow-hidden sm:gap-[16px] md:gap-[20px]">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
               <div
                 key={item}
-                className="h-[248px] min-w-[186px] animate-pulse rounded-[20px] bg-gray-200"
+                className="
+                  h-[200px]
+                  min-w-[145px]
+                  animate-pulse
+                  rounded-[16px]
+                  bg-gray-200
+
+                  sm:h-[220px]
+                  sm:min-w-[165px]
+                  sm:rounded-[18px]
+
+                  md:h-[235px]
+                  md:min-w-[175px]
+
+                  lg:h-[248px]
+                  lg:min-w-[186px]
+                  lg:rounded-[20px]
+                "
               />
             ))}
           </div>
         )}
 
+        {/* Error */}
+
         {isError && (
-          <div className="flex h-[248px] items-center justify-center">
-            <p className="text-gray-500">Failed to load categories.</p>
+          <div className="flex h-[200px] items-center justify-center sm:h-[220px] md:h-[248px]">
+            <p className="text-center text-[14px] text-gray-500 sm:text-[15px]">
+              Failed to load categories.
+            </p>
           </div>
         )}
 
+        {/* Categories */}
+
         {!isLoading && !isError && (
-          <div className="flex gap-[20px] overflow-hidden">
+          <div
+            className="
+              flex
+              gap-[12px]
+              overflow-x-auto
+              overflow-y-hidden
+              pb-3
+              scrollbar-none
+              sm:gap-[16px]
+              md:gap-[20px]
+            "
+          >
             {categories.slice(0, 8).map((category) => (
               <div
                 key={category._id}
-                className="group min-w-[186px] cursor-pointer"
+                className="
+                  group
+                  min-w-[145px]
+                  cursor-pointer
+
+                  sm:min-w-[165px]
+
+                  md:min-w-[175px]
+
+                  lg:min-w-[186px]
+                "
               >
-                <div className="relative h-[248px] w-[186px] overflow-hidden rounded-[20px]">
+                {/* Image */}
+
+                <div
+                  className="
+                    relative
+                    h-[200px]
+                    w-[145px]
+                    overflow-hidden
+                    rounded-[16px]
+
+                    sm:h-[220px]
+                    sm:w-[165px]
+                    sm:rounded-[18px]
+
+                    md:h-[235px]
+                    md:w-[175px]
+
+                    lg:h-[248px]
+                    lg:w-[186px]
+                    lg:rounded-[20px]
+                  "
+                >
                   <img
                     src={category.image}
                     alt={category.name}
-                    className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                    loading="lazy"
+                    className="
+                      h-full
+                      w-full
+                      object-cover
+                      transition-transform
+                      duration-500
+                      ease-out
+                      group-hover:scale-105
+                    "
                   />
 
-                  <div className="absolute bottom-[10px] right-[10px] flex h-[34px] w-[34px] items-center justify-center rounded-full bg-white text-[12px] font-semibold text-black shadow-sm">
+                  {/* Count */}
+
+                  <div
+                    className="
+                      absolute
+                      bottom-[8px]
+                      right-[8px]
+                      flex
+                      h-[30px]
+                      w-[30px]
+                      items-center
+                      justify-center
+                      rounded-full
+                      bg-white
+                      text-[10px]
+                      font-semibold
+                      text-black
+                      shadow-sm
+
+                      sm:bottom-[9px]
+                      sm:right-[9px]
+                      sm:h-[32px]
+                      sm:w-[32px]
+                      sm:text-[11px]
+
+                      md:bottom-[10px]
+                      md:right-[10px]
+                      md:h-[34px]
+                      md:w-[34px]
+                      md:text-[12px]
+                    "
+                  >
                     {category.count || 12}
                   </div>
                 </div>
 
-                <h3 className="mt-[18px] text-center font-zurixFont text-[18px] font-medium capitalize">
+                {/* Category Name */}
+
+                <h3
+                  className="
+                    mt-[12px]
+                    text-center
+                    font-zurixFont
+                    text-[15px]
+                    font-medium
+                    capitalize
+
+                    sm:mt-[15px]
+                    sm:text-[16px]
+
+                    md:mt-[18px]
+                    md:text-[18px]
+                  "
+                >
                   {category.name}
                 </h3>
               </div>

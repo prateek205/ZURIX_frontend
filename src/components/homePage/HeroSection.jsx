@@ -24,7 +24,7 @@ const HeroSection = () => {
   ];
 
   return (
-    <section className="w-full h-[700px]">
+    <section className="relative w-full h-[700px]">
       <Swiper
         modules={[Autoplay, EffectFade]}
         effect="fade"
