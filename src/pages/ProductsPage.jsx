@@ -1,5 +1,8 @@
 import React from "react";
-import AllProducts from "../components/shopSection/allProducts";
+import AllProducts from "../components/shopSection/FilterSection";
+import FilterSection from "../components/shopSection/FilterSection";
+import SortSection from "../components/shopSection/SortSection";
+import ProductSection from "../components/shopSection/ProductSection";
 
 const ProductsPage = () => {
   return (
@@ -12,8 +15,20 @@ const ProductsPage = () => {
         />
       </div>
 
-      <div>
-        <AllProducts />
+      <div className="w-[88%] m-auto p-5">
+        <div className="flex w-[100%] gap-3">
+          <div className="w-[20%] border border-black">
+            <FilterSection />
+          </div>
+          <div className="w-[80%] flex flex-col gap-3">
+            <div className="border border-black">
+              <SortSection />
+            </div>
+            <div className="border border-black">
+              <ProductSection />
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
