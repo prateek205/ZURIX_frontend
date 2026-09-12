@@ -18,6 +18,7 @@ const Navbar = () => {
         font-zurixFont
         text-black
         backdrop-blur-md
+        shadow-[0px_0px_10px_0px_rgb(0,0,0,0.5)]
       "
     >
       <div

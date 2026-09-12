@@ -17,9 +17,13 @@ const ProductsPage = () => {
   console.log("PRODUCTS:", products);
 
   return (
-    <section className="h-full p-10 mt-4">
-      <div>
-        <img src="./shop/hero_banner_shop.jpg" alt="" />
+    <section className="h-full">
+      <div className="mt-14 pb-2">
+        <img
+          src="images/shop/hero_banner_shop.jpg"
+          alt=""
+          className="w-[87%] m-auto h-[400px] rounded-[20px] object-cover"
+        />
       </div>
 
       {products.map((product) => (
