@@ -1,21 +1,7 @@
 import React from "react";
-import { useGetProductsQuery } from "../redux/productApi";
+import AllProducts from "../components/shopSection/allProducts";
 
 const ProductsPage = () => {
-  const { data, isLoading, isError } = useGetProductsQuery();
-
-  if (isLoading) {
-    return <p>Loading the Product...</p>;
-  }
-
-  if (isError) {
-    return <p>Unable to fetch data...</p>;
-  }
-
-  const products = data?.data || [];
-
-  console.log("PRODUCTS:", products);
-
   return (
     <section className="h-full">
       <div className="mt-14 pb-2">
@@ -26,11 +12,9 @@ const ProductsPage = () => {
         />
       </div>
 
-      {products.map((product) => (
-        <div key={product._id}>
-          <img src={product.category.image} alt="" />
-        </div>
-      ))}
+      <div>
+        <AllProducts />
+      </div>
     </section>
   );
 };
