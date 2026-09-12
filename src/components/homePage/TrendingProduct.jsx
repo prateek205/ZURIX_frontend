@@ -126,7 +126,7 @@ const TrendingProducts = () => {
               {/* Product Image */}
               <div className="relative overflow-hidden rounded-[20px] bg-[#f4f4f4]">
                 <img
-                  src={product.images?.[0] || product.image}
+                  src={product.category?.image || product.image}
                   alt={product.name}
                   className="aspect-[4/5] h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />

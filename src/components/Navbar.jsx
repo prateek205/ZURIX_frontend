@@ -3,6 +3,7 @@ import { CiHeart } from "react-icons/ci";
 import { FaRegUser } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 import { MdOutlineShoppingBag, MdMenu, MdClose } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -77,6 +78,7 @@ const Navbar = () => {
             ${isScrolled ? "text-black" : "text-white"}
           `}
         >
+        <Link to={"/"}>
           <li className="group relative cursor-pointer">
             Home
             <span
@@ -93,7 +95,8 @@ const Navbar = () => {
               `}
             />
           </li>
-
+        </Link>
+        <Link to={"/products"}>
           <li className="group relative cursor-pointer">
             Shop
             <span
@@ -110,6 +113,7 @@ const Navbar = () => {
               `}
             />
           </li>
+        </Link>
 
           <li className="group relative cursor-pointer">
             Pages

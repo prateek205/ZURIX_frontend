@@ -5,13 +5,10 @@ const PaletteEdit = () => {
   const { data, isLoading, isError } = useGetProductsQuery();
 
   const products = data?.data || [];
+  console.log("DATA:", products);
 
   return (
     <section className="mx-auto w-[92%] py-[60px] sm:w-[90%] sm:py-[75px] md:w-[88%] md:py-[90px] lg:w-[85%] lg:py-[100px]">
-      {/* =========================
-          SECTION HEADER
-      ========================== */}
-
       <div className="mb-[35px] sm:mb-[40px] md:mb-[45px] lg:mb-[50px]">
         <h1 className="font-zurixFont text-[12px] font-normal uppercase tracking-[2px] text-[rgb(222,89,34)] sm:text-[14px] sm:tracking-[2.5px] md:text-[15px] lg:text-[16px] lg:tracking-[3px]">
           SS26 — Palette Edit
@@ -28,10 +25,6 @@ const PaletteEdit = () => {
         </div>
       </div>
 
-      {/* =========================
-          LOADING
-      ========================== */}
-
       {isLoading && (
         <div className="grid grid-cols-2 gap-[12px] sm:gap-[16px] md:grid-cols-3 lg:grid-cols-4 lg:gap-[20px]">
           {[1, 2, 3, 4].map((item) => (
@@ -46,31 +39,19 @@ const PaletteEdit = () => {
         </div>
       )}
 
-      {/* =========================
-          ERROR
-      ========================== */}
-
       {isError && (
         <div className="py-[40px] text-center sm:py-[50px]">
           <p className="text-[14px] text-gray-500">Failed to load products.</p>
         </div>
       )}
 
-      {/* =========================
-          PRODUCTS
-      ========================== */}
-
       {!isLoading && !isError && (
         <div className="grid grid-cols-2 gap-x-[12px] gap-y-[30px] sm:gap-x-[16px] sm:gap-y-[35px] md:grid-cols-3 md:gap-x-[20px] md:gap-y-[40px] lg:grid-cols-4">
           {products.slice(0, 8).map((product) => (
             <div key={product._id} className="group min-w-0 cursor-pointer">
-              {/* =========================
-                  IMAGE
-              ========================== */}
-
               <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[14px] bg-gray-100 sm:rounded-[16px] lg:rounded-[20px]">
                 <img
-                  src={product.images?.[0]}
+                  src={product.category?.image}
                   alt={product.name}
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -95,10 +76,6 @@ const PaletteEdit = () => {
                   Shop Now
                 </button>
               </div>
-
-              {/* =========================
-                  PRODUCT INFO
-              ========================== */}
 
               <div className="mt-[12px] sm:mt-[15px] md:mt-[18px]">
                 <h3 className="line-clamp-2 font-zurixFont text-[13px] font-medium leading-[1.4] sm:text-[15px] md:text-[16px]">
