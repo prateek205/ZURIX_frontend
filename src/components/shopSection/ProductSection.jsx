@@ -3,9 +3,9 @@ import { useGetProductsQuery } from "../../redux/productApi";
 import { CiHeart } from "react-icons/ci";
 import { LuEye } from "react-icons/lu";
 
-const ProductSection = () => {
+const ProductSection = ({ queryParams }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const { data, isLoading, isError } = useGetProductsQuery();
+  const { data, isLoading, isError } = useGetProductsQuery(queryParams);
 
   if (isLoading) {
     return <p>Loading the Product...</p>;

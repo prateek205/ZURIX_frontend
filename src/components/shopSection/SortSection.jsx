@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
-const SortSection = () => {
-  return (
-    <div>SortSection</div>
-  )
-}
+const SortSection = ({ queryParams, setQueryParams }) => {
+  return <div>SortSection</div>;
+};
 
-export default SortSection
+export default SortSection;
