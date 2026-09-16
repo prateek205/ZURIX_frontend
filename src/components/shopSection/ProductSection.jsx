@@ -56,10 +56,6 @@ const ProductSection = ({ queryParams }) => {
   );
 };
 
-/* =====================================================
-   PRODUCT CARD
-===================================================== */
-
 const ProductCard = ({ product }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -85,9 +81,6 @@ const ProductCard = ({ product }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* =================================================
-          PRODUCT IMAGE
-      ================================================== */}
 
       <div
         className="
@@ -146,10 +139,6 @@ const ProductCard = ({ product }) => {
             `}
           />
         )}
-
-        {/* =================================================
-            ACTION BUTTONS
-        ================================================== */}
 
         <div
           className="
@@ -247,9 +236,6 @@ const ProductCard = ({ product }) => {
           </button>
         </div>
 
-        {/* =================================================
-            SELECT OPTIONS BUTTON
-        ================================================== */}
         <Link to={`/productdetail/${product._id}`}>
           <button
             type="button"
@@ -289,10 +275,6 @@ const ProductCard = ({ product }) => {
           </button>
         </Link>
       </div>
-
-      {/* =================================================
-          PRODUCT INFORMATION
-      ================================================== */}
 
       <div
         className="
