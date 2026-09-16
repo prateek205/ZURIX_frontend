@@ -250,7 +250,7 @@ const ProductCard = ({ product }) => {
         {/* =================================================
             SELECT OPTIONS BUTTON
         ================================================== */}
-        <Link to={`/productdetail/${id}`}>
+        <Link to={`/productdetail/${product._id}`}>
           <button
             type="button"
             className="
