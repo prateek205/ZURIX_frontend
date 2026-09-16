@@ -29,46 +29,185 @@ const collections = [
 
 const EditorialCollections = () => {
   return (
-    <section className="w-full py-[100px]">
-      <div className="mx-auto w-[85%]">
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+    <section
+      className="
+        w-full
+        py-[50px]
+
+        sm:py-[65px]
+
+        md:py-[80px]
+
+        lg:py-[100px]
+      "
+    >
+      <div
+        className="
+          mx-auto
+          w-[92%]
+
+          sm:w-[90%]
+
+          md:w-[88%]
+
+          lg:w-[85%]
+        "
+      >
+        {/* =========================
+            COLLECTION GRID
+        ========================== */}
+
+        <div
+          className="
+            grid
+            grid-cols-1
+            gap-[12px]
+
+            sm:gap-[16px]
+
+            md:grid-cols-3
+            md:gap-[18px]
+
+            lg:gap-[20px]
+          "
+        >
           {collections.map((collection) => (
             <div
               key={collection.id}
-              className="group relative h-[520px] overflow-hidden"
+              className="
+                group
+                relative
+                h-[400px]
+                overflow-hidden
+
+                sm:h-[440px]
+
+                md:h-[450px]
+
+                lg:h-[520px]
+              "
             >
-              {/* Image */}
+              {/* =========================
+                  IMAGE
+              ========================== */}
+
               <img
                 src={collection.image}
                 alt={collection.title}
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                loading="lazy"
+                className="
+                  h-full
+                  w-full
+                  object-cover
+                  transition-transform
+                  duration-700
+                  ease-out
+                  group-hover:scale-105
+                "
               />
 
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-black/20 transition-all duration-500 group-hover:bg-black/30" />
+              {/* =========================
+                  OVERLAY
+              ========================== */}
 
-              {/* Content */}
-              <div className="absolute inset-x-0 bottom-0 p-8 text-white">
-                <p className="mb-2 text-[13px] uppercase tracking-[2px]">
+              <div
+                className="
+                  absolute
+                  inset-0
+                  bg-black/25
+                  transition-all
+                  duration-500
+                  group-hover:bg-black/40
+                "
+              />
+
+              {/* =========================
+                  CONTENT
+              ========================== */}
+
+              <div
+                className="
+                  absolute
+                  inset-x-0
+                  bottom-0
+                  p-[20px]
+                  text-white
+
+                  sm:p-[24px]
+
+                  md:p-[25px]
+
+                  lg:p-[32px]
+                "
+              >
+                {/* Subtitle */}
+
+                <p
+                  className="
+                    mb-[6px]
+                    text-[10px]
+                    uppercase
+                    tracking-[1.5px]
+
+                    sm:mb-[7px]
+                    sm:text-[11px]
+                    sm:tracking-[1.8px]
+
+                    md:text-[12px]
+
+                    lg:mb-[8px]
+                    lg:text-[13px]
+                    lg:tracking-[2px]
+                  "
+                >
                   {collection.subtitle}
                 </p>
 
-                <h2 className="font-zurixFont text-[32px] uppercase leading-none">
+                {/* Title */}
+
+                <h2
+                  className="
+                    font-zurixFont
+                    text-[27px]
+                    uppercase
+                    leading-none
+                    tracking-[-0.5px]
+
+                    sm:text-[29px]
+
+                    md:text-[30px]
+
+                    lg:text-[32px]
+                  "
+                >
                   {collection.title}
                 </h2>
 
+                {/* Button */}
+
                 <button
+                  type="button"
                   className="
-                    mt-6
+                    mt-[18px]
                     border-b
                     border-white
-                    pb-1
-                    text-[13px]
+                    pb-[4px]
+                    text-[10px]
                     uppercase
-                    tracking-[1.5px]
+                    tracking-[1.2px]
                     transition-all
                     duration-300
                     hover:opacity-60
+
+                    sm:mt-[20px]
+                    sm:text-[11px]
+
+                    md:mt-[22px]
+
+                    lg:mt-[24px]
+                    lg:pb-[5px]
+                    lg:text-[13px]
+                    lg:tracking-[1.5px]
                   "
                 >
                   {collection.button}

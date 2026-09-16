@@ -29,57 +29,321 @@ const stylingSteps = [
 
 const StylingGuide = () => {
   return (
-    <section className="mx-auto w-[85%] py-[100px]">
-      {/* =================================
+    <section
+      className="
+        mx-auto
+        w-[92%]
+        py-[50px]
+
+        sm:w-[90%]
+        sm:py-[65px]
+
+        md:w-[88%]
+        md:py-[80px]
+
+        lg:w-[85%]
+        lg:py-[100px]
+      "
+    >
+      {/* =========================
           HEADER
-      ================================= */}
-      <div className="mb-[50px]">
-        <p className="font-zurixFont text-[16px] uppercase tracking-[3px] text-[rgb(222,89,34)]">
+      ========================== */}
+
+      <div
+        className="
+          mb-[30px]
+
+          sm:mb-[38px]
+
+          md:mb-[45px]
+
+          lg:mb-[50px]
+        "
+      >
+        {/* Small Label */}
+
+        <p
+          className="
+            font-zurixFont
+            text-[11px]
+            uppercase
+            tracking-[2px]
+            text-[rgb(222,89,34)]
+
+            sm:text-[12px]
+            sm:tracking-[2.5px]
+
+            md:text-[14px]
+            md:tracking-[3px]
+
+            lg:text-[16px]
+          "
+        >
           Styling Guide
         </p>
 
-        <div className="mt-[15px] flex items-end justify-between">
-          <h2 className="max-w-[700px] font-zurixFont text-[46px] font-bold leading-[1.05] tracking-[-1.5px]">
+        {/* Heading + Button */}
+
+        <div
+          className="
+            mt-[10px]
+            flex
+            flex-col
+            items-start
+            gap-[15px]
+
+            sm:mt-[12px]
+            sm:gap-[18px]
+
+            md:mt-[15px]
+            md:flex-row
+            md:items-end
+            md:justify-between
+
+            lg:gap-[20px]
+          "
+        >
+          {/* Main Heading */}
+
+          <h2
+            className="
+              max-w-[350px]
+              font-zurixFont
+              text-[30px]
+              font-bold
+              leading-[1.05]
+              tracking-[-1px]
+
+              sm:max-w-[500px]
+              sm:text-[36px]
+
+              md:max-w-[600px]
+              md:text-[42px]
+
+              lg:max-w-[700px]
+              lg:text-[46px]
+              lg:tracking-[-1.5px]
+            "
+          >
             Build your signature look
           </h2>
 
-          <button className="border-b border-black pb-[5px] text-[13px] font-semibold uppercase tracking-[1px]">
+          {/* Discover Button */}
+
+          <button
+            type="button"
+            className="
+              border-b
+              border-black
+              pb-[3px]
+              text-[10px]
+              font-semibold
+              uppercase
+              tracking-[1px]
+              transition-opacity
+              duration-300
+              hover:opacity-50
+
+              sm:text-[11px]
+
+              md:text-[12px]
+
+              lg:pb-[5px]
+              lg:text-[13px]
+            "
+          >
             Discover More
           </button>
         </div>
       </div>
 
-      {/* =================================
+      {/* =========================
           STYLING CARDS
-      ================================= */}
-      <div className="grid grid-cols-1 gap-[20px] md:grid-cols-3">
+      ========================== */}
+
+      <div
+        className="
+          grid
+          grid-cols-1
+          gap-[35px]
+
+          sm:gap-[40px]
+
+          md:grid-cols-3
+          md:gap-[18px]
+
+          lg:gap-[20px]
+        "
+      >
         {stylingSteps.map((step) => (
-          <article key={step.id} className="group cursor-pointer">
-            {/* Image */}
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[20px] bg-gray-100">
+          <article
+            key={step.id}
+            className="
+              group
+              cursor-pointer
+            "
+          >
+            {/* =========================
+                IMAGE
+            ========================== */}
+
+            <div
+              className="
+                relative
+                aspect-[4/5]
+                overflow-hidden
+                rounded-[15px]
+                bg-gray-100
+
+                sm:rounded-[17px]
+
+                md:rounded-[18px]
+
+                lg:rounded-[20px]
+              "
+            >
               <img
                 src={step.image}
                 alt={step.title}
-                className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                loading="lazy"
+                className="
+                  h-full
+                  w-full
+                  object-cover
+                  transition-transform
+                  duration-700
+                  ease-out
+                  group-hover:scale-105
+                "
               />
 
-              {/* Number */}
-              <div className="absolute left-[20px] top-[20px] flex h-[42px] w-[42px] items-center justify-center rounded-full bg-white text-[12px] font-semibold">
+              {/* =========================
+                  NUMBER
+              ========================== */}
+
+              <div
+                className="
+                  absolute
+                  left-[10px]
+                  top-[10px]
+                  flex
+                  h-[34px]
+                  w-[34px]
+                  items-center
+                  justify-center
+                  rounded-full
+                  bg-white
+                  text-[9px]
+                  font-semibold
+                  shadow-sm
+
+                  sm:left-[14px]
+                  sm:top-[14px]
+                  sm:h-[38px]
+                  sm:w-[38px]
+                  sm:text-[10px]
+
+                  md:left-[15px]
+                  md:top-[15px]
+                  md:h-[40px]
+                  md:w-[40px]
+                  md:text-[11px]
+
+                  lg:left-[20px]
+                  lg:top-[20px]
+                  lg:h-[42px]
+                  lg:w-[42px]
+                  lg:text-[12px]
+                "
+              >
                 {step.number}
               </div>
             </div>
 
-            {/* Content */}
-            <div className="mt-[20px]">
-              <h3 className="font-zurixFont text-[25px] font-semibold">
+            {/* =========================
+                CONTENT
+            ========================== */}
+
+            <div
+              className="
+                mt-[14px]
+
+                sm:mt-[16px]
+
+                md:mt-[17px]
+
+                lg:mt-[20px]
+              "
+            >
+              {/* Title */}
+
+              <h3
+                className="
+                  font-zurixFont
+                  text-[21px]
+                  font-semibold
+                  leading-[1.1]
+
+                  sm:text-[22px]
+
+                  md:text-[23px]
+
+                  lg:text-[25px]
+                "
+              >
                 {step.title}
               </h3>
 
-              <p className="mt-[8px] max-w-[320px] text-[14px] leading-[1.6] text-gray-600">
+              {/* Description */}
+
+              <p
+                className="
+                  mt-[6px]
+                  max-w-[300px]
+                  text-[12px]
+                  leading-[1.55]
+                  text-gray-600
+
+                  sm:mt-[7px]
+                  sm:text-[13px]
+
+                  md:mt-[8px]
+                  md:max-w-[320px]
+                  md:text-[14px]
+                  md:leading-[1.6]
+                "
+              >
                 {step.description}
               </p>
 
-              <button className="mt-[18px] border-b border-black pb-[4px] text-[11px] font-semibold uppercase tracking-[1.5px]">
+              {/* Explore */}
+
+              <button
+                type="button"
+                className="
+                  mt-[14px]
+                  border-b
+                  border-black
+                  pb-[3px]
+                  text-[9px]
+                  font-semibold
+                  uppercase
+                  tracking-[1.2px]
+                  transition-opacity
+                  duration-300
+                  hover:opacity-50
+
+                  sm:mt-[16px]
+                  sm:text-[10px]
+
+                  md:mt-[17px]
+                  md:text-[11px]
+
+                  lg:mt-[18px]
+                  lg:pb-[4px]
+                  lg:tracking-[1.5px]
+                "
+              >
                 Explore
               </button>
             </div>

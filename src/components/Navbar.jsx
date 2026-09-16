@@ -8,6 +8,10 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
     <nav
       className="
@@ -15,24 +19,34 @@ const Navbar = () => {
         top-0
         z-50
         w-full
+        bg-white/90
+        backdrop-blur-md
         font-zurixFont
         text-black
-        backdrop-blur-md
-        shadow-[0px_0px_10px_0px_rgb(0,0,0,0.5)]
+        shadow-[0px_0px_10px_0px_rgb(0,0,0,0.15)]
       "
     >
+      {/* =========================
+          MAIN NAVBAR
+      ========================== */}
       <div
         className="
           mx-auto
           flex
-          min-h-[75px]
-          w-[92%]
+          min-h-[70px]
+          w-[94%]
           items-center
           justify-between
-          px-4
-          md:min-h-[85px]
+          px-2
+
+          sm:min-h-[75px]
+          sm:w-[92%]
+
+          md:min-h-[80px]
           md:w-[90%]
+
           lg:w-[85%]
+          xl:max-w-[1400px]
         "
       >
         {/* =========================
@@ -43,55 +57,43 @@ const Navbar = () => {
           className="
             hidden
             items-center
-            gap-6
-            text-[15px]
+            gap-5
+            text-[14px]
             font-semibold
-            text-black
+
             md:flex
-            lg:gap-9
-            xl:gap-11
+
+            lg:gap-7
+            lg:text-[15px]
+
+            xl:gap-10
           "
         >
-          <Link to="/">
-            <li className="group relative cursor-pointer">
+          <li className="group relative cursor-pointer">
+            <Link to="/" onClick={closeMenu}>
               Home
-              <span
-                className="
-                  absolute
-                  -bottom-2
-                  left-0
-                  h-[1px]
-                  w-0
-                  bg-white
-                  transition-all
-                  duration-300
-                  group-hover:w-full
-                "
-              />
-            </li>
-          </Link>
+            </Link>
 
-          <Link to="/products">
-            <li className="group relative cursor-pointer">
+            <span
+              className="
+                absolute
+                -bottom-2
+                left-0
+                h-[1px]
+                w-0
+                bg-black
+                transition-all
+                duration-300
+                group-hover:w-full
+              "
+            />
+          </li>
+
+          <li className="group relative cursor-pointer">
+            <Link to="/products" onClick={closeMenu}>
               Shop
-              <span
-                className="
-                  absolute
-                  -bottom-2
-                  left-0
-                  h-[1px]
-                  w-0
-                  bg-white
-                  transition-all
-                  duration-300
-                  group-hover:w-full
-                "
-              />
-            </li>
-          </Link>
+            </Link>
 
-          <li className="group relative cursor-pointer">
-            Pages
             <span
               className="
                 absolute
@@ -99,7 +101,7 @@ const Navbar = () => {
                 left-0
                 h-[1px]
                 w-0
-                bg-white
+                bg-black
                 transition-all
                 duration-300
                 group-hover:w-full
@@ -108,7 +110,8 @@ const Navbar = () => {
           </li>
 
           <li className="group relative cursor-pointer">
-            Blog
+            <span>Pages</span>
+
             <span
               className="
                 absolute
@@ -116,7 +119,7 @@ const Navbar = () => {
                 left-0
                 h-[1px]
                 w-0
-                bg-white
+                bg-black
                 transition-all
                 duration-300
                 group-hover:w-full
@@ -125,7 +128,8 @@ const Navbar = () => {
           </li>
 
           <li className="group relative cursor-pointer">
-            Contact Us
+            <span>Blog</span>
+
             <span
               className="
                 absolute
@@ -133,7 +137,25 @@ const Navbar = () => {
                 left-0
                 h-[1px]
                 w-0
-                bg-white
+                bg-black
+                transition-all
+                duration-300
+                group-hover:w-full
+              "
+            />
+          </li>
+
+          <li className="group relative cursor-pointer">
+            <span>Contact Us</span>
+
+            <span
+              className="
+                absolute
+                -bottom-2
+                left-0
+                h-[1px]
+                w-0
+                bg-black
                 transition-all
                 duration-300
                 group-hover:w-full
@@ -143,31 +165,55 @@ const Navbar = () => {
         </ul>
 
         {/* =========================
+            MOBILE LEFT MENU ICON
+        ========================== */}
+
+        <button
+          type="button"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="
+            flex
+            items-center
+            justify-center
+            text-[26px]
+            md:hidden
+          "
+          aria-label="Toggle menu"
+        >
+          {isMenuOpen ? <MdClose /> : <MdMenu />}
+        </button>
+
+        {/* =========================
             CENTER - LOGO
         ========================== */}
 
-        <div
+        <Link
+          to="/"
           className="
             absolute
             left-1/2
             -translate-x-1/2
+            whitespace-nowrap
           "
         >
           <h1
             className="
               cursor-pointer
-              text-[28px]
+              text-[24px]
               font-bold
               uppercase
               tracking-[-1px]
-              text-black
-              sm:text-[32px]
-              md:text-[36px]
+
+              sm:text-[28px]
+
+              md:text-[32px]
+
+              lg:text-[36px]
             "
           >
-            ZURI<span className=" text-red-500">X.</span>
+            ZURI<span className="text-red-500">X.</span>
           </h1>
-        </div>
+        </Link>
 
         {/* =========================
             RIGHT - ICONS
@@ -178,12 +224,17 @@ const Navbar = () => {
             ml-auto
             flex
             items-center
-            gap-3
-            text-[22px]
-            text-black
-            sm:gap-4
-            md:gap-5
-            md:text-[24px]
+            gap-2
+            text-[20px]
+
+            sm:gap-3
+            sm:text-[22px]
+
+            md:gap-4
+            md:text-[23px]
+
+            lg:gap-5
+            lg:text-[24px]
           "
         >
           {/* User */}
@@ -233,18 +284,6 @@ const Navbar = () => {
           >
             <MdOutlineShoppingBag />
           </li>
-
-          {/* Mobile Menu */}
-          <li
-            className="
-              cursor-pointer
-              text-[27px]
-              md:hidden
-            "
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? <MdClose /> : <MdMenu />}
-          </li>
         </ul>
       </div>
 
@@ -254,13 +293,14 @@ const Navbar = () => {
 
       <div
         className={`
+          md:hidden
           overflow-hidden
+          bg-black
           transition-all
           duration-500
-          md:hidden
-          ${isMenuOpen ? "max-h-[400px] border-t" : "max-h-0"}
-          border-white/20
-          bg-black
+          ease-in-out
+
+          ${isMenuOpen ? "max-h-[500px] border-t border-white/20" : "max-h-0"}
         `}
       >
         <ul
@@ -268,30 +308,52 @@ const Navbar = () => {
             flex
             flex-col
             items-center
-            gap-6
-            py-7
-            text-[16px]
+            gap-5
+            px-5
+            py-6
+            text-[15px]
             font-semibold
             text-white
           "
         >
-          <li className="cursor-pointer" onClick={() => setIsMenuOpen(false)}>
-            Home
+          <li>
+            <Link
+              to="/"
+              onClick={closeMenu}
+              className="transition-colors hover:text-gray-400"
+            >
+              Home
+            </Link>
           </li>
 
-          <li className="cursor-pointer" onClick={() => setIsMenuOpen(false)}>
-            Shop
+          <li>
+            <Link
+              to="/products"
+              onClick={closeMenu}
+              className="transition-colors hover:text-gray-400"
+            >
+              Shop
+            </Link>
           </li>
 
-          <li className="cursor-pointer" onClick={() => setIsMenuOpen(false)}>
+          <li
+            className="cursor-pointer transition-colors hover:text-gray-400"
+            onClick={closeMenu}
+          >
             Pages
           </li>
 
-          <li className="cursor-pointer" onClick={() => setIsMenuOpen(false)}>
+          <li
+            className="cursor-pointer transition-colors hover:text-gray-400"
+            onClick={closeMenu}
+          >
             Blog
           </li>
 
-          <li className="cursor-pointer" onClick={() => setIsMenuOpen(false)}>
+          <li
+            className="cursor-pointer transition-colors hover:text-gray-400"
+            onClick={closeMenu}
+          >
             Contact Us
           </li>
         </ul>
