@@ -139,10 +139,6 @@ const PaletteEdit = () => {
         </div>
       </div>
 
-      {/* =========================
-          LOADING
-      ========================== */}
-
       {isLoading && (
         <div
           className="
@@ -211,10 +207,6 @@ const PaletteEdit = () => {
         </div>
       )}
 
-      {/* =========================
-          ERROR
-      ========================== */}
-
       {isError && (
         <div
           className="
@@ -238,10 +230,6 @@ const PaletteEdit = () => {
           </p>
         </div>
       )}
-
-      {/* =========================
-          PRODUCTS
-      ========================== */}
 
       {!isLoading && !isError && (
         <div
@@ -293,7 +281,7 @@ const PaletteEdit = () => {
                 "
               >
                 <img
-                  src={product.images?.[0] || product.category?.image}
+                  src={product.images?.[0].url || product.category?.image}
                   alt={product.name}
                   loading="lazy"
                   className="
