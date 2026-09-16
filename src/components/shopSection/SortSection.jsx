@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
-import { HiViewGrid } from "react-icons/hi";
 import { TfiLayoutGrid4Alt } from "react-icons/tfi";
 import { BsGrid3X3GapFill } from "react-icons/bs";
 
@@ -25,22 +24,106 @@ const SortSection = ({ queryParams, setQueryParams }) => {
   };
 
   return (
-    <div className="w-full flex items-center justify-between py-4">
-      {/* ================= LEFT ================= */}
-      <div className="text-[14px] text-black">Showing all 12 results</div>
+    <div
+      className="
+        flex
+        w-full
+        flex-col
+        gap-[16px]
+        py-[12px]
 
-      {/* ================= RIGHT ================= */}
-      <div className="flex items-center gap-[8px]">
-        {/* Show */}
-        <div className="flex items-center gap-[14px] mr-[12px]">
-          <span className="text-[12px] font-medium">Show</span>
+        sm:gap-[18px]
+        sm:py-[14px]
+
+        md:flex-row
+        md:items-center
+        md:justify-between
+        md:gap-4
+        md:py-4
+      "
+    >
+      {/* =================================================
+          LEFT - RESULT COUNT
+      ================================================== */}
+
+      <div
+        className="
+          text-[12px]
+          text-black
+          sm:text-[13px]
+          md:text-[14px]
+        "
+      >
+        Showing all 12 results
+      </div>
+
+      {/* =================================================
+          RIGHT - CONTROLS
+      ================================================== */}
+
+      <div
+        className="
+          flex
+          w-full
+          flex-wrap
+          items-center
+          justify-between
+          gap-[8px]
+
+          sm:justify-end
+          sm:gap-[10px]
+
+          md:w-auto
+          md:gap-[8px]
+        "
+      >
+        {/* =================================================
+            SHOW COUNT
+        ================================================== */}
+
+        <div
+          className="
+            flex
+            items-center
+            gap-[9px]
+            mr-0
+
+            sm:gap-[12px]
+            sm:mr-[5px]
+
+            md:gap-[14px]
+            md:mr-[12px]
+          "
+        >
+          <span
+            className="
+              text-[11px]
+              font-medium
+
+              sm:text-[12px]
+            "
+          >
+            Show
+          </span>
 
           {[12, 15, 30].map((number) => (
             <button
               key={number}
               type="button"
               onClick={() => setShowCount(number)}
-              className="relative text-[12px] px-[2px] py-[8px]"
+              className="
+                relative
+                min-h-[36px]
+                min-w-[25px]
+                px-[2px]
+                py-[6px]
+                text-[11px]
+
+                sm:min-h-[38px]
+                sm:text-[12px]
+
+                md:min-h-[40px]
+              "
             >
               {number}
 
@@ -49,9 +132,9 @@ const SortSection = ({ queryParams, setQueryParams }) => {
                 <span
                   className="
                     absolute
+                    bottom-[2px]
                     left-0
                     right-0
-                    bottom-[-2px]
                     h-[1px]
                     bg-black
                   "
@@ -61,34 +144,68 @@ const SortSection = ({ queryParams, setQueryParams }) => {
           ))}
         </div>
 
-        {/* ================= CUSTOM SORT DROPDOWN ================= */}
-        <div className="relative">
+        {/* =================================================
+            SORT DROPDOWN
+        ================================================== */}
+
+        <div
+          className="
+            relative
+            min-w-0
+          "
+        >
           {/* Dropdown Button */}
           <button
             type="button"
             onClick={() => setIsSortOpen(!isSortOpen)}
             className="
-              w-[180px]
-              h-[40px]
-              px-[12px]
-              border
-              border-[#dedede]
-              rounded-[6px]
-              bg-white
               flex
+              h-[38px]
+              w-[145px]
               items-center
               justify-between
-              text-[12px]
+              gap-[6px]
+              rounded-[6px]
+              border
+              border-[#dedede]
+              bg-white
+              px-[9px]
+              text-left
+              text-[10px]
               text-black
-              cursor-pointer
+              transition-colors
+              hover:border-black
+
+              sm:h-[40px]
+              sm:w-[165px]
+              sm:px-[11px]
+              sm:text-[11px]
+
+              md:w-[180px]
+              md:px-[12px]
+              md:text-[12px]
             "
           >
-            <span>{sortBy}</span>
+            <span className="truncate">{sortBy}</span>
 
             {isSortOpen ? (
-              <IoChevronUp className="text-[18px]" />
+              <IoChevronUp
+                className="
+                  shrink-0
+                  text-[16px]
+                  sm:text-[17px]
+                  md:text-[18px]
+                "
+              />
             ) : (
-              <IoChevronDown className="text-[18px]" />
+              <IoChevronDown
+                className="
+                  shrink-0
+                  text-[16px]
+                  sm:text-[17px]
+                  md:text-[18px]
+                "
+              />
             )}
           </button>
 
@@ -97,12 +214,17 @@ const SortSection = ({ queryParams, setQueryParams }) => {
             <div
               className="
                 absolute
-                z-[50]
-                top-[64px]
                 right-0
-                w-[200px]
+                top-[44px]
+                z-[50]
+                w-[190px]
+                overflow-hidden
+                rounded-[6px]
                 bg-white
                 shadow-[0px_8px_20px_rgba(0,0,0,0.08)]
+
+                sm:top-[46px]
+                sm:w-[200px]
               "
             >
               {sortOptions.map((option) => (
@@ -111,14 +233,22 @@ const SortSection = ({ queryParams, setQueryParams }) => {
                   type="button"
                   onClick={() => handleSortChange(option)}
                   className={`
-                    w-full
-                    text-left
-                    px-[14px]
-                    h-[51px]
                     flex
+                    min-h-[44px]
+                    w-full
                     items-center
-                    text-[12px]
+                    px-[11px]
+                    text-left
+                    text-[10px]
                     transition-colors
+
+                    sm:min-h-[48px]
+                    sm:px-[13px]
+                    sm:text-[11px]
+
+                    md:h-[51px]
+                    md:text-[12px]
+
                     ${
                       sortBy === option
                         ? "bg-[#e6531c] text-white"
@@ -133,50 +263,80 @@ const SortSection = ({ queryParams, setQueryParams }) => {
           )}
         </div>
 
-        {/* ================= GRID BUTTON ================= */}
+        {/* =================================================
+            GRID BUTTON
+        ================================================== */}
+
         <button
           type="button"
           onClick={() => setView("grid")}
+          aria-label="Grid view"
           className={`
-            w-[40px]
-            h-[40px]
-            rounded-[6px]
             flex
+            h-[38px]
+            w-[38px]
+            shrink-0
             items-center
             justify-center
+            rounded-[6px]
             border
             transition-all
+
+            sm:h-[40px]
+            sm:w-[40px]
+
             ${
               view === "grid"
-                ? "bg-[#e6531c] text-white border-[#e6531c]"
-                : "bg-white text-black border-[#dedede]"
+                ? "border-[#e6531c] bg-[#e6531c] text-white"
+                : "border-[#dedede] bg-white text-black"
             }
           `}
         >
-          <BsGrid3X3GapFill className="text-[28px]" />
+          <BsGrid3X3GapFill
+            className="
+              text-[20px]
+              sm:text-[23px]
+              md:text-[28px]
+            "
+          />
         </button>
 
-        {/* ================= LIST BUTTON ================= */}
+        {/* =================================================
+            LIST BUTTON
+        ================================================== */}
+
         <button
           type="button"
           onClick={() => setView("list")}
+          aria-label="List view"
           className={`
-            w-[40px]
-            h-[40px]
-            rounded-[6px]
             flex
+            h-[38px]
+            w-[38px]
+            shrink-0
             items-center
             justify-center
+            rounded-[6px]
             border
             transition-all
+
+            sm:h-[40px]
+            sm:w-[40px]
+
             ${
               view === "list"
-                ? "bg-[#e6531c] text-white border-[#e6531c]"
-                : "bg-white text-black border-[#dedede]"
+                ? "border-[#e6531c] bg-[#e6531c] text-white"
+                : "border-[#dedede] bg-white text-black"
             }
           `}
         >
-          <TfiLayoutGrid4Alt className="text-[28px]" />
+          <TfiLayoutGrid4Alt
+            className="
+              text-[20px]
+              sm:text-[23px]
+              md:text-[28px]
+            "
+          />
         </button>
       </div>
     </div>
