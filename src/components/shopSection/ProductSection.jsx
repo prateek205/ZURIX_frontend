@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useGetProductsQuery } from "../../redux/productApi";
 import { CiHeart } from "react-icons/ci";
 import { LuEye } from "react-icons/lu";
+import { Link, useNavigate } from "react-router-dom";
 
 const ProductSection = ({ queryParams }) => {
   const { data, isLoading, isError } = useGetProductsQuery(queryParams);
@@ -249,10 +250,10 @@ const ProductCard = ({ product }) => {
         {/* =================================================
             SELECT OPTIONS BUTTON
         ================================================== */}
-
-        <button
-          type="button"
-          className="
+        <Link to={`productdetail/${id}`}>
+          <button
+            type="button"
+            className="
             absolute
             bottom-[8px]
             left-1/2
@@ -283,9 +284,10 @@ const ProductCard = ({ product }) => {
             lg:py-[11px]
             lg:text-[12px]
           "
-        >
-          Select Options
-        </button>
+          >
+            Select Options
+          </button>
+        </Link>
       </div>
 
       {/* =================================================
