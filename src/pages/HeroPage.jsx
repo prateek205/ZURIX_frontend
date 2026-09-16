@@ -1,5 +1,4 @@
 import React from "react";
-import HeroSection from "../components/HomePage/HeroSection";
 import Category from "../components/homePage/Category";
 import PaletteEdit from "../components/homePage/PalletteSection";
 import CuratedCollections from "../components/homePage/CurattedSection";
@@ -8,6 +7,7 @@ import StylingGuide from "../components/homePage/StylingGuide";
 import CollectionBanner from "../components/homePage/CollectionBanner";
 import EditorialCollections from "../components/homePage/EditorialCollection";
 import Testimonials from "../components/homePage/Testimonail";
+import HeroSection from "../components/homePage/HeroSection";
 
 const HeroPage = () => {
   return (
