@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import AllProducts from "../components/shopSection/FilterSection";
 import FilterSection from "../components/shopSection/FilterSection";
 import SortSection from "../components/shopSection/SortSection";
 import ProductSection from "../components/shopSection/ProductSection";
@@ -18,6 +17,7 @@ const ProductsPage = () => {
 
   return (
     <section className="h-full">
+      {/* ================= HERO ================= */}
       <div className="mt-14 pb-2">
         <img
           src="images/shop/hero_banner_shop.jpg"
@@ -26,22 +26,31 @@ const ProductsPage = () => {
         />
       </div>
 
+      {/* ================= SHOP SECTION ================= */}
       <div className="w-[88%] m-auto p-5">
-        <div className="flex w-[100%] gap-3">
-          <div className="w-[20%] border border-black">
-            <FilterSection
-              queryParams={queryParams}
-              setQueryParams={setQueryParams}
-            />
+        <div className="flex w-full gap-3">
+          {/* ================= FILTER ================= */}
+          <div className="w-[25%] py-1 px-2">
+            <div className="sticky top-[20px]">
+              <FilterSection
+                queryParams={queryParams}
+                setQueryParams={setQueryParams}
+              />
+            </div>
           </div>
-          <div className="w-[80%] flex flex-col gap-3">
-            <div className="border border-black">
+
+          {/* ================= PRODUCTS ================= */}
+          <div className="w-[75%] flex flex-col gap-3">
+            {/* Sort */}
+            <div>
               <SortSection
                 queryParams={queryParams}
                 setQueryParams={setQueryParams}
               />
             </div>
-            <div className="border border-black">
+
+            {/* Products */}
+            <div>
               <ProductSection queryParams={queryParams} />
             </div>
           </div>
