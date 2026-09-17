@@ -1,6 +1,7 @@
 import React from "react";
 import { useGetProductsQuery } from "../../redux/productApi";
 import { CiHeart } from "react-icons/ci";
+import { Link } from "react-router-dom";
 
 const PaletteEdit = () => {
   const { data, isLoading, isError } = useGetProductsQuery();
@@ -352,11 +353,11 @@ const PaletteEdit = () => {
                 {/* =========================
                     SHOP NOW
                 ========================== */}
-
-                <button
-                  type="button"
-                  onClick={(e) => e.stopPropagation()}
-                  className="
+                <Link to={`/productdetail/${product._id}`}>
+                  <button
+                    type="button"
+                    onClick={(e) => e.stopPropagation()}
+                    className="
                     absolute
                     bottom-[7px]
                     left-[7px]
@@ -394,9 +395,10 @@ const PaletteEdit = () => {
                     lg:right-[15px]
                     lg:text-[12px]
                   "
-                >
-                  Shop Now
-                </button>
+                  >
+                    Shop Now
+                  </button>
+                </Link>
               </div>
 
               {/* =========================
