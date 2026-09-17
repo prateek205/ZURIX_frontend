@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useGetProductsQuery } from "../../redux/productApi";
 import { CiHeart } from "react-icons/ci";
 import { MdOutlineShoppingBag } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const TrendingProducts = () => {
   const [activeTab, setActiveTab] = useState("bestSeller");
@@ -9,10 +10,6 @@ const TrendingProducts = () => {
   const { data, isLoading, isError } = useGetProductsQuery();
 
   const products = data?.data || [];
-
-  // For now both tabs use the same API data.
-  // Later you can apply different sorting/filtering
-  // for Best Sellers and New Arrivals.
 
   const displayedProducts = products.slice(0, 8);
 
@@ -683,9 +680,10 @@ const TrendingProducts = () => {
             lg:mt-[55px]
           "
         >
-          <button
-            type="button"
-            className="
+          <Link to="/products">
+            <button
+              type="button"
+              className="
               rounded-full
               border
               border-black
@@ -711,9 +709,10 @@ const TrendingProducts = () => {
               lg:text-[12px]
               lg:tracking-[1.5px]
             "
-          >
-            View All Products
-          </button>
+            >
+              View All Products
+            </button>
+          </Link>
         </div>
       )}
     </section>
