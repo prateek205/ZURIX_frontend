@@ -1,7 +1,32 @@
 import React, { useState } from "react";
+import { CiStar } from "react-icons/ci";
+import { FaStar } from "react-icons/fa";
 
 const ProductTab = ({ product }) => {
   const [activeTab, setActiveTab] = useState("description");
+
+  const rating = [
+    {
+      star: 5,
+      count: 0,
+    },
+    {
+      star: 4,
+      count: 0,
+    },
+    {
+      star: 3,
+      count: 0,
+    },
+    {
+      star: 2,
+      count: 0,
+    },
+    {
+      star: 1,
+      count: 0,
+    },
+  ];
 
   return (
     <section className="w-full flex flex-col items-center justify-center gap-8 px-4 sm:px-6 lg:px-8">
@@ -49,13 +74,13 @@ const ProductTab = ({ product }) => {
         </button>
       </div>
 
-      {/* =========================
-          CONTENT
-      ========================== */}
-      <div className="w-full border border-gray-300 p-4 sm:p-6">
-        {/* =========================
-            DESCRIPTION
-        ========================== */}
+      {/* ======================
+                  CONTENT
+          ====================== */}
+      <div className="w-full p-4 sm:p-6">
+        {/* ======================
+                  DESCRIPTION
+            ====================== */}
         {activeTab === "description" && (
           <div className="w-full">
             <p className="text-sm sm:text-base leading-6 sm:leading-7 text-gray-700">
@@ -64,9 +89,9 @@ const ProductTab = ({ product }) => {
           </div>
         )}
 
-        {/* =========================
-            ADDITIONAL INFORMATION
-        ========================== */}
+        {/* =======================
+                REVIEW SECTION
+            ======================= */}
         {activeTab === "additional" && (
           <div className="w-full max-w-3xl">
             {/* Category */}
@@ -120,14 +145,50 @@ const ProductTab = ({ product }) => {
           </div>
         )}
 
-        {/* =========================
-            REVIEWS
-        ========================== */}
         {activeTab === "reviews" && (
-          <div className="w-full">
-            <p className="text-sm sm:text-base text-gray-700">
-              There are no reviews yet.
-            </p>
+          <div className="flex w-full gap-7 ">
+            <div className="w-[25%] flex flex-col gap-5">
+              <h1>Rating</h1>
+              <div className="flex flex-col gap-7 border border-gray-200 rounded-md p-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-[50px]">0.0</span>
+                  <span className="text-[16px]">0 Product Ratings</span>
+                </div>
+                <div>
+                  {rating.map((rate, index) => {
+                    return (
+                      <div key={index} className="flex items-center gap-5">
+                        <div className="flex items-center gap-1">
+                          <div>{rate.star}</div>
+                          <div className="text-yellow-600">
+                            <FaStar />
+                          </div>
+                        </div>
+                        <div className="w-[100%] rounded-md h-[7px] border bg-gray-300"></div>
+                        <div>{rate.count}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="flex flex-col gap-4">
+                  <h1 className="font-zurixFont text-md font-bold">
+                    Review this product
+                  </h1>
+                  <p className="font-zurixFont text-sm ">
+                    share your thought with other customers
+                  </p>
+                </div>
+                <button className="border-2 border-black rounded-full py-3 px-2 bg-black text-white hover:bg-white hover:text-black transition duration-300 ease-in-out mt-5">
+                  Write A Review
+                </button>
+              </div>
+            </div>
+            <div className="w-[80%] flex flex-col gap-4">
+              <h1 className="text-lg">Reviews</h1>
+              <div className="border border-gray-200 rounded-md h-[500px] p-5">
+                <p className="text-gray-400">No Review for this product</p>
+              </div>
+            </div>
           </div>
         )}
       </div>
