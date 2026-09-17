@@ -4,6 +4,7 @@ import ProductInfo from "../components/productDetailSection/ProductInfo";
 import { useGetProductByIdQuery } from "../redux/productApi";
 import { useParams } from "react-router-dom";
 import ProductTab from "../components/productDetailSection/ProductTab";
+import RelatedProducts from "../components/productDetailSection/RelatedProducts";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -157,6 +158,10 @@ const ProductDetails = () => {
         "
       >
         <ProductTab product={product} />
+      </div>
+
+      <div>
+        <RelatedProducts product={product} />
       </div>
     </section>
   );

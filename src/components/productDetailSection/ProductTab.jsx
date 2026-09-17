@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CiStar } from "react-icons/ci";
+
 import { FaStar } from "react-icons/fa";
 
 const ProductTab = ({ product }) => {
@@ -29,58 +29,60 @@ const ProductTab = ({ product }) => {
   ];
 
   return (
-    <section className="w-full flex flex-col items-center justify-center gap-8 px-4 sm:px-6 lg:px-8">
+    <section className="w-full flex flex-col items-center justify-center gap-6 sm:gap-8 px-4 sm:px-6 md:px-8 lg:px-10">
       {/* =========================
           TABS
       ========================== */}
-      <div className="w-full flex flex-wrap items-center justify-center gap-x-6 gap-y-3 sm:gap-x-10 lg:gap-x-16">
-        {/* Description */}
-        <button
-          type="button"
-          onClick={() => setActiveTab("description")}
-          className={`pb-2 text-base sm:text-lg lg:text-xl font-zurixFont transition-all duration-200 ${
-            activeTab === "description"
-              ? "border-b-2 border-orange-500"
-              : "border-b-2 border-transparent"
-          }`}
-        >
-          Description
-        </button>
+      <div className="w-full overflow-x-auto scrollbar-none">
+        <div className="min-w-max flex items-center justify-center gap-6 sm:gap-10 lg:gap-16">
+          {/* Description */}
+          <button
+            type="button"
+            onClick={() => setActiveTab("description")}
+            className={`whitespace-nowrap pb-2 text-sm sm:text-base lg:text-xl font-zurixFont transition-all duration-200 ${
+              activeTab === "description"
+                ? "border-b-2 border-orange-500"
+                : "border-b-2 border-transparent"
+            }`}
+          >
+            Description
+          </button>
 
-        {/* Additional Information */}
-        <button
-          type="button"
-          onClick={() => setActiveTab("additional")}
-          className={`pb-2 text-base sm:text-lg lg:text-xl font-zurixFont transition-all duration-200 ${
-            activeTab === "additional"
-              ? "border-b-2 border-orange-500"
-              : "border-b-2 border-transparent"
-          }`}
-        >
-          Additional Information
-        </button>
+          {/* Additional Information */}
+          <button
+            type="button"
+            onClick={() => setActiveTab("additional")}
+            className={`whitespace-nowrap pb-2 text-sm sm:text-base lg:text-xl font-zurixFont transition-all duration-200 ${
+              activeTab === "additional"
+                ? "border-b-2 border-orange-500"
+                : "border-b-2 border-transparent"
+            }`}
+          >
+            Additional Information
+          </button>
 
-        {/* Reviews */}
-        <button
-          type="button"
-          onClick={() => setActiveTab("reviews")}
-          className={`pb-2 text-base sm:text-lg lg:text-xl font-zurixFont transition-all duration-200 ${
-            activeTab === "reviews"
-              ? "border-b-2 border-orange-500"
-              : "border-b-2 border-transparent"
-          }`}
-        >
-          Reviews (0)
-        </button>
+          {/* Reviews */}
+          <button
+            type="button"
+            onClick={() => setActiveTab("reviews")}
+            className={`whitespace-nowrap pb-2 text-sm sm:text-base lg:text-xl font-zurixFont transition-all duration-200 ${
+              activeTab === "reviews"
+                ? "border-b-2 border-orange-500"
+                : "border-b-2 border-transparent"
+            }`}
+          >
+            Reviews (0)
+          </button>
+        </div>
       </div>
 
       {/* ======================
-                  CONTENT
-          ====================== */}
-      <div className="w-full p-4 sm:p-6">
+          CONTENT
+      ====================== */}
+      <div className="w-full p-2 sm:p-4 md:p-6">
         {/* ======================
-                  DESCRIPTION
-            ====================== */}
+            DESCRIPTION
+        ====================== */}
         {activeTab === "description" && (
           <div className="w-full">
             <p className="text-sm sm:text-base leading-6 sm:leading-7 text-gray-700">
@@ -89,23 +91,27 @@ const ProductTab = ({ product }) => {
           </div>
         )}
 
-        {/* =======================
-                REVIEW SECTION
-            ======================= */}
+        {/* ======================
+            ADDITIONAL INFORMATION
+        ====================== */}
         {activeTab === "additional" && (
           <div className="w-full max-w-3xl">
             {/* Category */}
             <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-2 sm:gap-4 py-3 border-b border-gray-200">
-              <span className="font-medium text-gray-800">Category</span>
+              <span className="font-medium text-sm sm:text-base text-gray-800">
+                Category
+              </span>
 
-              <span className="text-gray-600">
+              <span className="text-sm sm:text-base text-gray-600">
                 {product?.category?.name || "N/A"}
               </span>
             </div>
 
             {/* Sizes */}
             <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-2 sm:gap-4 py-3 border-b border-gray-200">
-              <span className="font-medium text-gray-800">Sizes</span>
+              <span className="font-medium text-sm sm:text-base text-gray-800">
+                Sizes
+              </span>
 
               <div className="flex flex-wrap gap-2">
                 {product?.size?.length > 0 ? (
@@ -118,14 +124,16 @@ const ProductTab = ({ product }) => {
                     </span>
                   ))
                 ) : (
-                  <span className="text-gray-500">N/A</span>
+                  <span className="text-sm text-gray-500">N/A</span>
                 )}
               </div>
             </div>
 
             {/* Colors */}
             <div className="grid grid-cols-1 sm:grid-cols-[140px_1fr] gap-2 sm:gap-4 py-3">
-              <span className="font-medium text-gray-800">Colors</span>
+              <span className="font-medium text-sm sm:text-base text-gray-800">
+                Colors
+              </span>
 
               <div className="flex flex-wrap gap-2">
                 {product?.colors?.length > 0 ? (
@@ -138,55 +146,101 @@ const ProductTab = ({ product }) => {
                     </span>
                   ))
                 ) : (
-                  <span className="text-gray-500">N/A</span>
+                  <span className="text-sm text-gray-500">N/A</span>
                 )}
               </div>
             </div>
           </div>
         )}
 
+        {/* ======================
+            REVIEWS
+        ====================== */}
         {activeTab === "reviews" && (
-          <div className="flex w-full gap-7 ">
-            <div className="w-[25%] flex flex-col gap-5">
-              <h1>Rating</h1>
-              <div className="flex flex-col gap-7 border border-gray-200 rounded-md p-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-[50px]">0.0</span>
-                  <span className="text-[16px]">0 Product Ratings</span>
+          <div className="w-full flex flex-col lg:flex-row gap-6 lg:gap-8">
+            {/* ======================
+                RATING SECTION
+            ====================== */}
+            <div className="w-full lg:w-[30%] flex flex-col gap-4 sm:gap-5">
+              <h1 className="text-base sm:text-lg font-medium">Rating</h1>
+
+              <div className="w-full border border-gray-200 rounded-md p-4 sm:p-5 flex flex-col gap-6">
+                {/* Rating Summary */}
+                <div className="flex flex-col xs:flex-row sm:flex-row items-start sm:items-center justify-between gap-3">
+                  <span className="text-4xl sm:text-5xl font-medium">0.0</span>
+
+                  <span className="text-xs sm:text-sm text-gray-600">
+                    0 Product Ratings
+                  </span>
                 </div>
-                <div>
+
+                {/* Rating Bars */}
+                <div className="flex flex-col gap-4">
                   {rating.map((rate, index) => {
                     return (
-                      <div key={index} className="flex items-center gap-5">
-                        <div className="flex items-center gap-1">
-                          <div>{rate.star}</div>
-                          <div className="text-yellow-600">
-                            <FaStar />
-                          </div>
+                      <div
+                        key={index}
+                        className="w-full flex items-center gap-2 sm:gap-4"
+                      >
+                        {/* Star Number */}
+                        <div className="flex items-center gap-1 shrink-0">
+                          <span className="text-xs sm:text-sm">
+                            {rate.star}
+                          </span>
+
+                          <FaStar className="text-yellow-600 text-xs sm:text-sm" />
                         </div>
-                        <div className="w-[100%] rounded-md h-[7px] border bg-gray-300"></div>
-                        <div>{rate.count}</div>
+
+                        {/* Progress Bar */}
+                        <div className="flex-1 min-w-0 h-[6px] sm:h-[7px] rounded-md bg-gray-300 overflow-hidden">
+                          <div
+                            className="h-full bg-yellow-500 rounded-md"
+                            style={{
+                              width: "0%",
+                            }}
+                          ></div>
+                        </div>
+
+                        {/* Count */}
+                        <span className="text-xs sm:text-sm shrink-0">
+                          {rate.count}
+                        </span>
                       </div>
                     );
                   })}
                 </div>
-                <div className="flex flex-col gap-4">
-                  <h1 className="font-zurixFont text-md font-bold">
+
+                {/* Write Review Information */}
+                <div className="flex flex-col gap-2">
+                  <h1 className="font-zurixFont text-sm sm:text-base font-bold">
                     Review this product
                   </h1>
-                  <p className="font-zurixFont text-sm ">
-                    share your thought with other customers
+
+                  <p className="font-zurixFont text-xs sm:text-sm text-gray-600">
+                    Share your thought with other customers
                   </p>
                 </div>
-                <button className="border-2 border-black rounded-full py-3 px-2 bg-black text-white hover:bg-white hover:text-black transition duration-300 ease-in-out mt-5">
+
+                {/* Write Review Button */}
+                <button
+                  type="button"
+                  className="w-full sm:w-fit border-2 border-black rounded-full py-2.5 sm:py-3 px-5 bg-black text-white text-sm hover:bg-white hover:text-black transition duration-300 ease-in-out"
+                >
                   Write A Review
                 </button>
               </div>
             </div>
-            <div className="w-[80%] flex flex-col gap-4">
-              <h1 className="text-lg">Reviews</h1>
-              <div className="border border-gray-200 rounded-md h-[500px] p-5">
-                <p className="text-gray-400">No Review for this product</p>
+
+            {/* ======================
+                REVIEWS LIST
+            ====================== */}
+            <div className="w-full lg:flex-1 flex flex-col gap-4">
+              <h1 className="text-base sm:text-lg font-medium">Reviews</h1>
+
+              <div className="w-full min-h-[300px] sm:min-h-[400px] lg:h-[500px] border border-gray-200 rounded-md p-4 sm:p-5">
+                <p className="text-xs sm:text-sm text-gray-400">
+                  No Review for this product
+                </p>
               </div>
             </div>
           </div>
