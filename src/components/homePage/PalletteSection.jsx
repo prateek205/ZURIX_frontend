@@ -112,10 +112,10 @@ const PaletteEdit = () => {
           </h2>
 
           {/* Shop All */}
-
-          <button
-            type="button"
-            className="
+          <Link to="/products">
+            <button
+              type="button"
+              className="
               shrink-0
               border-b
               border-black
@@ -134,9 +134,10 @@ const PaletteEdit = () => {
 
               lg:text-[13px]
             "
-          >
-            Shop All
-          </button>
+            >
+              Shop All
+            </button>
+          </Link>
         </div>
       </div>
 
