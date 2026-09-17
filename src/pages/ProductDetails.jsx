@@ -31,6 +31,8 @@ const ProductDetails = () => {
   const product = data?.data || {};
 
   console.log("PRODUCT_DATA:", product);
+  console.log("API DATA:", data);
+  console.log("PRODUCT:", product);
 
   return (
     <section
