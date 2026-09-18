@@ -7,7 +7,7 @@ import Footer from "./components/Footer";
 import ProductDetails from "./pages/ProductDetails";
 import CartPage from "./pages/CartPage";
 import ProtectedRoutes from "./utils/ProtectedRoutes";
-import Login from "./pages/loginPage";
+import Login from "./pages/LoginPage";
 import Profile from "./pages/Profile";
 
 const App = () => {
