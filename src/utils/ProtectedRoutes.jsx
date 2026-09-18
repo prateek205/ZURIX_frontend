@@ -13,7 +13,7 @@ const ProtectedRoutes = ({ children }) => {
     );
   }
 
-  if (!isError || !data?.success) {
+  if (isError || !data?.success) {
     return <Navigate to="/login" replace />;
   }
 
