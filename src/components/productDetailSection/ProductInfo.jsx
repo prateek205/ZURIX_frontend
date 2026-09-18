@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { BsArrowReturnLeft } from "react-icons/bs";
 import { FaMinus, FaMoneyCheck, FaPlus } from "react-icons/fa";
 import { MdOutlineRocketLaunch } from "react-icons/md";
+import { useGetProfileQuery } from "../../redux/authApi";
+import { useAddToCartMutation } from "../../redux/cartApi";
+import { useNavigate } from "react-router-dom";
 
 const ProductInfo = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
@@ -14,6 +17,49 @@ const ProductInfo = ({ product }) => {
 
   const handleIncrease = () => {
     setQuantity((prev) => prev + 1);
+  };
+
+  const navigate = useNavigate()
+
+  const {
+    data: profileData,
+    isLoading: profileLoading,
+    isError,
+  } = useGetProfileQuery();
+
+  const [
+    addToCart,
+    { data: cartData, isLoading: cartLoading, isError: cartError },
+  ] = useAddToCartMutation();
+
+  const handleAddToCart = async () => {
+    if (profileLoading) {
+      return;
+    }
+
+    if (isError || !profileData?.success) {
+      navigate("/login", {
+        state: {
+          from: "cart",
+        },
+      });
+      return;
+    }
+
+    try {
+      const cartData = {
+        productId: product._id,
+        quantity: 1,
+        size: selectedSize,
+        color: selectedColor,
+      };
+
+      const response = await addToCart(cartData).unwrap();
+
+      navigate("/cart");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -352,6 +398,7 @@ const ProductInfo = ({ product }) => {
           {/* Add To Cart */}
           <button
             type="button"
+            onClick={handleAddToCart}
             className="
               h-[48px]
               min-w-0
@@ -379,7 +426,7 @@ const ProductInfo = ({ product }) => {
               lg:text-[15px]
             "
           >
-            Add to Cart
+            {profileLoading ? "Product Adding..." : "Add to Cart"}
           </button>
         </div>
 

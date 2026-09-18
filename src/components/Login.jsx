@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff, FiMail, FiLock } from "react-icons/fi";
 import { useAddLoginMutation } from "../redux/authApi";
 
@@ -14,6 +14,7 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,9 +31,15 @@ const Login = () => {
     try {
       const response = await login(formData).unwrap();
 
-      console.log(response);
+      if (location.state?.from === "cart") {
+        return navigate("/cart", {
+          replace: true,
+        });
+      }
 
-      navigate("/profile");
+      navigate("/", {
+        replace: true,
+      });
     } catch (error) {
       console.log(error);
     }
