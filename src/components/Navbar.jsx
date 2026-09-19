@@ -26,9 +26,6 @@ const Navbar = () => {
         shadow-[0px_0px_10px_0px_rgb(0,0,0,0.15)]
       "
     >
-      {/* =========================
-          MAIN NAVBAR
-      ========================== */}
       <div
         className="
           mx-auto
@@ -49,9 +46,6 @@ const Navbar = () => {
           xl:max-w-[1400px]
         "
       >
-        {/* =========================
-            LEFT - DESKTOP MENU
-        ========================== */}
 
         <ul
           className="
@@ -164,10 +158,6 @@ const Navbar = () => {
           </li>
         </ul>
 
-        {/* =========================
-            MOBILE LEFT MENU ICON
-        ========================== */}
-
         <button
           type="button"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -182,10 +172,6 @@ const Navbar = () => {
         >
           {isMenuOpen ? <MdClose /> : <MdMenu />}
         </button>
-
-        {/* =========================
-            CENTER - LOGO
-        ========================== */}
 
         <Link
           to="/"
@@ -214,10 +200,6 @@ const Navbar = () => {
             ZURI<span className="text-red-500">X.</span>
           </h1>
         </Link>
-
-        {/* =========================
-            RIGHT - ICONS
-        ========================== */}
 
         <ul
           className="
@@ -288,10 +270,6 @@ const Navbar = () => {
           </li>
         </ul>
       </div>
-
-      {/* =========================
-          MOBILE MENU
-      ========================== */}
 
       <div
         className={`

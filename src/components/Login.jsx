@@ -32,9 +32,7 @@ const Login = () => {
 
       console.log("LOGIN_RESPONSE:", response)
 
-      navigate("/profile", {
-        replace: true,
-      });
+      navigate("/");
     } catch (error) {
       console.log("LOGIN_ERROR:",error);
     }
