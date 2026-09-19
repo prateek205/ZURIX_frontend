@@ -46,8 +46,6 @@ const ProductInfo = ({ product }) => {
       const cartData = {
         productId: product._id,
         quantity: 1,
-        size: selectedSize,
-        color: selectedColor,
       };
 
       const response = await addToCart(cartData).unwrap();

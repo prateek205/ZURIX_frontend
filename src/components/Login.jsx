@@ -30,11 +30,13 @@ const Login = () => {
     try {
       const response = await login(formData).unwrap();
 
+      console.log("LOGIN_RESPONSE:", response)
+
       navigate("/profile", {
         replace: true,
       });
     } catch (error) {
-      console.log(error);
+      console.log("LOGIN_ERROR:",error);
     }
   };
 
