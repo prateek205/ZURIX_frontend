@@ -14,7 +14,6 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
-  const location = useLocation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,13 +30,7 @@ const Login = () => {
     try {
       const response = await login(formData).unwrap();
 
-      if (location.state?.from === "cart") {
-        return navigate("/cart", {
-          replace: true,
-        });
-      }
-
-      navigate("/", {
+      navigate("/profile", {
         replace: true,
       });
     } catch (error) {

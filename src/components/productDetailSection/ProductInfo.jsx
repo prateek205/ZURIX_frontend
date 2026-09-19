@@ -19,7 +19,7 @@ const ProductInfo = ({ product }) => {
     setQuantity((prev) => prev + 1);
   };
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const {
     data: profileData,
@@ -38,11 +38,7 @@ const ProductInfo = ({ product }) => {
     }
 
     if (isError || !profileData?.success) {
-      navigate("/login", {
-        state: {
-          from: "cart",
-        },
-      });
+      navigate("/login");
       return;
     }
 

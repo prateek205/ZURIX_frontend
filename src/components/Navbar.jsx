@@ -238,6 +238,7 @@ const Navbar = () => {
           "
         >
           {/* User */}
+          <Link to="/profile">
           <li
             className="
               cursor-pointer
@@ -248,6 +249,7 @@ const Navbar = () => {
           >
             <FaRegUser />
           </li>
+          </Link>
 
           {/* Search */}
           <li
