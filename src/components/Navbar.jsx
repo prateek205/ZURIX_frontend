@@ -46,7 +46,6 @@ const Navbar = () => {
           xl:max-w-[1400px]
         "
       >
-
         <ul
           className="
             hidden
@@ -221,16 +220,16 @@ const Navbar = () => {
         >
           {/* User */}
           <Link to="/profile">
-          <li
-            className="
+            <li
+              className="
               cursor-pointer
               transition-transform
               duration-300
               hover:scale-110
             "
-          >
-            <FaRegUser />
-          </li>
+            >
+              <FaRegUser />
+            </li>
           </Link>
 
           {/* Search */}
@@ -258,16 +257,18 @@ const Navbar = () => {
           </li>
 
           {/* Cart */}
-          <li
-            className="
+          <Link to="/cart">
+            <li
+              className="
               cursor-pointer
               transition-transform
               duration-300
               hover:scale-110
             "
-          >
-            <MdOutlineShoppingBag />
-          </li>
+            >
+              <MdOutlineShoppingBag />
+            </li>
+          </Link>
         </ul>
       </div>
 
