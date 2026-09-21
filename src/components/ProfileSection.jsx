@@ -1,6 +1,6 @@
 import React from "react";
 import { useAddLogoutMutation, useGetProfileQuery } from "../redux/authApi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   FiUser,
   FiMail,
@@ -122,23 +122,23 @@ const ProfileSection = () => {
                 <FiChevronRight size={16} />
               </button>
 
+              <Link to="/order">
+                <button
+                  type="button"
+                  className="w-full flex items-center justify-between p-3 rounded-md hover:bg-gray-50 transition"
+                >
+                  <div className="flex items-center gap-3">
+                    <FiShoppingBag size={18} />
+
+                    <span className="text-sm">My Orders</span>
+                  </div>
+
+                  <FiChevronRight size={16} />
+                </button>
+              </Link>
+
               <button
                 type="button"
-                onClick={() => navigate("/orders")}
-                className="w-full flex items-center justify-between p-3 rounded-md hover:bg-gray-50 transition"
-              >
-                <div className="flex items-center gap-3">
-                  <FiShoppingBag size={18} />
-
-                  <span className="text-sm">My Orders</span>
-                </div>
-
-                <FiChevronRight size={16} />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => navigate("/wishlist")}
                 className="w-full flex items-center justify-between p-3 rounded-md hover:bg-gray-50 transition"
               >
                 <div className="flex items-center gap-3">
@@ -237,19 +237,21 @@ const ProfileSection = () => {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <button
-                  type="button"
-                  onClick={() => navigate("/orders")}
-                  className="border border-gray-200 rounded-lg p-5 text-left hover:border-black transition"
-                >
-                  <FiShoppingBag size={22} className="mb-4" />
+                <Link to="/order">
+                  <button
+                    type="button"
+                    onClick={() => navigate("/orders")}
+                    className="border border-gray-200 rounded-lg p-5 text-left hover:border-black transition"
+                  >
+                    <FiShoppingBag size={22} className="mb-4" />
 
-                  <h3 className="text-sm font-medium">View Orders</h3>
+                    <h3 className="text-sm font-medium">View Orders</h3>
 
-                  <p className="text-xs text-gray-500 mt-1">
-                    Track your recent orders
-                  </p>
-                </button>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Track your recent orders
+                    </p>
+                  </button>
+                </Link>
 
                 <button
                   type="button"
