@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import CartSection from "../components/carts/CartSection";
 
 const CartPage = () => {
   return (
-    <div>CartPage</div>
-  )
-}
+    <section>
+      <CartSection />
+    </section>
+  );
+};
 
-export default CartPage
+export default CartPage;
