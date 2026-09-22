@@ -20,7 +20,7 @@ const OrderSection = () => {
   console.log("CART_DATA:", cartItem);
 
   const mainPrice = cartItem.reduce((total, item) => {
-    const product = product.Id;
+    const product = item.productId;
     const orginalPrice = product?.salePrice || 0;
     const quantity = item.quantity || 0;
 
@@ -28,7 +28,7 @@ const OrderSection = () => {
   }, 0);
 
   const sellingPrice = cartItem.reduce((total, item) => {
-    const product = product.id;
+    const product = item.productId;
     const salesPrice = product?.price || 0;
     const quantity = item.quantity || 0;
 
@@ -388,7 +388,9 @@ const OrderSection = () => {
                     Main Price
                   </span>
 
-                  <span className="font-medium font-zurixFont">${mainPrice}</span>
+                  <span className="font-medium font-zurixFont">
+                    ${mainPrice}
+                  </span>
                 </div>
 
                 <div className="flex justify-between">
@@ -396,13 +398,17 @@ const OrderSection = () => {
                     Selling Price
                   </span>
 
-                  <span className="font-medium font-zurixFont">${salePrice}</span>
+                  <span className="font-medium font-zurixFont">
+                    ${sellingPrice}
+                  </span>
                 </div>
 
                 <div className="flex justify-between">
                   <span className="text-gray-600 font-zurixFont">Discount</span>
 
-                  <span className="font-medium font-zurixFont">-${discount}</span>
+                  <span className="font-medium font-zurixFont">
+                    -${discount}
+                  </span>
                 </div>
 
                 <div className="flex justify-between">
