@@ -1,15 +1,28 @@
 import React, { useState } from "react";
 import { useGetAllCartsQuery } from "../../redux/cartApi";
 import { useCreateOrderMutation } from "../../redux/orderApi";
+import {
+  useGetAllAddressQuery,
+  usePostAddressMutation,
+} from "../../redux/addressApi";
 
 const OrderSection = () => {
+  const {
+    data,
+    isLoading: cartLoading,
+    isError: cartError,
+  } = useGetAllCartsQuery();
   const [createOrder, { isLoading: orderLoading }] = useCreateOrderMutation();
+  const { data: addAddress, isLoading: addressLoading } =
+    usePostAddressMutation();
 
-  const [formData, setFormData] = useState({
+  const [addressData, setAddressData] = useState({
     fullName: "",
     mobileNumber: "",
+    address: "",
     city: "",
     state: "",
+    country: "",
     pincode: "",
   });
 
@@ -18,17 +31,20 @@ const OrderSection = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setFormData((prev) => ({
+    setAddressData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const {
-    data,
-    isLoading: cartLoading,
-    isError: cartError,
-  } = useGetAllCartsQuery();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await addAddress(addressData).unwrap();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   if (cartLoading) {
     return <p>Loading...</p>;
@@ -68,7 +84,7 @@ const OrderSection = () => {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 lg:gap-12">
         {/* ================= LEFT SECTION ================= */}
         <div className="w-full">
-          <div className="flex flex-col gap-8">
+          <div onSubmit={handleSubmit} className="flex flex-col gap-8">
             {/* Heading */}
             <div>
               <h1 className="text-3xl md:text-4xl font-bold font-zurixFont">
@@ -104,6 +120,8 @@ const OrderSection = () => {
 
                 <input
                   type="tel"
+                  value={addressData.mobileNumber}
+                  onChange={handleChange}
                   placeholder="Enter your phone number"
                   className="w-full border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont"
                 />
@@ -125,6 +143,8 @@ const OrderSection = () => {
 
                   <input
                     type="text"
+                    value={addressData.fullName}
+                    onChange={handleChange}
                     placeholder="First Name"
                     className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont"
                   />
@@ -139,6 +159,8 @@ const OrderSection = () => {
 
                 <input
                   type="text"
+                  value={addressData.address}
+                  onChange={handleChange}
                   placeholder="House number and street name"
                   className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont"
                 />
@@ -153,6 +175,8 @@ const OrderSection = () => {
 
                   <input
                     type="text"
+                    value={addressData.city}
+                    onChange={handleChange}
                     placeholder="City"
                     className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont"
                   />
@@ -163,7 +187,11 @@ const OrderSection = () => {
                     State
                   </label>
 
-                  <select className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont bg-white">
+                  <select
+                    value={addressData.state}
+                    onChange={handleChange}
+                    className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont bg-white"
+                  >
                     <option value="">Select State</option>
                     <option>Maharashtra</option>
                     <option>Gujarat</option>
@@ -184,6 +212,8 @@ const OrderSection = () => {
 
                   <input
                     type="text"
+                    value={addressData.pincode}
+                    onChange={handleChange}
                     placeholder="PIN Code"
                     className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont"
                   />
@@ -194,7 +224,11 @@ const OrderSection = () => {
                     Country
                   </label>
 
-                  <select className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont bg-white">
+                  <select
+                    value={addressData.country}
+                    onChange={handleChange}
+                    className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont bg-white"
+                  >
                     <option>India</option>
                   </select>
                 </div>

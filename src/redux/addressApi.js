@@ -2,7 +2,7 @@ import { baseApi } from "./baseApi";
 
 export const addressApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    addAddress: builder.mutation({
+    postAddress: builder.mutation({
       query: (newBody) => ({
         url: "/address/createAddress",
         method: "POST",
@@ -12,7 +12,7 @@ export const addressApi = baseApi.injectEndpoints({
     }),
 
     getAllAddress: (builder) => ({
-      query: ({ sort }) => ({
+      query: ({ sort = {} }) => ({
         url: "/address/getAllAddress",
         params: {
           sort,
@@ -24,4 +24,4 @@ export const addressApi = baseApi.injectEndpoints({
   }),
 });
 
-const { useAddAddressMutation, useGetAllAddressQuery } = addressApi;
+export const { usePostAddressMutation, useGetAllAddressQuery } = addressApi;
