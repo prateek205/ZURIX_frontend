@@ -1,7 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { useGetAllCartsQuery } from "../../redux/cartApi";
+import { useCreateOrderMutation } from "../../redux/orderApi";
 
 const OrderSection = () => {
+  const [createOrder, { isLoading: orderLoading }] = useCreateOrderMutation();
+
+  const [formData, setFormData] = useState({
+    fullName: "",
+    mobileNumber: "",
+    city: "",
+    state: "",
+    pincode: "",
+  });
+
+  const [paymentMethod, setPaymentMethod] = useState("COD");
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   const {
     data,
     isLoading: cartLoading,
@@ -98,24 +120,12 @@ const OrderSection = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-medium font-zurixFont">
-                    First Name
+                    Full Name
                   </label>
 
                   <input
                     type="text"
                     placeholder="First Name"
-                    className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont"
-                  />
-                </div>
-
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium font-zurixFont">
-                    Last Name
-                  </label>
-
-                  <input
-                    type="text"
-                    placeholder="Last Name"
                     className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont"
                   />
                 </div>
@@ -130,20 +140,6 @@ const OrderSection = () => {
                 <input
                   type="text"
                   placeholder="House number and street name"
-                  className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont"
-                />
-              </div>
-
-              {/* Apartment */}
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium font-zurixFont">
-                  Apartment, Suite, etc.{" "}
-                  <span className="text-gray-400">(Optional)</span>
-                </label>
-
-                <input
-                  type="text"
-                  placeholder="Apartment, suite, unit, etc."
                   className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont"
                 />
               </div>

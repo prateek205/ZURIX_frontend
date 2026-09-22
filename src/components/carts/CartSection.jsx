@@ -3,8 +3,11 @@ import {
   useGetAllCartsQuery,
   useUpdateCartMutation,
 } from "../../redux/cartApi";
+import { useNavigate } from "react-router-dom";
 
 const CartSection = () => {
+  const navigate = useNavigate()
+  
   const { data, isLoading, isError } = useGetAllCartsQuery();
   const [updateCart] = useUpdateCartMutation();
 
@@ -44,6 +47,10 @@ const CartSection = () => {
       console.log("UPDATE_ERROR", error);
     }
   };
+
+  const handleCheckout = () => {
+      navigate("/order")
+  }
 
   const mainPrice = cartData.reduce((total, item) => {
     const product = item.productId;
@@ -245,7 +252,7 @@ const CartSection = () => {
             </div>
 
             {/* Checkout */}
-            <button className="w-full mt-5 py-4 bg-black text-white text-sm font-medium tracking-wide hover:bg-gray-800 transition">
+            <button onClick={handleCheckout} className="w-full mt-5 py-4 bg-black text-white text-sm font-medium tracking-wide hover:bg-gray-800 transition">
               Proceed to Checkout
             </button>
 
