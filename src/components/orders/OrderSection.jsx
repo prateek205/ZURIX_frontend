@@ -13,8 +13,7 @@ const OrderSection = () => {
     isError: cartError,
   } = useGetAllCartsQuery();
   const [createOrder, { isLoading: orderLoading }] = useCreateOrderMutation();
-  const { data: addAddress, isLoading: addressLoading } =
-    usePostAddressMutation();
+  const [addAddress, { isLoading: addressLoading }] = usePostAddressMutation();
 
   const [addressData, setAddressData] = useState({
     fullName: "",
@@ -84,7 +83,7 @@ const OrderSection = () => {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 lg:gap-12">
         {/* ================= LEFT SECTION ================= */}
         <div className="w-full">
-          <div onSubmit={handleSubmit} className="flex flex-col gap-8">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-8">
             {/* Heading */}
             <div>
               <h1 className="text-3xl md:text-4xl font-bold font-zurixFont">
@@ -120,6 +119,7 @@ const OrderSection = () => {
 
                 <input
                   type="tel"
+                  name="mobileNumber"
                   value={addressData.mobileNumber}
                   onChange={handleChange}
                   placeholder="Enter your phone number"
@@ -143,6 +143,7 @@ const OrderSection = () => {
 
                   <input
                     type="text"
+                    name="fullName"
                     value={addressData.fullName}
                     onChange={handleChange}
                     placeholder="First Name"
@@ -159,6 +160,7 @@ const OrderSection = () => {
 
                 <input
                   type="text"
+                  name="address"
                   value={addressData.address}
                   onChange={handleChange}
                   placeholder="House number and street name"
@@ -175,6 +177,7 @@ const OrderSection = () => {
 
                   <input
                     type="text"
+                    name="city"
                     value={addressData.city}
                     onChange={handleChange}
                     placeholder="City"
@@ -188,6 +191,7 @@ const OrderSection = () => {
                   </label>
 
                   <select
+                    name="state"
                     value={addressData.state}
                     onChange={handleChange}
                     className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont bg-white"
@@ -212,6 +216,7 @@ const OrderSection = () => {
 
                   <input
                     type="text"
+                    name="pincode"
                     value={addressData.pincode}
                     onChange={handleChange}
                     placeholder="PIN Code"
@@ -225,6 +230,7 @@ const OrderSection = () => {
                   </label>
 
                   <select
+                    name="country"
                     value={addressData.country}
                     onChange={handleChange}
                     className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont bg-white"
@@ -235,12 +241,14 @@ const OrderSection = () => {
               </div>
 
               {/* Save Address */}
-              <label className="flex items-center gap-3 cursor-pointer">
-                <input type="checkbox" className="w-4 h-4 accent-black" />
-
-                <span className="text-sm text-gray-600 font-zurixFont">
-                  Save this information for next time
-                </span>
+              <label className="flex flex-col gap-3">
+                <button
+                  type="submit"
+                  disabled={addressLoading}
+                  className="border border-black w-[25%] p-2 rounded-md bg-black text-white transition duration-200 ease-in-out hover:text-black hover:bg-white"
+                >
+                  {addressLoading ? "saving..." : "save address"}
+                </button>
               </label>
             </div>
 
@@ -307,7 +315,7 @@ const OrderSection = () => {
             >
               Place Order
             </button>
-          </div>
+          </form>
         </div>
 
         {/* ================= RIGHT SECTION ================= */}
