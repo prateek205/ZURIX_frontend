@@ -5,6 +5,7 @@ import {
   useGetAllAddressQuery,
   usePostAddressMutation,
 } from "../../redux/addressApi";
+import countryStateData from "../../data/countryStateData";
 
 const OrderSection = () => {
   const {
@@ -14,6 +15,11 @@ const OrderSection = () => {
   } = useGetAllCartsQuery();
   const [createOrder, { isLoading: orderLoading }] = useCreateOrderMutation();
   const [addAddress, { isLoading: addressLoading }] = usePostAddressMutation();
+  const {
+    data: address,
+    isLoading: loadingList,
+    isError: errorList,
+  } = useGetAllAddressQuery();
 
   const [addressData, setAddressData] = useState({
     fullName: "",
@@ -26,6 +32,7 @@ const OrderSection = () => {
   });
 
   const [paymentMethod, setPaymentMethod] = useState("COD");
+  const [selectAddress, setSelectAddress] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,6 +40,16 @@ const OrderSection = () => {
     setAddressData((prev) => ({
       ...prev,
       [name]: value,
+    }));
+  };
+
+  const handleCountryChange = (e) => {
+    const country = e.target.value;
+
+    setAddressData((prev) => ({
+      ...prev,
+      country,
+      state: "",
     }));
   };
 
@@ -50,11 +67,19 @@ const OrderSection = () => {
   };
 
   if (cartLoading) {
-    return <p>Loading...</p>;
+    return (
+      <p className="flex items-center justify-center w-full h-screen">
+        Loading...
+      </p>
+    );
   }
 
   if (cartError) {
-    return <p>Unable to fetch data</p>;
+    return (
+      <p className="flex items-center justify-center w-full h-screen">
+        Unable to fetch data
+      </p>
+    );
   }
 
   const cartItem = data?.data?.items || [];
@@ -120,6 +145,65 @@ const OrderSection = () => {
               </div>
             </div>
 
+            {/* Saved Addresses */}
+            <div className="flex flex-col gap-4">
+              <h2 className="text-xl font-semibold font-zurixFont">
+                Saved Addresses
+              </h2>
+
+              {loadingList && (
+                <p className="text-sm text-gray-500">Loading addresses...</p>
+              )}
+
+              {errorList && (
+                <p className="text-sm text-red-500">
+                  Unable to fetch saved addresses.
+                </p>
+              )}
+
+              {address?.data?.map((address) => (
+                <div
+                  key={address._id}
+                  onClick={() => setSelectAddress(address)}
+                  className={`border rounded-md p-4 cursor-pointer transition ${
+                    selectAddress?._id === address._id
+                      ? "border-black"
+                      : "border-gray-300"
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <input
+                      type="radio"
+                      name="deliveryAddress"
+                      checked={selectAddress?._id === address._id}
+                      onChange={() => setSelectAddress(address)}
+                      className="mt-1 accent-black"
+                    />
+
+                    <div className="font-zurixFont">
+                      <p className="font-semibold">{address.fullName}</p>
+
+                      <p className="text-sm text-gray-600 mt-1">
+                        {address.mobileNumber}
+                      </p>
+
+                      <p className="text-sm text-gray-600 mt-1">
+                        {address.address}
+                      </p>
+
+                      <p className="text-sm text-gray-600">
+                        {address.city}, {address.state}
+                      </p>
+
+                      <p className="text-sm text-gray-600">
+                        {address.pincode}, {address.country}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
             {/* Billing Address */}
             <div className="flex flex-col gap-5">
               <h2 className="text-xl font-semibold font-zurixFont">
@@ -176,31 +260,6 @@ const OrderSection = () => {
                     className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont"
                   />
                 </div>
-
-                <div className="flex flex-col gap-2">
-                  <label className="text-sm font-medium font-zurixFont">
-                    State
-                  </label>
-
-                  <select
-                    name="state"
-                    value={addressData.state}
-                    onChange={handleChange}
-                    className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont bg-white"
-                  >
-                    <option value="">Select State</option>
-                    <option>Maharashtra</option>
-                    <option>Gujarat</option>
-                    <option>Madhya Pradesh</option>
-                    <option>Goa</option>
-                    <option>Karnataka</option>
-                    <option>Delhi</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* PIN / Country */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-medium font-zurixFont">
                     PIN Code
@@ -215,7 +274,10 @@ const OrderSection = () => {
                     className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont"
                   />
                 </div>
+              </div>
 
+              {/* PIN / Country */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-medium font-zurixFont">
                     Country
@@ -224,11 +286,41 @@ const OrderSection = () => {
                   <select
                     name="country"
                     value={addressData.country}
-                    onChange={handleChange}
+                    onChange={handleCountryChange}
                     className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont bg-white"
                   >
                     <option value="">Select Country</option>
-                    <option>India</option>
+
+                    {Object.keys(countryStateData).map((country) => {
+                      return (
+                        <option key={country} value={country}>
+                          {country}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-medium font-zurixFont">
+                    State
+                  </label>
+
+                  <select
+                    name="state"
+                    value={addressData.state}
+                    onChange={handleChange}
+                    className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont bg-white"
+                  >
+                    <option value="">Select State</option>
+
+                    {addressData.country &&
+                      countryStateData[addressData.country]?.map((state) => {
+                        return (
+                          <option key={state} value={state}>
+                            {state}
+                          </option>
+                        );
+                      })}
                   </select>
                 </div>
               </div>

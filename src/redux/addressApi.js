@@ -11,12 +11,9 @@ export const addressApi = baseApi.injectEndpoints({
       invalidatesTags: ["Address"],
     }),
 
-    getAllAddress: (builder) => ({
-      query: ({ sort = {} }) => ({
+    getAllAddress: builder.query({
+      query: () => ({
         url: "/address/getAllAddress",
-        params: {
-          sort,
-        },
         method: "GET",
       }),
       providesTags: ["Address"],
