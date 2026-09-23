@@ -39,7 +39,11 @@ const OrderSection = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log("ADDRESS_DATA:", addressData);
+
       const response = await addAddress(addressData).unwrap();
+
+      console.log("ADDRESS_CREATED:", response);
     } catch (error) {
       console.log(error);
     }
@@ -99,18 +103,6 @@ const OrderSection = () => {
               <h2 className="text-xl font-semibold font-zurixFont">
                 Contact Information
               </h2>
-
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium font-zurixFont">
-                  Email Address
-                </label>
-
-                <input
-                  type="email"
-                  placeholder="Enter your email address"
-                  className="w-full border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont"
-                />
-              </div>
 
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium font-zurixFont">
@@ -235,6 +227,7 @@ const OrderSection = () => {
                     onChange={handleChange}
                     className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont bg-white"
                   >
+                    <option value="">Select Country</option>
                     <option>India</option>
                   </select>
                 </div>
