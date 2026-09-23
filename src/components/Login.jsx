@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FiEye, FiEyeOff, FiMail, FiLock } from "react-icons/fi";
 import { useAddLoginMutation } from "../redux/authApi";
+import { useAddToCartMutation } from "../redux/cartApi";
 
 const Login = () => {
   const [login, { data, isLoading, isError }] = useAddLoginMutation();
+  const [addToCart] = useAddToCartMutation();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -14,6 +16,7 @@ const Login = () => {
   });
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,11 +33,23 @@ const Login = () => {
     try {
       const response = await login(formData).unwrap();
 
-      console.log("LOGIN_RESPONSE:", response)
+      console.log("LOGIN_RESPONSE:", response);
+
+      if (location.state?.addToCart) {
+        const cartData = {
+          productId: location.state.productId,
+          quantity: 1,
+        };
+
+        await addToCart(cartData).unwrap();
+
+        navigate("/cart");
+        return;
+      }
 
       navigate("/");
     } catch (error) {
-      console.log("LOGIN_ERROR:",error);
+      console.log("LOGIN_ERROR:", error);
     }
   };
 

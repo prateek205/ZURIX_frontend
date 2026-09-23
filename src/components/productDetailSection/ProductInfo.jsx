@@ -38,7 +38,12 @@ const ProductInfo = ({ product }) => {
     }
 
     if (isError || !profileData?.success) {
-      navigate("/login");
+      navigate("/login", {
+        state: {
+          addToCart: true,
+          productId: product._id,
+        },
+      });
       return;
     }
 
