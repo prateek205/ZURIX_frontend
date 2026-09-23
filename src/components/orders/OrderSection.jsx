@@ -6,8 +6,11 @@ import {
   usePostAddressMutation,
 } from "../../redux/addressApi";
 import countryStateData from "../../data/countryStateData";
+import { useNavigate } from "react-router-dom";
 
 const OrderSection = () => {
+  const navigate = useNavigate();
+
   const {
     data,
     isLoading: cartLoading,
@@ -16,7 +19,7 @@ const OrderSection = () => {
   const [createOrder, { isLoading: orderLoading }] = useCreateOrderMutation();
   const [addAddress, { isLoading: addressLoading }] = usePostAddressMutation();
   const {
-    data: address,
+    data: shippingAddress,
     isLoading: loadingList,
     isError: errorList,
   } = useGetAllAddressQuery();
@@ -63,6 +66,38 @@ const OrderSection = () => {
       console.log("ADDRESS_CREATED:", response);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handlePlaceOrder = async (e) => {
+    e.preventDefault();
+    try {
+      if (!selectAddress) {
+        return alert("Please select the address");
+      }
+
+      if (!paymentMethod) {
+        return alert("Please select the payment method");
+      }
+
+      const orderData = {
+        shippingAddress: selectAddress,
+        paymentMethod: paymentMethod,
+      };
+
+      console.log("ORDER:", orderData);
+
+      const response = await createOrder(orderData).unwrap();
+
+      console.log("ORDER_DATA:", response);
+
+      alert("Congrats Order has been successfully placed");
+
+      navigate("/");
+    } catch (error) {
+      console.log("ORDER ERROR:", error);
+      console.log("ORDER ERROR DATA:", error?.data);
+      console.log("ORDER ERROR STATUS:", error?.status);
     }
   };
 
@@ -161,7 +196,7 @@ const OrderSection = () => {
                 </p>
               )}
 
-              {address?.data?.map((address) => (
+              {shippingAddress?.data?.map((address) => (
                 <div
                   key={address._id}
                   onClick={() => setSelectAddress(address)}
@@ -385,6 +420,8 @@ const OrderSection = () => {
 
             {/* Place Order - Mobile */}
             <button
+              type="button"
+              onClick={handlePlaceOrder}
               className="
                 lg:hidden
                 w-full
@@ -398,7 +435,7 @@ const OrderSection = () => {
                 transition
               "
             >
-              Place Order
+              {orderLoading ? "Placing Order..." : "Order Placed"}
             </button>
           </form>
         </div>
@@ -554,6 +591,8 @@ const OrderSection = () => {
 
               {/* Place Order */}
               <button
+                type="button"
+                onClick={handlePlaceOrder}
                 className="
                   hidden
                   lg:block
@@ -568,7 +607,7 @@ const OrderSection = () => {
                   transition
                 "
               >
-                Place Order
+                {orderLoading ? "Placing Order..." : "Order Placed"}
               </button>
 
               <p className="text-xs text-gray-500 text-center mt-4 font-zurixFont">
