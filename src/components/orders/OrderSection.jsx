@@ -68,8 +68,11 @@ const OrderSection = () => {
       setAddressData(initialAddressData);
 
       console.log("ADDRESS_CREATED:", response);
+
+      alert("Address Saved Successfully!!!");
     } catch (error) {
-      console.log(error);
+      console.log(error?.data?.message);
+      alert(error?.data?.message || "Something went wrong");
     }
   };
 
@@ -102,6 +105,7 @@ const OrderSection = () => {
       console.log("ORDER ERROR:", error);
       console.log("ORDER ERROR DATA:", error?.data);
       console.log("ORDER ERROR STATUS:", error?.status);
+      alert(error?.data?.message || "something went wrong");
     }
   };
 
@@ -255,6 +259,7 @@ const OrderSection = () => {
                   name="mobileNumber"
                   value={addressData.mobileNumber}
                   onChange={handleChange}
+                  maxLength={10}
                   placeholder="Enter your phone number"
                   className="w-1/2 border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont"
                 />
