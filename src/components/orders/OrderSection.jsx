@@ -32,7 +32,7 @@ const OrderSection = () => {
     state: "",
     country: "",
     pincode: "",
-  }
+  };
 
   const [addressData, setAddressData] = useState(initialAddressData);
 
@@ -65,7 +65,7 @@ const OrderSection = () => {
 
       const response = await addAddress(addressData).unwrap();
 
-      setAddressData(initialAddressData)
+      setAddressData(initialAddressData);
 
       console.log("ADDRESS_CREATED:", response);
     } catch (error) {
@@ -162,28 +162,6 @@ const OrderSection = () => {
               </p>
             </div>
 
-            {/* Contact Information */}
-            <div className="flex flex-col gap-4">
-              <h2 className="text-xl font-semibold font-zurixFont">
-                Contact Information
-              </h2>
-
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-medium font-zurixFont">
-                  Phone Number
-                </label>
-
-                <input
-                  type="tel"
-                  name="mobileNumber"
-                  value={addressData.mobileNumber}
-                  onChange={handleChange}
-                  placeholder="Enter your phone number"
-                  className="w-full border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont"
-                />
-              </div>
-            </div>
-
             {/* Saved Addresses */}
             <div className="flex flex-col gap-4">
               <h2 className="text-xl font-semibold font-zurixFont">
@@ -249,8 +227,8 @@ const OrderSection = () => {
                 Billing Address
               </h2>
 
-              {/* First Name / Last Name */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* First Name */}
+              <div className="grid sm:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-medium font-zurixFont">
                     Full Name
@@ -261,10 +239,25 @@ const OrderSection = () => {
                     name="fullName"
                     value={addressData.fullName}
                     onChange={handleChange}
-                    placeholder="First Name"
+                    placeholder="Full Name"
                     className="border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont"
                   />
                 </div>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium font-zurixFont">
+                  Phone Number
+                </label>
+
+                <input
+                  type="tel"
+                  name="mobileNumber"
+                  value={addressData.mobileNumber}
+                  onChange={handleChange}
+                  placeholder="Enter your phone number"
+                  className="w-1/2 border border-gray-300 px-4 py-3 rounded-md outline-none focus:border-black transition font-zurixFont"
+                />
               </div>
 
               {/* Address */}
@@ -315,7 +308,7 @@ const OrderSection = () => {
                 </div>
               </div>
 
-              {/* PIN / Country */}
+              {/* Country */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-2">
                   <label className="text-sm font-medium font-zurixFont">
