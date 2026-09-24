@@ -24,7 +24,7 @@ const OrderSection = () => {
     isError: errorList,
   } = useGetAllAddressQuery();
 
-  const [addressData, setAddressData] = useState({
+  const initialAddressData = {
     fullName: "",
     mobileNumber: "",
     address: "",
@@ -32,7 +32,9 @@ const OrderSection = () => {
     state: "",
     country: "",
     pincode: "",
-  });
+  }
+
+  const [addressData, setAddressData] = useState(initialAddressData);
 
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const [selectAddress, setSelectAddress] = useState(null);
@@ -62,6 +64,8 @@ const OrderSection = () => {
       console.log("ADDRESS_DATA:", addressData);
 
       const response = await addAddress(addressData).unwrap();
+
+      setAddressData(initialAddressData)
 
       console.log("ADDRESS_CREATED:", response);
     } catch (error) {
