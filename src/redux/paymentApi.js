@@ -15,7 +15,7 @@ const paymentApi = baseApi.injectEndpoints({
         method: "POST",
         body: paymentData,
       }),
-      invalidatesTags:["Carts","Order"]
+      invalidatesTags:["Cart","Order"]
     }),
   }),
 });
