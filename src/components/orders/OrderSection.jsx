@@ -238,7 +238,7 @@ const OrderSection = () => {
 
   const discount = mainPrice - sellingPrice;
 
-  const shipping = 0;
+  const shipping = sellingPrice >= 1000 ? 0 : 100;
 
   const total = sellingPrice + shipping;
 
