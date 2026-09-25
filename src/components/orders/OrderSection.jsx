@@ -7,6 +7,10 @@ import {
 } from "../../redux/addressApi";
 import countryStateData from "../../data/countryStateData";
 import { useNavigate } from "react-router-dom";
+import {
+  useCreateRazorpayOrderMutation,
+  useVerifyRazorpayPaymentMutation,
+} from "../../redux/paymentApi";
 
 const OrderSection = () => {
   const navigate = useNavigate();
@@ -23,6 +27,11 @@ const OrderSection = () => {
     isLoading: loadingList,
     isError: errorList,
   } = useGetAllAddressQuery();
+
+  const [createRazorpayOrder, { isLoading: loadingRazorpayOrder }] =
+    useCreateRazorpayOrderMutation();
+  const [verifyRazorpayPayment, { isLoading: loadingVerifyPayment }] =
+    useVerifyRazorpayPaymentMutation();
 
   const initialAddressData = {
     fullName: "",
@@ -78,6 +87,7 @@ const OrderSection = () => {
 
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
+
     try {
       if (!selectAddress) {
         return alert("Please select the address");
@@ -92,20 +102,102 @@ const OrderSection = () => {
         paymentMethod: paymentMethod,
       };
 
-      console.log("ORDER:", orderData);
+      console.log("ORDER DATA:", orderData);
 
-      const response = await createOrder(orderData).unwrap();
+      if (paymentMethod === "COD") {
+        const response = await createOrder(orderData).unwrap();
 
-      console.log("ORDER_DATA:", response);
+        console.log("COD ORDER RESPONSE:", response);
 
-      alert("Congrats Order has been successfully placed");
+        alert("Congrats! Order has been successfully placed");
 
-      navigate("/");
+        navigate("/order-success", {
+          replace: true,
+          state: {
+            order: response?.data,
+          },
+        });
+
+        return;
+      }
+
+      if (paymentMethod === "ONLINE") {
+        const razorpayResponse = await createRazorpayOrder().unwrap();
+
+        console.log("RAZORPAY ORDER RESPONSE:", razorpayResponse);
+
+        const razorpayOrder = razorpayResponse?.data;
+
+        const options = {
+          key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+
+          amount: razorpayOrder.amount,
+
+          currency: razorpayOrder.currency,
+
+          name: "ZURIX",
+
+          description: "ZURIX Order Payment",
+
+          order_id: razorpayOrder.razorpayOrderId,
+
+          handler: async function (response) {
+            console.log("RAZORPAY PAYMENT RESPONSE:", response);
+
+            try {
+              const verifyResponse = await verifyRazorpayPayment({
+                razorpay_order_id: response.razorpay_order_id,
+
+                razorpay_payment_id: response.razorpay_payment_id,
+
+                razorpay_signature: response.razorpay_signature,
+                shippingAddress: selectAddress,
+              }).unwrap();
+
+              console.log("PAYMENT VERIFIED:", verifyResponse);
+
+              alert("Payment successful!");
+
+              navigate("/order-success", {
+                replace: true,
+                state: {
+                  order: verifyResponse?.data,
+                },
+              });
+            } catch (error) {
+              console.log("PAYMENT VERIFICATION ERROR:", error);
+
+              alert(error?.data?.message || "Payment verification failed");
+            }
+          },
+
+          prefill: {
+            name: selectAddress.fullName,
+            contact: selectAddress.mobileNumber,
+          },
+
+          theme: {
+            color: "#000000",
+          },
+
+          modal: {
+            ondismiss: function () {
+              console.log("Razorpay Checkout closed");
+            },
+          },
+        };
+        const razorpay = new window.Razorpay(options);
+
+        razorpay.open();
+
+        return;
+      }
     } catch (error) {
       console.log("ORDER ERROR:", error);
+
       console.log("ORDER ERROR DATA:", error?.data);
-      console.log("ORDER ERROR STATUS:", error?.status);
-      alert(error?.data?.message || "something went wrong");
+
+      alert(error?.data?.message || "Something went wrong");
     }
   };
 
@@ -385,7 +477,9 @@ const OrderSection = () => {
                   <input
                     type="radio"
                     name="payment"
-                    defaultChecked
+                    value="COD"
+                    checked={paymentMethod === "COD"}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
                     className="mt-1 accent-black"
                   />
 
@@ -406,6 +500,9 @@ const OrderSection = () => {
                   <input
                     type="radio"
                     name="payment"
+                    value="ONLINE"
+                    checked={paymentMethod === "ONLINE"}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
                     className="mt-1 accent-black"
                   />
 
