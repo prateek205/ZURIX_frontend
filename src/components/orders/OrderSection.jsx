@@ -222,7 +222,7 @@ const OrderSection = () => {
 
   const mainPrice = cartItem.reduce((total, item) => {
     const product = item.productId;
-    const orginalPrice = product?.salePrice || 0;
+    const orginalPrice = product?.price || 0;
     const quantity = item.quantity || 0;
 
     return total + Number(orginalPrice) * Number(quantity);
@@ -230,7 +230,7 @@ const OrderSection = () => {
 
   const sellingPrice = cartItem.reduce((total, item) => {
     const product = item.productId;
-    const salesPrice = product?.price || 0;
+    const salesPrice = product?.salePrice || 0;
     const quantity = item.quantity || 0;
 
     return total + Number(salesPrice) * Number(quantity);
