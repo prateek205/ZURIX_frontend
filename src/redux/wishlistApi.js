@@ -12,3 +12,5 @@ const wishlistApi = baseApi.injectEndpoints({
     }),
   }),
 });
+
+export const { useCreateWishlistMutation } = wishlistApi;
