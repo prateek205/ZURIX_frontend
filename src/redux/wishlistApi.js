@@ -10,7 +10,27 @@ const wishlistApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Wishlist"],
     }),
+
+    getAllWishlist: builder.query({
+      query: () => ({
+        url: "/wishlist/getAllWishlist",
+        method: "GET",
+      }),
+      providesTags: ["Wishlist"],
+    }),
+
+    deleteWishlist: builder.mutation({
+      query: (id) => ({
+        url: "/wishlist/deleteWishlist",
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Wishlist"],
+    }),
   }),
 });
 
-export const { useCreateWishlistMutation } = wishlistApi;
+export const {
+  useCreateWishlistMutation,
+  useGetAllWishlistQuery,
+  useDeleteWishlistMutation,
+} = wishlistApi;
