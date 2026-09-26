@@ -54,7 +54,7 @@ const CartSection = () => {
 
   const mainPrice = cartData.reduce((total, item) => {
     const product = item.productId;
-    const orginalPrice = product?.salePrice || 0;
+    const orginalPrice = product?.price || 0;
     const quantity = item?.quantity || 0;
 
     return total + Number(orginalPrice) * Number(quantity);
@@ -62,7 +62,7 @@ const CartSection = () => {
 
   const sellingPrice = cartData.reduce((total, item) => {
     const product = item.productId;
-    const sellPrice = product?.price || 0;
+    const sellPrice = product?.salePrice || 0;
     const quantity = item?.quantity || 0;
 
     return total + Number(sellPrice) * Number(quantity);
