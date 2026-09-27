@@ -10,6 +10,7 @@ import Login from "./pages/LoginPage";
 import Profile from "./pages/Profile";
 import OrderPage from "./pages/OrderPage";
 import Order_Success from "./pages/Order-Success";
+import WishlistSection from "./pages/WishlistSection";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/order" element={<OrderPage />} />
         <Route path="/order-success" element={<Order_Success />} />
+        <Route path="/wishlist" element={<WishlistSection />} />
       </Routes>
       <Footer />
     </>
