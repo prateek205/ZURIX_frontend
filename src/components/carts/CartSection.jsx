@@ -77,7 +77,7 @@ const CartSection = () => {
 
           {/* Continue Shopping */}
           <button
-            onClick={() => navigate("/shop")}
+            onClick={() => navigate("/products")}
             className="mt-8 px-8 py-3 bg-black text-white text-sm font-medium tracking-wide hover:bg-gray-800 transition"
           >
             Continue Shopping
