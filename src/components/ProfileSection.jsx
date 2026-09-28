@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useAddLogoutMutation, useGetProfileQuery } from "../redux/authApi";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -32,6 +32,12 @@ const ProfileSection = () => {
     }
   };
 
+  useEffect(() => {
+    if (isError || !profileData?.success) {
+      navigate("/login", { replace: true });
+    }
+  }, [isError, profileData, navigate]);
+
   if (profileLoading) {
     return (
       <section className="min-h-screen flex items-center justify-center">
@@ -40,20 +46,6 @@ const ProfileSection = () => {
 
           <p className="text-sm text-gray-500">Loading profile...</p>
         </div>
-      </section>
-    );
-  }
-
-  useEffect(() => {
-    if (isError || !profileData?.success) {
-      navigate("/login", { replace: true });
-    }
-  }, [isError, profileData, navigate]);
-
-  if (isLoading) {
-    return (
-      <section className="min-h-screen flex items-center justify-center">
-        <p>Loading...</p>
       </section>
     );
   }
