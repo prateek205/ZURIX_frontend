@@ -5,12 +5,49 @@ import { IoIosSearch } from "react-icons/io";
 import { MdOutlineShoppingBag, MdMenu, MdClose } from "react-icons/md";
 import { Link } from "react-router-dom";
 
+import { useGetProfileQuery } from "../redux/authApi";
+import { useGetAllCartsQuery } from "../redux/cartApi";
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
+
+  // -------------------------------
+  // GET LOGGED-IN USER
+  // -------------------------------
+  const {
+    data: profileData,
+    isLoading: profileLoading,
+    isSuccess: profileSuccess,
+  } = useGetProfileQuery();
+
+  // Get user from your profile response
+  const user = profileData?.data;
+
+  const userName = user?.name || user?.username || user?.firstName || "";
+
+  // -------------------------------
+  // GET CART ONLY WHEN LOGGED IN
+  // -------------------------------
+  const { data: cartData } = useGetAllCartsQuery(undefined, {
+    skip: !profileSuccess,
+  });
+
+  // -------------------------------
+  // CART COUNT
+  // -------------------------------
+  let cartCount = 0;
+
+  if (profileSuccess) {
+    const cartItems = cartData?.data?.items || [];
+
+    cartCount = cartItems.reduce((total, item) => {
+      return total + Number(item?.quantity || 0);
+    }, 0);
+  }
 
   return (
     <nav
@@ -35,17 +72,15 @@ const Navbar = () => {
           items-center
           justify-between
           px-2
-
           sm:min-h-[75px]
           sm:w-[92%]
-
           md:min-h-[80px]
           md:w-[90%]
-
           lg:w-[85%]
           xl:max-w-[1400px]
         "
       >
+        {/* Desktop Navigation */}
         <ul
           className="
             hidden
@@ -53,19 +88,14 @@ const Navbar = () => {
             gap-5
             text-[14px]
             font-semibold
-
             md:flex
-
             lg:gap-7
             lg:text-[15px]
-
             xl:gap-10
           "
         >
           <li className="group relative cursor-pointer">
-            <Link to="/" onClick={closeMenu}>
-              Home
-            </Link>
+            <Link to="/">Home</Link>
 
             <span
               className="
@@ -83,9 +113,7 @@ const Navbar = () => {
           </li>
 
           <li className="group relative cursor-pointer">
-            <Link to="/products" onClick={closeMenu}>
-              Shop
-            </Link>
+            <Link to="/products">Shop</Link>
 
             <span
               className="
@@ -104,74 +132,27 @@ const Navbar = () => {
 
           <li className="group relative cursor-pointer">
             <span>Pages</span>
-
-            <span
-              className="
-                absolute
-                -bottom-2
-                left-0
-                h-[1px]
-                w-0
-                bg-black
-                transition-all
-                duration-300
-                group-hover:w-full
-              "
-            />
           </li>
 
           <li className="group relative cursor-pointer">
             <span>Blog</span>
-
-            <span
-              className="
-                absolute
-                -bottom-2
-                left-0
-                h-[1px]
-                w-0
-                bg-black
-                transition-all
-                duration-300
-                group-hover:w-full
-              "
-            />
           </li>
 
           <li className="group relative cursor-pointer">
             <span>Contact Us</span>
-
-            <span
-              className="
-                absolute
-                -bottom-2
-                left-0
-                h-[1px]
-                w-0
-                bg-black
-                transition-all
-                duration-300
-                group-hover:w-full
-              "
-            />
           </li>
         </ul>
 
+        {/* Mobile Menu */}
         <button
           type="button"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="
-            flex
-            items-center
-            justify-center
-            text-[26px]
-            md:hidden
-          "
-          aria-label="Toggle menu"
+          className="flex items-center justify-center text-[26px] md:hidden"
         >
           {isMenuOpen ? <MdClose /> : <MdMenu />}
         </button>
 
+        {/* Logo */}
         <Link
           to="/"
           className="
@@ -188,11 +169,8 @@ const Navbar = () => {
               font-bold
               uppercase
               tracking-[-1px]
-
               sm:text-[28px]
-
               md:text-[32px]
-
               lg:text-[36px]
             "
           >
@@ -200,6 +178,7 @@ const Navbar = () => {
           </h1>
         </Link>
 
+        {/* Right Icons */}
         <ul
           className="
             ml-auto
@@ -207,32 +186,39 @@ const Navbar = () => {
             items-center
             gap-2
             text-[20px]
-
             sm:gap-3
             sm:text-[22px]
-
             md:gap-4
             md:text-[23px]
-
             lg:gap-5
             lg:text-[24px]
           "
         >
-          {/* User */}
+          {/* USER */}
           <Link to="/profile">
             <li
               className="
-              cursor-pointer
-              transition-transform
-              duration-300
-              hover:scale-110
-            "
+                flex
+                cursor-pointer
+                items-center
+                transition-transform
+                duration-300
+                hover:scale-105
+              "
             >
-              <FaRegUser />
+              {profileLoading ? (
+                <FaRegUser />
+              ) : userName ? (
+                <span className="text-[13px] font-semibold md:text-[15px]">
+                  {userName}
+                </span>
+              ) : (
+                <FaRegUser />
+              )}
             </li>
           </Link>
 
-          {/* Search */}
+          {/* SEARCH */}
           <li
             className="
               cursor-pointer
@@ -244,45 +230,71 @@ const Navbar = () => {
             <IoIosSearch />
           </li>
 
-          {/* Wishlist */}
+          {/* WISHLIST */}
           <Link to="/wishlist">
             <li
               className="
-              cursor-pointer
-              transition-transform
-              duration-300
-              hover:scale-110
-            "
+                cursor-pointer
+                transition-transform
+                duration-300
+                hover:scale-110
+              "
             >
               <CiHeart />
             </li>
           </Link>
 
-          {/* Cart */}
+          {/* CART */}
           <Link to="/cart">
             <li
               className="
-              cursor-pointer
-              transition-transform
-              duration-300
-              hover:scale-110
-            "
+                relative
+                cursor-pointer
+                transition-transform
+                duration-300
+                hover:scale-110
+              "
             >
               <MdOutlineShoppingBag />
+
+              {/* COUNTER */}
+              {cartCount > 0 && (
+                <span
+                  className="
+                    absolute
+                    -right-2
+                    -top-2
+                    flex
+                    h-[17px]
+                    min-w-[17px]
+                    items-center
+                    justify-center
+                    rounded-full
+                    bg-red-500
+                    px-1
+                    text-[10px]
+                    font-bold
+                    leading-none
+                    text-white
+                  "
+                >
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
+              )}
             </li>
           </Link>
         </ul>
       </div>
 
+      {/* MOBILE MENU */}
       <div
         className={`
-          md:hidden
           overflow-hidden
           bg-black
           transition-all
           duration-500
           ease-in-out
-
+          md:hidden
           ${isMenuOpen ? "max-h-[500px] border-t border-white/20" : "max-h-0"}
         `}
       >
@@ -300,45 +312,20 @@ const Navbar = () => {
           "
         >
           <li>
-            <Link
-              to="/"
-              onClick={closeMenu}
-              className="transition-colors hover:text-gray-400"
-            >
+            <Link to="/" onClick={closeMenu}>
               Home
             </Link>
           </li>
 
           <li>
-            <Link
-              to="/products"
-              onClick={closeMenu}
-              className="transition-colors hover:text-gray-400"
-            >
+            <Link to="/products" onClick={closeMenu}>
               Shop
             </Link>
           </li>
 
-          <li
-            className="cursor-pointer transition-colors hover:text-gray-400"
-            onClick={closeMenu}
-          >
-            Pages
-          </li>
-
-          <li
-            className="cursor-pointer transition-colors hover:text-gray-400"
-            onClick={closeMenu}
-          >
-            Blog
-          </li>
-
-          <li
-            className="cursor-pointer transition-colors hover:text-gray-400"
-            onClick={closeMenu}
-          >
-            Contact Us
-          </li>
+          <li onClick={closeMenu}>Pages</li>
+          <li onClick={closeMenu}>Blog</li>
+          <li onClick={closeMenu}>Contact Us</li>
         </ul>
       </div>
     </nav>
