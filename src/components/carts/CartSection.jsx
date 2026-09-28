@@ -6,77 +6,183 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const CartSection = () => {
-  const navigate = useNavigate()
-  
+  const navigate = useNavigate();
+
   const { data, isLoading, isError } = useGetAllCartsQuery();
   const [updateCart] = useUpdateCartMutation();
 
+  // Loading state
   if (isLoading) {
-    return <p>Loading...</p>;
+    return (
+      <section className="w-[90%] max-w-[1400px] mx-auto py-20">
+        <div className="flex justify-center items-center min-h-[400px]">
+          <p className="text-gray-500">Loading...</p>
+        </div>
+      </section>
+    );
   }
 
+  // Error state
   if (isError) {
-    return <p>Unable to fetch data</p>;
+    return (
+      <section className="w-[90%] max-w-[1400px] mx-auto py-20">
+        <div className="flex flex-col justify-center items-center min-h-[400px] text-center">
+          <h2 className="text-xl font-medium text-gray-900">
+            Unable to fetch cart
+          </h2>
+
+          <p className="text-sm text-gray-500 mt-2">
+            Something went wrong while loading your cart.
+          </p>
+
+          <button
+            onClick={() => navigate("/shop")}
+            className="mt-6 px-6 py-3 bg-black text-white text-sm hover:bg-gray-800 transition"
+          >
+            Continue Shopping
+          </button>
+        </div>
+      </section>
+    );
   }
 
+  // Get cart items
   const cartData = data?.data?.items || [];
 
   console.log("CART_ITEM:", cartData);
 
+  // ---------------------------------------
+  // EMPTY CART
+  // ---------------------------------------
+
+  if (cartData.length === 0) {
+    return (
+      <section className="w-[90%] max-w-[1400px] mx-auto py-10">
+        <div className="min-h-[600px] flex flex-col items-center justify-center text-center">
+          {/* Empty Cart Icon */}
+          <div className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center mb-6">
+            <span className="text-4xl">🛒</span>
+          </div>
+
+          {/* Heading */}
+          <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
+            Your Cart is Empty
+          </h1>
+
+          {/* Description */}
+          <p className="mt-3 text-sm text-gray-500 max-w-md">
+            Looks like you haven't added anything to your cart yet. Explore our
+            collection and find something you love.
+          </p>
+
+          {/* Continue Shopping */}
+          <button
+            onClick={() => navigate("/shop")}
+            className="mt-8 px-8 py-3 bg-black text-white text-sm font-medium tracking-wide hover:bg-gray-800 transition"
+          >
+            Continue Shopping
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  // ---------------------------------------
+  // QUANTITY HANDLER
+  // ---------------------------------------
+
   const handleQuantity = async (item, action) => {
     let newQty = item.quantity;
 
-    if (action == "inc") {
+    if (action === "inc") {
       newQty = item.quantity + 1;
     }
 
-    if (action == "dec") {
+    if (action === "dec") {
       newQty = item.quantity - 1;
     }
 
+    // Don't allow quantity below 1
     if (newQty < 1) {
       return;
     }
 
     try {
       await updateCart({
-        itemId:item._id,
+        itemId: item._id,
         quantity: newQty,
       }).unwrap();
     } catch (error) {
-      console.log("UPDATE_ERROR", error);
+      console.log("UPDATE_ERROR:", error);
     }
   };
 
+  // ---------------------------------------
+  // CHECKOUT
+  // ---------------------------------------
+
   const handleCheckout = () => {
-      navigate("/order")
-  }
+    navigate("/order");
+  };
+
+  // ---------------------------------------
+  // CONTINUE SHOPPING
+  // ---------------------------------------
+
+  const handleContinueShopping = () => {
+    navigate("/products");
+  };
+
+  // ---------------------------------------
+  // MAIN PRICE
+  // ---------------------------------------
 
   const mainPrice = cartData.reduce((total, item) => {
-    const product = item.productId;
-    const orginalPrice = product?.price || 0;
+    const product = item?.productId;
+
+    const originalPrice = product?.price || 0;
     const quantity = item?.quantity || 0;
 
-    return total + Number(orginalPrice) * Number(quantity);
+    return total + Number(originalPrice) * Number(quantity);
   }, 0);
+
+  // ---------------------------------------
+  // SELLING PRICE
+  // ---------------------------------------
 
   const sellingPrice = cartData.reduce((total, item) => {
-    const product = item.productId;
-    const sellPrice = product?.salePrice || 0;
+    const product = item?.productId;
+
+    const salePrice = product?.salePrice || 0;
     const quantity = item?.quantity || 0;
 
-    return total + Number(sellPrice) * Number(quantity);
+    return total + Number(salePrice) * Number(quantity);
   }, 0);
+
+  // ---------------------------------------
+  // DISCOUNT
+  // ---------------------------------------
 
   const discount = mainPrice - sellingPrice;
 
+  // ---------------------------------------
+  // SHIPPING
+  // ---------------------------------------
+
   const shipping = 0;
+
+  // ---------------------------------------
+  // TOTAL
+  // ---------------------------------------
 
   const total = sellingPrice + shipping;
 
   return (
     <section className="w-[90%] max-w-[1400px] mx-auto py-10">
-      {/* Page Header */}
+      {/* =========================================
+          PAGE HEADER
+      ========================================= */}
+
       <div className="mb-8">
         <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
           Shopping Cart
@@ -87,16 +193,25 @@ const CartSection = () => {
         </p>
       </div>
 
+      {/* =========================================
+          MAIN CART LAYOUT
+      ========================================= */}
+
       <div className="flex flex-col lg:flex-row gap-8">
-        {/* Left Side - Cart Items */}
+        {/* =========================================
+            LEFT SIDE - CART ITEMS
+        ========================================= */}
+
         <div className="w-full lg:w-[68%]">
           <div className="border border-gray-200 rounded-sm bg-white">
             {/* Cart Header */}
+
             <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200">
               <div>
                 <h2 className="text-lg font-medium text-gray-900">
                   Your Items
                 </h2>
+
                 <p className="text-sm text-gray-500 mt-1">
                   {cartData.length} items in your cart
                 </p>
@@ -107,42 +222,54 @@ const CartSection = () => {
               </button>
             </div>
 
-            {cartData.map((item, index) => {
-              const product = item.productId;
+            {/* =====================================
+                CART ITEMS
+            ===================================== */}
+
+            {cartData.map((item) => {
+              const product = item?.productId;
 
               return (
                 <div
-                  key={index}
+                  key={item?._id}
                   className="flex gap-5 p-6 border-b border-gray-200"
                 >
                   {/* Product Image */}
+
                   <div className="w-[120px] h-[150px] bg-gray-100 overflow-hidden shrink-0">
                     <img
-                      src={product?.images[0]?.url}
-                      alt="Product"
+                      src={product?.images?.[0]?.url}
+                      alt={product?.name || "Product"}
                       className="w-full h-full object-cover"
                     />
                   </div>
 
                   {/* Product Details */}
+
                   <div className="flex-1 flex flex-col justify-between">
+                    {/* Product Name */}
+
                     <div>
                       <div className="flex justify-between gap-4">
                         <div>
                           <h3 className="text-base font-medium text-gray-900">
-                            {product.name}
+                            {product?.name}
                           </h3>
                         </div>
 
-                        <button className="text-gray-400 hover:text-black transition">
+                        {/* Remove Button */}
+
+                        <button className="text-gray-400 hover:text-black transition text-xl">
                           ×
                         </button>
                       </div>
 
+                      {/* Size / Color */}
+
                       <div className="flex gap-6 mt-4 text-sm text-gray-500">
                         <p>
                           Size:{" "}
-                          <span className="text-gray-900">{item.size}</span>
+                          <span className="text-gray-900">{item?.size}</span>
                         </p>
 
                         <p>
@@ -152,19 +279,29 @@ const CartSection = () => {
                       </div>
                     </div>
 
+                    {/* Quantity + Price */}
+
                     <div className="flex items-center justify-between mt-5">
                       {/* Quantity */}
+
                       <div className="flex items-center border border-gray-300">
+                        {/* Decrease */}
+
                         <button
                           onClick={() => handleQuantity(item, "dec")}
-                          className="w-9 h-9 text-gray-600 hover:bg-gray-100"
+                          disabled={item?.quantity <= 1}
+                          className="w-9 h-9 text-gray-600 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed"
                         >
                           −
                         </button>
 
+                        {/* Quantity */}
+
                         <span className="w-10 text-center text-sm">
-                          {item.quantity}
+                          {item?.quantity}
                         </span>
+
+                        {/* Increase */}
 
                         <button
                           onClick={() => handleQuantity(item, "inc")}
@@ -175,13 +312,14 @@ const CartSection = () => {
                       </div>
 
                       {/* Price */}
+
                       <div className="text-right">
                         <p className="text-base font-medium text-gray-900">
-                          ${product.price}
+                          ${product?.salePrice}
                         </p>
 
                         <p className="text-xs text-gray-400 line-through">
-                          ${product.salePrice}
+                          ${product?.price}
                         </p>
                       </div>
                     </div>
@@ -192,39 +330,64 @@ const CartSection = () => {
           </div>
 
           {/* Continue Shopping */}
-          <button className="mt-5 text-sm text-gray-600 hover:text-black transition">
+
+          <button
+            onClick={handleContinueShopping}
+            className="mt-5 text-sm text-gray-600 hover:text-black transition"
+          >
             ← Continue Shopping
           </button>
         </div>
 
-        {/* Right Side - Order Summary */}
+        {/* =========================================
+            RIGHT SIDE - ORDER SUMMARY
+        ========================================= */}
+
         <div className="w-full lg:w-[32%]">
           <div className="border border-gray-200 rounded-sm p-6 sticky top-6">
+            {/* Summary Heading */}
+
             <h2 className="text-lg font-medium text-gray-900 pb-5 border-b border-gray-200">
               Order Summary
             </h2>
 
+            {/* Price Details */}
+
             <div className="space-y-4 py-5 text-sm">
+              {/* Main Price */}
+
               <div className="flex justify-between text-gray-600">
                 <span>Main Price</span>
+
                 <span className="text-gray-900">${mainPrice}</span>
               </div>
 
+              {/* Sale Price */}
+
               <div className="flex justify-between text-gray-600">
                 <span>Sale Price</span>
+
                 <span className="text-gray-900">${sellingPrice}</span>
               </div>
 
+              {/* Discount */}
+
               <div className="flex justify-between text-gray-600">
                 <span>Discount</span>
+
                 <span className="text-gray-900">-${discount}</span>
               </div>
 
+              {/* Shipping */}
+
               <div className="flex justify-between text-gray-600">
                 <span>Shipping</span>
+
                 <span className="text-green-600">Free</span>
               </div>
             </div>
+
+            {/* Total */}
 
             <div className="border-t border-gray-200 pt-5">
               <div className="flex justify-between items-center">
@@ -238,7 +401,10 @@ const CartSection = () => {
               </div>
             </div>
 
-            {/* Coupon */}
+            {/* =====================================
+                COUPON
+            ===================================== */}
+
             <div className="flex mt-6">
               <input
                 type="text"
@@ -251,10 +417,18 @@ const CartSection = () => {
               </button>
             </div>
 
-            {/* Checkout */}
-            <button onClick={handleCheckout} className="w-full mt-5 py-4 bg-black text-white text-sm font-medium tracking-wide hover:bg-gray-800 transition">
+            {/* =====================================
+                CHECKOUT BUTTON
+            ===================================== */}
+
+            <button
+              onClick={handleCheckout}
+              className="w-full mt-5 py-4 bg-black text-white text-sm font-medium tracking-wide hover:bg-gray-800 transition"
+            >
               Proceed to Checkout
             </button>
+
+            {/* Footer Text */}
 
             <p className="text-xs text-gray-400 text-center mt-4">
               Secure checkout · Easy returns · Fast delivery
