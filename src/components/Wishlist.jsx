@@ -1,12 +1,36 @@
 import React from "react";
 import { FaHeart, FaRegHeart, FaShoppingBag, FaTrash } from "react-icons/fa";
-import { useGetAllWishlistQuery } from "../redux/wishlistApi";
+import {
+  useDeleteWishlistMutation,
+  useGetAllWishlistQuery,
+} from "../redux/wishlistApi";
 
 const Wishlist = () => {
+  const [deleteItem, { isLoading: itemDeleteLoading }] =
+    useDeleteWishlistMutation();
+
+  const handleDelete = async (id) => {
+
+    console.log("DELETE_ID_FROM_FRONTEND", id)
+
+    try {
+      const response = await deleteItem(id).unwrap();
+
+      console.log("DELETE_WISHLIST:", response);
+    } catch (error) {
+      console.log("DELETE_WISHLIST_ERROR:", error);
+      error?.message?.data;
+    }
+  };
+
   const { data, isLoading, isError } = useGetAllWishlistQuery();
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return (
+      <p className="h-screen w-full flex items-center justify-center">
+        Loading...
+      </p>
+    );
   }
 
   if (isError) {
@@ -15,63 +39,6 @@ const Wishlist = () => {
 
   const wishlist = data?.data?.[0]?.item || [];
   console.log("WISHLIST_DATA:", wishlist);
-
-  // Temporary data
-  // Later this will come from useGetWishlistQuery()
-  // const wishlistItems = [
-  //   {
-  //     _id: "1",
-  //     productId: {
-  //       _id: "p1",
-  //       name: "Oversized Cotton T-Shirt",
-  //       category: "T-Shirts",
-  //       price: 1499,
-  //       salePrice: 999,
-  //       images: [
-  //         "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab",
-  //       ],
-  //     },
-  //     quantity: 1,
-  //   },
-  //   {
-  //     _id: "2",
-  //     productId: {
-  //       _id: "p2",
-  //       name: "Relaxed Fit Jeans",
-  //       category: "Jeans",
-  //       price: 2499,
-  //       salePrice: 1799,
-  //       images: ["https://images.unsplash.com/photo-1542272604-787c3835535d"],
-  //     },
-  //     quantity: 1,
-  //   },
-  //   {
-  //     _id: "3",
-  //     productId: {
-  //       _id: "p3",
-  //       name: "Classic Casual Shirt",
-  //       category: "Shirts",
-  //       price: 1999,
-  //       salePrice: 1299,
-  //       images: [
-  //         "https://images.unsplash.com/photo-1603252110481-7ba873bf42ab",
-  //       ],
-  //     },
-  //     quantity: 1,
-  //   },
-  //   {
-  //     _id: "4",
-  //     productId: {
-  //       _id: "p4",
-  //       name: "Minimal Sneakers",
-  //       category: "Footwear",
-  //       price: 2999,
-  //       salePrice: 2199,
-  //       images: ["https://images.unsplash.com/photo-1542291026-7eec264c27ff"],
-  //     },
-  //     quantity: 1,
-  //   },
-  // ];
 
   return (
     <section className="min-h-screen bg-white px-4 py-10 sm:px-6 lg:px-10">
@@ -104,6 +71,7 @@ const Wishlist = () => {
         {wishlist.length > 0 ? (
           <div className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {wishlist.map((item) => {
+              console.log("WISHLIST ITEM:", item);
               const product = item.productId;
 
               const discount =
@@ -134,9 +102,15 @@ const Wishlist = () => {
                     {/* Remove Wishlist */}
                     <button
                       type="button"
+                      onClick={() => handleDelete(item._id)}
+                      disabled={itemDeleteLoading}
                       className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm transition hover:bg-black hover:text-white"
                     >
-                      <FaTrash className="text-xs" />
+                      {itemDeleteLoading ? (
+                        "removing"
+                      ) : (
+                        <FaTrash className="text-xs" />
+                      )}
                     </button>
 
                     {/* Add To Cart */}

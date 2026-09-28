@@ -245,16 +245,18 @@ const Navbar = () => {
           </li>
 
           {/* Wishlist */}
-          <li
-            className="
+          <Link to="/wishlist">
+            <li
+              className="
               cursor-pointer
               transition-transform
               duration-300
               hover:scale-110
             "
-          >
-            <CiHeart />
-          </li>
+            >
+              <CiHeart />
+            </li>
+          </Link>
 
           {/* Cart */}
           <Link to="/cart">

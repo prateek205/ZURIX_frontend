@@ -3,8 +3,36 @@ import { useGetProductsQuery } from "../../redux/productApi";
 import { CiHeart } from "react-icons/ci";
 import { LuEye } from "react-icons/lu";
 import { Link, useNavigate } from "react-router-dom";
+import { useCreateWishlistMutation } from "../../redux/wishlistApi";
 
 const ProductSection = ({ queryParams }) => {
+  const [addToWishlist, { isLoading: wishlistLoading }] =
+    useCreateWishlistMutation();
+
+  const handleAddWishlist = async (product) => {
+
+    console.log("PRODUCT:", product)
+
+    try {
+      const wishlistData = {
+        item: {
+          productId: product._id,
+          productName: product.name,
+          category: product.category._id,
+          quantity: 1,
+        },
+      };
+
+      const response = await addToWishlist(wishlistData).unwrap();
+
+      alert(response?.message || "product added successfully")
+
+      console.log("WISHLIST_DATA:", response);
+    } catch (error) {
+      console.log("WISHLIST_ERROR:", error?.message?.data);
+    }
+  };
+
   const { data, isLoading, isError } = useGetProductsQuery(queryParams);
 
   if (isLoading) {
@@ -50,13 +78,18 @@ const ProductSection = ({ queryParams }) => {
       "
     >
       {products.map((product) => (
-        <ProductCard key={product._id} product={product} />
+        <ProductCard
+          key={product._id}
+          product={product}
+          handleAddWishlist={handleAddWishlist}
+          wishlistLoading={wishlistLoading}
+        />
       ))}
     </section>
   );
 };
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const firstImage = product?.images?.[0]?.url;
@@ -81,7 +114,6 @@ const ProductCard = ({ product }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-
       <div
         className="
           relative
@@ -201,8 +233,11 @@ const ProductCard = ({ product }) => {
           </button>
 
           {/* Wishlist */}
+
           <button
             type="button"
+            onClick={() => handleAddWishlist(product)}
+            disabled={wishlistLoading}
             className="
               flex
               h-[30px]

@@ -21,7 +21,7 @@ const wishlistApi = baseApi.injectEndpoints({
 
     deleteWishlist: builder.mutation({
       query: (id) => ({
-        url: "/wishlist/deleteWishlist",
+        url: `/wishlist/deleteWishlist/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Wishlist"],
