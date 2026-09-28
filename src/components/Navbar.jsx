@@ -31,16 +31,6 @@ const Navbar = () => {
   // USER DATA
   // ==========================================
 
-  /*
-    Depending on your backend response, user can be:
-
-    profileData.data.user
-
-    OR
-
-    profileData.data
-  */
-
   const user = profileData?.data?.user || profileData?.data || null;
 
   // ==========================================

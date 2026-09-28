@@ -44,21 +44,22 @@ const ProfileSection = () => {
     );
   }
 
-  if (isError || !profileData?.success) {
+  useEffect(() => {
+    if (isError || !profileData?.success) {
+      navigate("/login", { replace: true });
+    }
+  }, [isError, profileData, navigate]);
+
+  if (isLoading) {
     return (
       <section className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-500 mb-4">Unable to fetch profile data.</p>
-
-          <button
-            onClick={() => navigate("/login")}
-            className="px-6 py-2 bg-black text-white rounded-md text-sm"
-          >
-            Go to Login
-          </button>
-        </div>
+        <p>Loading...</p>
       </section>
     );
+  }
+
+  if (isError || !profileData?.success) {
+    return null;
   }
 
   const profile = profileData?.data;

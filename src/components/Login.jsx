@@ -1,12 +1,35 @@
 import React, { useState } from "react";
+
 import { Link, useLocation, useNavigate } from "react-router-dom";
+
 import { FiEye, FiEyeOff, FiMail, FiLock } from "react-icons/fi";
-import { useAddLoginMutation } from "../redux/authApi";
+
+import { useAddLoginMutation, useGetProfileQuery } from "../redux/authApi";
+
 import { useAddToCartMutation } from "../redux/cartApi";
 
 const Login = () => {
-  const [login, { data, isLoading, isError }] = useAddLoginMutation();
+  // ==========================================
+  // LOGIN API
+  // ==========================================
+
+  const [login, { isLoading }] = useAddLoginMutation();
+
+  // ==========================================
+  // PROFILE API
+  // ==========================================
+
+  const { refetch: refetchProfile } = useGetProfileQuery();
+
+  // ==========================================
+  // CART API
+  // ==========================================
+
   const [addToCart] = useAddToCartMutation();
+
+  // ==========================================
+  // STATES
+  // ==========================================
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -18,6 +41,10 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // ==========================================
+  // INPUT CHANGE
+  // ==========================================
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -27,13 +54,34 @@ const Login = () => {
     }));
   };
 
+  // ==========================================
+  // LOGIN SUBMIT
+  // ==========================================
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      // -------------------------------
+      // LOGIN
+      // -------------------------------
+
       const response = await login(formData).unwrap();
 
       console.log("LOGIN_RESPONSE:", response);
+
+      // -------------------------------
+      // IMPORTANT
+      // REFRESH PROFILE AFTER LOGIN
+      // -------------------------------
+
+      const profileResponse = await refetchProfile();
+
+      console.log("PROFILE_AFTER_LOGIN:", profileResponse?.data);
+
+      // -------------------------------
+      // ADD PRODUCT TO CART
+      // -------------------------------
 
       if (location.state?.addToCart) {
         const cartData = {
@@ -47,6 +95,10 @@ const Login = () => {
         return;
       }
 
+      // -------------------------------
+      // NORMAL LOGIN
+      // -------------------------------
+
       navigate("/");
     } catch (error) {
       console.log("LOGIN_ERROR:", error);
@@ -57,6 +109,7 @@ const Login = () => {
     <section className="min-h-screen flex items-center justify-center px-4 py-10 bg-gray-50">
       <div className="w-full max-w-6xl min-h-[600px] flex flex-col md:flex-row bg-white rounded-xl overflow-hidden shadow-lg border border-gray-200">
         {/* ================= LEFT SECTION ================= */}
+
         <div className="hidden md:flex md:w-[50%] bg-black text-white p-10 flex-col justify-between">
           {/* Logo */}
           <div>
@@ -90,6 +143,7 @@ const Login = () => {
         </div>
 
         {/* ================= RIGHT SECTION ================= */}
+
         <div className="w-full md:w-[50%] flex items-center justify-center p-6 sm:p-10 lg:p-14">
           <div className="w-full max-w-md">
             {/* Heading */}
@@ -104,8 +158,10 @@ const Login = () => {
             </div>
 
             {/* Login Form */}
+
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Email */}
+
               <div>
                 <label
                   htmlFor="email"
@@ -134,6 +190,7 @@ const Login = () => {
               </div>
 
               {/* Password */}
+
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label
@@ -183,6 +240,7 @@ const Login = () => {
               </div>
 
               {/* Remember Me */}
+
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -199,11 +257,25 @@ const Login = () => {
               </div>
 
               {/* Login Button */}
+
               <button
                 type="submit"
-                className="w-full h-12 bg-black text-white rounded-md text-sm font-medium hover:bg-gray-800 transition-colors"
+                disabled={isLoading}
+                className="
+                  w-full
+                  h-12
+                  bg-black
+                  text-white
+                  rounded-md
+                  text-sm
+                  font-medium
+                  hover:bg-gray-800
+                  transition-colors
+                  disabled:opacity-50
+                  disabled:cursor-not-allowed
+                "
               >
-                Sign In
+                {isLoading ? "Signing In..." : "Sign In"}
               </button>
             </form>
           </div>
