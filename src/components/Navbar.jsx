@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+
 import { CiHeart } from "react-icons/ci";
 import { FaRegUser } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 import { MdOutlineShoppingBag, MdMenu, MdClose } from "react-icons/md";
+
 import { Link } from "react-router-dom";
 
 import { useGetProfileQuery } from "../redux/authApi";
@@ -15,39 +17,68 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
-  // -------------------------------
-  // GET LOGGED-IN USER
-  // -------------------------------
+  // ==========================================
+  // PROFILE API
+  // ==========================================
+
   const {
     data: profileData,
     isLoading: profileLoading,
-    isSuccess: profileSuccess,
+    isError: profileError,
   } = useGetProfileQuery();
 
-  // Get user from your profile response
-  const user = profileData?.data;
+  // ==========================================
+  // USER DATA
+  // ==========================================
+
+  /*
+    Depending on your backend response, user can be:
+
+    profileData.data.user
+
+    OR
+
+    profileData.data
+  */
+
+  const user = profileData?.data?.user || profileData?.data || null;
+
+  // ==========================================
+  // LOGIN STATUS
+  // ==========================================
+
+  const isLoggedIn = !profileError && !!user;
+
+  // ==========================================
+  // USER NAME
+  // ==========================================
 
   const userName = user?.name || user?.username || user?.firstName || "";
 
-  // -------------------------------
-  // GET CART ONLY WHEN LOGGED IN
-  // -------------------------------
+  // ==========================================
+  // CART API
+  // ONLY CALL WHEN USER IS LOGGED IN
+  // ==========================================
+
   const { data: cartData } = useGetAllCartsQuery(undefined, {
-    skip: !profileSuccess,
+    skip: !isLoggedIn,
   });
 
-  // -------------------------------
-  // CART COUNT
-  // -------------------------------
-  let cartCount = 0;
+  // ==========================================
+  // CART ITEMS
+  // ==========================================
 
-  if (profileSuccess) {
-    const cartItems = cartData?.data?.items || [];
+  const cartItems = isLoggedIn ? cartData?.data?.items || [] : [];
 
-    cartCount = cartItems.reduce((total, item) => {
-      return total + Number(item?.quantity || 0);
-    }, 0);
-  }
+  // ==========================================
+  // CART COUNTER
+  // ==========================================
+
+  const cartCount = isLoggedIn
+    ? cartItems.reduce((total, item) => {
+        return total + Number(item?.quantity || 0);
+      }, 0)
+    : 0;
 
   return (
     <nav
@@ -63,6 +94,10 @@ const Navbar = () => {
         shadow-[0px_0px_10px_0px_rgb(0,0,0,0.15)]
       "
     >
+      {/* ==========================================
+          MAIN NAVBAR
+      ========================================== */}
+
       <div
         className="
           mx-auto
@@ -80,7 +115,10 @@ const Navbar = () => {
           xl:max-w-[1400px]
         "
       >
-        {/* Desktop Navigation */}
+        {/* ==========================================
+            DESKTOP MENU
+        ========================================== */}
+
         <ul
           className="
             hidden
@@ -94,8 +132,11 @@ const Navbar = () => {
             xl:gap-10
           "
         >
+          {/* Home */}
           <li className="group relative cursor-pointer">
-            <Link to="/">Home</Link>
+            <Link to="/" onClick={closeMenu}>
+              Home
+            </Link>
 
             <span
               className="
@@ -112,8 +153,11 @@ const Navbar = () => {
             />
           </li>
 
+          {/* Shop */}
           <li className="group relative cursor-pointer">
-            <Link to="/products">Shop</Link>
+            <Link to="/products" onClick={closeMenu}>
+              Shop
+            </Link>
 
             <span
               className="
@@ -130,29 +174,87 @@ const Navbar = () => {
             />
           </li>
 
+          {/* Pages */}
           <li className="group relative cursor-pointer">
             <span>Pages</span>
+
+            <span
+              className="
+                absolute
+                -bottom-2
+                left-0
+                h-[1px]
+                w-0
+                bg-black
+                transition-all
+                duration-300
+                group-hover:w-full
+                "
+            />
           </li>
 
+          {/* Blog */}
           <li className="group relative cursor-pointer">
             <span>Blog</span>
+
+            <span
+              className="
+                absolute
+                -bottom-2
+                left-0
+                h-[1px]
+                w-0
+                bg-black
+                transition-all
+                duration-300
+                group-hover:w-full
+              "
+            />
           </li>
 
+          {/* Contact */}
           <li className="group relative cursor-pointer">
             <span>Contact Us</span>
+
+            <span
+              className="
+                absolute
+                -bottom-2
+                left-0
+                h-[1px]
+                w-0
+                bg-black
+                transition-all
+                duration-300
+                group-hover:w-full
+              "
+            />
           </li>
         </ul>
 
-        {/* Mobile Menu */}
+        {/* ==========================================
+            MOBILE MENU BUTTON
+        ========================================== */}
+
         <button
           type="button"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          className="flex items-center justify-center text-[26px] md:hidden"
+          className="
+            flex
+            items-center
+            justify-center
+            text-[26px]
+            md:hidden
+          "
+          aria-label="Toggle menu"
         >
           {isMenuOpen ? <MdClose /> : <MdMenu />}
         </button>
 
-        {/* Logo */}
+        {/* ==========================================
+            LOGO
+        ========================================== */}
+
         <Link
           to="/"
           className="
@@ -178,7 +280,10 @@ const Navbar = () => {
           </h1>
         </Link>
 
-        {/* Right Icons */}
+        {/* ==========================================
+            RIGHT SIDE ICONS
+        ========================================== */}
+
         <ul
           className="
             ml-auto
@@ -194,7 +299,10 @@ const Navbar = () => {
             lg:text-[24px]
           "
         >
-          {/* USER */}
+          {/* ==========================================
+              PROFILE
+          ========================================== */}
+
           <Link to="/profile">
             <li
               className="
@@ -208,8 +316,17 @@ const Navbar = () => {
             >
               {profileLoading ? (
                 <FaRegUser />
-              ) : userName ? (
-                <span className="text-[13px] font-semibold md:text-[15px]">
+              ) : isLoggedIn && userName ? (
+                <span
+                  className="
+                    max-w-[100px]
+                    truncate
+                    text-[13px]
+                    font-semibold
+                    sm:text-[14px]
+                    md:text-[15px]
+                  "
+                >
                   {userName}
                 </span>
               ) : (
@@ -218,7 +335,10 @@ const Navbar = () => {
             </li>
           </Link>
 
-          {/* SEARCH */}
+          {/* ==========================================
+              SEARCH
+          ========================================== */}
+
           <li
             className="
               cursor-pointer
@@ -230,7 +350,10 @@ const Navbar = () => {
             <IoIosSearch />
           </li>
 
-          {/* WISHLIST */}
+          {/* ==========================================
+              WISHLIST
+          ========================================== */}
+
           <Link to="/wishlist">
             <li
               className="
@@ -244,7 +367,10 @@ const Navbar = () => {
             </li>
           </Link>
 
-          {/* CART */}
+          {/* ==========================================
+              SHOPPING BAG
+          ========================================== */}
+
           <Link to="/cart">
             <li
               className="
@@ -257,8 +383,11 @@ const Navbar = () => {
             >
               <MdOutlineShoppingBag />
 
-              {/* COUNTER */}
-              {cartCount > 0 && (
+              {/* ======================================
+                  CART COUNTER
+              ====================================== */}
+
+              {isLoggedIn && cartCount > 0 && (
                 <span
                   className="
                     absolute
@@ -286,7 +415,10 @@ const Navbar = () => {
         </ul>
       </div>
 
-      {/* MOBILE MENU */}
+      {/* ==========================================
+          MOBILE MENU
+      ========================================== */}
+
       <div
         className={`
           overflow-hidden
@@ -311,21 +443,51 @@ const Navbar = () => {
             text-white
           "
         >
+          {/* Home */}
           <li>
-            <Link to="/" onClick={closeMenu}>
+            <Link
+              to="/"
+              onClick={closeMenu}
+              className="transition-colors hover:text-gray-400"
+            >
               Home
             </Link>
           </li>
 
+          {/* Shop */}
           <li>
-            <Link to="/products" onClick={closeMenu}>
+            <Link
+              to="/products"
+              onClick={closeMenu}
+              className="transition-colors hover:text-gray-400"
+            >
               Shop
             </Link>
           </li>
 
-          <li onClick={closeMenu}>Pages</li>
-          <li onClick={closeMenu}>Blog</li>
-          <li onClick={closeMenu}>Contact Us</li>
+          {/* Pages */}
+          <li
+            className="cursor-pointer transition-colors hover:text-gray-400"
+            onClick={closeMenu}
+          >
+            Pages
+          </li>
+
+          {/* Blog */}
+          <li
+            className="cursor-pointer transition-colors hover:text-gray-400"
+            onClick={closeMenu}
+          >
+            Blog
+          </li>
+
+          {/* Contact */}
+          <li
+            className="cursor-pointer transition-colors hover:text-gray-400"
+            onClick={closeMenu}
+          >
+            Contact Us
+          </li>
         </ul>
       </div>
     </nav>

@@ -9,7 +9,7 @@ const authApi = baseApi.injectEndpoints({
         method: "POST",
         body: addNew,
       }),
-      invalidateTags: ["Auth"],
+      invalidateTags: ["Auth", "Cart"],
     }),
 
     getProfile: builder.query({
