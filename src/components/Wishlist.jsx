@@ -4,14 +4,14 @@ import {
   useDeleteWishlistMutation,
   useGetAllWishlistQuery,
 } from "../redux/wishlistApi";
+import { Link } from "react-router-dom";
 
 const Wishlist = () => {
   const [deleteItem, { isLoading: itemDeleteLoading }] =
     useDeleteWishlistMutation();
 
   const handleDelete = async (id) => {
-
-    console.log("DELETE_ID_FROM_FRONTEND", id)
+    console.log("DELETE_ID_FROM_FRONTEND", id);
 
     try {
       const response = await deleteItem(id).unwrap();
@@ -186,13 +186,14 @@ const Wishlist = () => {
               Save your favorite products here and come back whenever you're
               ready to shop.
             </p>
-
-            <button
-              type="button"
-              className="mt-7 bg-black px-8 py-4 text-xs font-medium uppercase tracking-[0.15em] text-white transition hover:bg-gray-800"
-            >
-              Continue Shopping
-            </button>
+            <Link to="/products">
+              <button
+                type="button"
+                className="mt-7 bg-black px-8 py-4 text-xs font-medium uppercase tracking-[0.15em] text-white transition hover:bg-gray-800"
+              >
+                Continue Shopping
+              </button>
+            </Link>
           </div>
         )}
       </div>
