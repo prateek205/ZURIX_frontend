@@ -5,13 +5,17 @@ import { FaRegUser } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 import { MdOutlineShoppingBag, MdMenu, MdClose } from "react-icons/md";
 
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
+import { toast } from "react-toastify";
 
 import { useGetProfileQuery } from "../redux/authApi";
 import { useGetAllCartsQuery } from "../redux/cartApi";
 import { useGetAllWishlistQuery } from "../redux/wishlistApi";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // ==========================================
@@ -104,6 +108,60 @@ const Navbar = () => {
   const wishlistCount = wishlistItems.length;
 
   // ==========================================
+  // AUTHENTICATION CHECK
+  // ==========================================
+
+  const handleProtectedNavigation = (path, message) => {
+    closeMenu();
+
+    if (!isLoggedIn) {
+      toast.error(message);
+
+      navigate("/login");
+      return;
+    }
+
+    navigate(path);
+  };
+
+  // ==========================================
+  // PROFILE CLICK
+  // ==========================================
+
+  const handleProfileClick = () => {
+    if (!isLoggedIn) {
+      toast.error("Please login to view your profile.");
+
+      navigate("/login");
+      return;
+    }
+
+    navigate("/profile");
+  };
+
+  // ==========================================
+  // WISHLIST CLICK
+  // ==========================================
+
+  const handleWishlistClick = () => {
+    handleProtectedNavigation(
+      "/wishlist",
+      "Please login to view your wishlist.",
+    );
+  };
+
+  // ==========================================
+  // CART CLICK
+  // ==========================================
+
+  const handleCartClick = () => {
+    handleProtectedNavigation(
+      "/cart",
+      "Please login to view your shopping bag.",
+    );
+  };
+
+  // ==========================================
   // OPEN SEARCH
   // ==========================================
 
@@ -147,18 +205,14 @@ const Navbar = () => {
     const value = searchValue.trim();
 
     if (!value) {
+      toast.error("Please enter a product name to search.");
       return;
     }
 
     console.log("SEARCH:", value);
 
-    // ==========================================
-    // LATER YOU CAN NAVIGATE TO PRODUCTS PAGE
-    // WITH SEARCH PARAMETER
-    //
-    // Example:
+    // Later:
     // navigate(`/products?search=${value}`);
-    // ==========================================
 
     closeSearch();
   };
@@ -168,6 +222,7 @@ const Navbar = () => {
       {/* ==========================================
           NAVBAR
       ========================================== */}
+
       <nav
         className="
           sticky
@@ -378,37 +433,36 @@ const Navbar = () => {
                 PROFILE
             ========================================== */}
 
-            <Link to="/profile">
-              <li
-                className="
-                  flex
-                  cursor-pointer
-                  items-center
-                  transition-transform
-                  duration-300
-                  hover:scale-105
-                "
-              >
-                {profileLoading ? (
-                  <FaRegUser />
-                ) : isLoggedIn && userName ? (
-                  <span
-                    className="
-                      max-w-[100px]
-                      truncate
-                      text-[13px]
-                      font-semibold
-                      sm:text-[14px]
-                      md:text-[15px]
-                    "
-                  >
-                    {userName}
-                  </span>
-                ) : (
-                  <FaRegUser />
-                )}
-              </li>
-            </Link>
+            <li
+              onClick={handleProfileClick}
+              className="
+                flex
+                cursor-pointer
+                items-center
+                transition-transform
+                duration-300
+                hover:scale-105
+              "
+            >
+              {profileLoading ? (
+                <FaRegUser />
+              ) : isLoggedIn && userName ? (
+                <span
+                  className="
+                    max-w-[100px]
+                    truncate
+                    text-[13px]
+                    font-semibold
+                    sm:text-[14px]
+                    md:text-[15px]
+                  "
+                >
+                  {userName}
+                </span>
+              ) : (
+                <FaRegUser />
+              )}
+            </li>
 
             {/* ==========================================
                 SEARCH
@@ -431,87 +485,89 @@ const Navbar = () => {
                 WISHLIST
             ========================================== */}
 
-            <Link to="/wishlist">
-              <li
-                className="
-                  relative
-                  cursor-pointer
-                  transition-transform
-                  duration-300
-                  hover:scale-110
-                "
-              >
-                <CiHeart />
+            <li
+              onClick={handleWishlistClick}
+              className="
+                relative
+                cursor-pointer
+                transition-transform
+                duration-300
+                hover:scale-110
+              "
+              aria-label="Wishlist"
+            >
+              <CiHeart />
 
-                {isLoggedIn && wishlistCount > 0 && (
-                  <span
-                    className="
-                        absolute
-                        -right-2
-                        -top-2
-                        flex
-                        h-[17px]
-                        min-w-[17px]
-                        items-center
-                        justify-center
-                        rounded-full
-                        bg-red-500
-                        px-1
-                        text-[10px]
-                        font-bold
-                        leading-none
-                        text-white
-                      "
-                  >
-                    {wishlistCount > 99 ? "99+" : wishlistCount}
-                  </span>
-                )}
-              </li>
-            </Link>
+              {/* WISHLIST COUNTER */}
+
+              {isLoggedIn && wishlistCount > 0 && (
+                <span
+                  className="
+                    absolute
+                    -right-2
+                    -top-2
+                    flex
+                    h-[17px]
+                    min-w-[17px]
+                    items-center
+                    justify-center
+                    rounded-full
+                    bg-red-500
+                    px-1
+                    text-[10px]
+                    font-bold
+                    leading-none
+                    text-white
+                  "
+                >
+                  {wishlistCount > 99 ? "99+" : wishlistCount}
+                </span>
+              )}
+            </li>
 
             {/* ==========================================
                 SHOPPING BAG
             ========================================== */}
 
-            <Link to="/cart">
-              <li
-                className="
-                  relative
-                  cursor-pointer
-                  transition-transform
-                  duration-300
-                  hover:scale-110
-                "
-              >
-                <MdOutlineShoppingBag />
+            <li
+              onClick={handleCartClick}
+              className="
+                relative
+                cursor-pointer
+                transition-transform
+                duration-300
+                hover:scale-110
+              "
+              aria-label="Shopping bag"
+            >
+              <MdOutlineShoppingBag />
 
-                {/* CART COUNTER */}
+              {/* CART COUNTER */}
 
-                {isLoggedIn && cartCount > 0 && (
-                  <span
-                    className="
-                        absolute
-                        -right-2
-                        -top-2
-                        flex
-                        h-[17px]
-                        min-w-[17px]
-                        items-center
-                        justify-center
-                        rounded-full
-                        bg-red-500
-                        px-1
-                        text-[10px]
-                        font-bold
-                        leading-none
-                        text-white
-                      "
-                  >
-                    {cartCount > 99 ? "99+" : cartCount}
-                  </span>
-                )}
-              </li>
-            </Link>
+              {isLoggedIn && cartCount > 0 && (
+                <span
+                  className="
+                    absolute
+                    -right-2
+                    -top-2
+                    flex
+                    h-[17px]
+                    min-w-[17px]
+                    items-center
+                    justify-center
+                    rounded-full
+                    bg-red-500
+                    px-1
+                    text-[10px]
+                    font-bold
+                    leading-none
+                    text-white
+                  "
+                >
+                  {cartCount > 99 ? "99+" : cartCount}
+                </span>
+              )}
+            </li>
           </ul>
         </div>
 
@@ -543,37 +599,25 @@ const Navbar = () => {
               text-white
             "
           >
-            {/* Home */}
-
             <li>
               <Link
                 to="/"
                 onClick={closeMenu}
-                className="
-                  transition-colors
-                  hover:text-gray-400
-                "
+                className="transition-colors hover:text-gray-400"
               >
                 Home
               </Link>
             </li>
 
-            {/* Shop */}
-
             <li>
               <Link
                 to="/products"
                 onClick={closeMenu}
-                className="
-                  transition-colors
-                  hover:text-gray-400
-                "
+                className="transition-colors hover:text-gray-400"
               >
                 Shop
               </Link>
             </li>
-
-            {/* Pages */}
 
             <li
               className="
@@ -586,8 +630,6 @@ const Navbar = () => {
               Pages
             </li>
 
-            {/* Blog */}
-
             <li
               className="
                 cursor-pointer
@@ -598,8 +640,6 @@ const Navbar = () => {
             >
               Blog
             </li>
-
-            {/* Contact */}
 
             <li
               className="
@@ -614,6 +654,7 @@ const Navbar = () => {
           </ul>
         </div>
       </nav>
+
       {/* ==================================================
           FULL SCREEN SEARCH OVERLAY
       ================================================== */}
@@ -621,121 +662,109 @@ const Navbar = () => {
       {isSearchOpen && (
         <div
           className="
-      fixed
-      inset-0
-      z-[9999]
-      flex
-      min-h-screen
-      w-full
-      items-start
-      justify-center
-      bg-black/40
-      px-5
-      py-28
-      backdrop-blur-[2px]
-    "
+            fixed
+            inset-0
+            z-[9999]
+            flex
+            min-h-screen
+            w-full
+            items-start
+            justify-center
+            bg-black/40
+            px-5
+            py-28
+            backdrop-blur-[2px]
+          "
           onMouseDown={(e) => {
             if (e.target === e.currentTarget) {
               closeSearch();
             }
           }}
         >
-          {/* ==========================================
-        SEARCH BOX
-    ========================================== */}
+          {/* SEARCH BOX */}
 
           <div
             className="
-        relative
-        w-full
-        max-w-[600px]
-        rounded-lg
-        bg-white
-        px-6
-        py-8
-        shadow-2xl
-        sm:px-8
-        sm:py-10
-      "
+              relative
+              w-full
+              max-w-[600px]
+              rounded-lg
+              bg-white
+              px-6
+              py-8
+              shadow-2xl
+              sm:px-8
+              sm:py-10
+            "
             onMouseDown={(e) => e.stopPropagation()}
           >
-            {/* ==========================================
-          CLOSE BUTTON
-      ========================================== */}
+            {/* CLOSE BUTTON */}
 
             <button
               type="button"
               onClick={closeSearch}
               className="
-          absolute
-          right-4
-          top-4
-          flex
-          h-9
-          w-9
-          cursor-pointer
-          items-center
-          justify-center
-          rounded-full
-          text-2xl
-          text-gray-600
-          transition-all
-          duration-300
-          hover:rotate-90
-          hover:bg-black
-          hover:text-white
-        "
+                absolute
+                right-4
+                top-4
+                flex
+                h-9
+                w-9
+                cursor-pointer
+                items-center
+                justify-center
+                rounded-full
+                text-2xl
+                text-gray-600
+                transition-all
+                duration-300
+                hover:rotate-90
+                hover:bg-black
+                hover:text-white
+              "
               aria-label="Close search"
             >
               <MdClose />
             </button>
 
-            {/* ==========================================
-          SEARCH HEADING
-      ========================================== */}
+            {/* SEARCH HEADING */}
 
             <p
               className="
-          mb-5
-          text-center
-          text-xs
-          font-semibold
-          uppercase
-          tracking-[3px]
-          text-gray-500
-        "
+                mb-5
+                text-center
+                text-xs
+                font-semibold
+                uppercase
+                tracking-[3px]
+                text-gray-500
+              "
             >
               Search Products
             </p>
 
-            {/* ==========================================
-          SEARCH FORM
-      ========================================== */}
+            {/* SEARCH FORM */}
 
             <form
               onSubmit={handleSearch}
               className="
-          flex
-          w-full
-          items-center
-          border-b
-          border-gray-300
-          pb-3
-          focus-within:border-black
-        "
+                flex
+                w-full
+                items-center
+                border-b
+                border-gray-300
+                pb-3
+                focus-within:border-black
+              "
             >
-              {/* Search Icon */}
-
               <IoIosSearch
                 className="
-            mr-3
-            shrink-0
-            text-2xl
-            text-gray-700
-          "
+                  mr-3
+                  shrink-0
+                  text-2xl
+                  text-gray-700
+                "
               />
-
-              {/* Search Input */}
 
               <input
                 type="text"
@@ -744,50 +773,46 @@ const Navbar = () => {
                 autoFocus
                 placeholder="Search for products..."
                 className="
-            w-full
-            bg-transparent
-            text-base
-            font-medium
-            text-black
-            outline-none
-            placeholder:text-gray-400
-            sm:text-lg
-          "
+                  w-full
+                  bg-transparent
+                  text-base
+                  font-medium
+                  text-black
+                  outline-none
+                  placeholder:text-gray-400
+                  sm:text-lg
+                "
               />
-
-              {/* Search Button */}
 
               <button
                 type="submit"
                 className="
-            ml-3
-            shrink-0
-            cursor-pointer
-            text-xs
-            font-semibold
-            uppercase
-            tracking-wider
-            text-black
-            transition-colors
-            hover:text-red-500
-            sm:text-sm
-          "
+                  ml-3
+                  shrink-0
+                  cursor-pointer
+                  text-xs
+                  font-semibold
+                  uppercase
+                  tracking-wider
+                  text-black
+                  transition-colors
+                  hover:text-red-500
+                  sm:text-sm
+                "
               >
                 Search
               </button>
             </form>
 
-            {/* ==========================================
-          SEARCH HINT
-      ========================================== */}
+            {/* SEARCH HINT */}
 
             <p
               className="
-          mt-4
-          text-center
-          text-xs
-          text-gray-400
-        "
+                mt-4
+                text-center
+                text-xs
+                text-gray-400
+              "
             >
               Type a product name and press Enter
             </p>
