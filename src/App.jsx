@@ -11,14 +11,14 @@ import Profile from "./pages/Profile";
 import OrderPage from "./pages/OrderPage";
 import Order_Success from "./pages/Order-Success";
 import WishlistSection from "./pages/WishlistSection";
-import { Bounce, ToastContainer } from "react-toastify";
+import { Slide, ToastContainer } from "react-toastify";
 
 const App = () => {
   return (
     <>
       <ToastContainer
         position="top-right"
-        autoClose={1500}
+        autoClose={3500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick={false}
@@ -27,7 +27,7 @@ const App = () => {
         draggable
         pauseOnHover
         theme="dark"
-        transition={Bounce}
+        transition={Slide}
       />
       <Navbar />
       <Routes>

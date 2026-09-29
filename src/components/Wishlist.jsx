@@ -118,7 +118,7 @@ const Wishlist = () => {
                       className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm transition hover:bg-black hover:text-white"
                     >
                       {itemDeleteLoading ? (
-                        "removing"
+                        <FaTrash className="text-xs" />
                       ) : (
                         <FaTrash className="text-xs" />
                       )}
