@@ -4,6 +4,7 @@ import { CiHeart } from "react-icons/ci";
 import { FaHeart } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useCreateWishlistMutation } from "../../redux/wishlistApi";
+import { toast } from "react-toastify";
 
 const ProductSection = ({ queryParams }) => {
   const [addToWishlist, { isLoading: wishlistLoading }] =
@@ -26,7 +27,7 @@ const ProductSection = ({ queryParams }) => {
 
       console.log("WISHLIST_DATA:", response);
 
-      alert(response?.message || "Product added successfully");
+      toast.success(response?.message || "Product added to wishlist!");
 
       return true;
     } catch (error) {
@@ -124,12 +125,18 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
         error?.status === 401 ||
         (error?.status === 400 && error?.data?.message === "Login First")
       ) {
+        toast.error("Please login to add products to your wishlist.");
         navigate("/login");
         return;
       }
 
       // Other wishlist errors should NOT redirect to login
       console.log("Wishlist API error:", error);
+      toast.error(
+        error?.data?.message ||
+          error?.error ||
+          "Unable to add product to wishlist.",
+      );
     }
   };
 
