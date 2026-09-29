@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useGetProductsQuery } from "../../redux/productApi";
 import { CiHeart } from "react-icons/ci";
-import { LuEye } from "react-icons/lu";
+import { FaHeart } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useCreateWishlistMutation } from "../../redux/wishlistApi";
 
@@ -10,27 +10,26 @@ const ProductSection = ({ queryParams }) => {
     useCreateWishlistMutation();
 
   const handleAddWishlist = async (product) => {
+    console.log("PRODUCT:", product);
+    const wishlistData = {
+      item: {
+        productId: product._id,
+        productName: product.name,
+        category: product.category._id,
+        quantity: 1,
+      },
+    };
 
-    console.log("PRODUCT:", product)
+    const response = await addToWishlist(wishlistData).unwrap();
 
-    try {
-      const wishlistData = {
-        item: {
-          productId: product._id,
-          productName: product.name,
-          category: product.category._id,
-          quantity: 1,
-        },
-      };
+    alert(response?.message || "Product added successfully");
 
-      const response = await addToWishlist(wishlistData).unwrap();
+    console.log("WISHLIST_DATA:", response);
 
-      alert(response?.message || "product added successfully")
+    return true;
 
-      console.log("WISHLIST_DATA:", response);
-    } catch (error) {
-      console.log("WISHLIST_ERROR:", error?.message?.data);
-    }
+    console.log("WISHLIST_ERROR:", error);
+    return true;
   };
 
   const { data, isLoading, isError } = useGetProductsQuery(queryParams);
@@ -90,10 +89,33 @@ const ProductSection = ({ queryParams }) => {
 };
 
 const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
+  const navigate = useNavigate();
+
   const [isHovered, setIsHovered] = useState(false);
+
+  // Wishlist state for this particular product
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
   const firstImage = product?.images?.[0]?.url;
   const secondImage = product?.images?.[1]?.url || firstImage;
+
+  const handleWishlistClick = async () => {
+    // Prevent adding again if already wishlisted
+    if (isWishlisted) {
+      return;
+    }
+
+    try {
+      const success = await handleAddWishlist(product);
+
+      if (success) {
+        setIsWishlisted(true);
+      }
+    } catch (error) {
+      console.log("WISHLIST CLICK ERROR:", error);
+      navigate("/login");
+    }
+  };
 
   return (
     <div
@@ -139,9 +161,7 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
             transition-opacity
             duration-500
             ease-in-out
-
             md:group-hover:opacity-0
-
             ${isHovered ? "opacity-0 md:opacity-0" : "opacity-100"}
           `}
         />
@@ -160,9 +180,7 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
               transition-opacity
               duration-500
               ease-in-out
-
               md:group-hover:opacity-100
-
               ${
                 isHovered
                   ? "opacity-100 md:opacity-100"
@@ -172,6 +190,7 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
           />
         )}
 
+        {/* Action Buttons */}
         <div
           className="
             absolute
@@ -180,15 +199,12 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
             flex
             flex-col
             gap-[6px]
-
             sm:right-[10px]
             sm:top-[10px]
             sm:gap-[8px]
-
             md:right-[12px]
             md:top-[12px]
             md:gap-[10px]
-
             md:translate-y-[-8px]
             md:opacity-0
             md:transition-all
@@ -197,47 +213,11 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
             md:group-hover:opacity-100
           "
         >
-          {/* Eye */}
-          <button
-            type="button"
-            className="
-              flex
-              h-[30px]
-              w-[30px]
-              items-center
-              justify-center
-              rounded-full
-              bg-white
-              shadow-sm
-              transition-transform
-              duration-200
-              hover:scale-105
-
-              sm:h-[34px]
-              sm:w-[34px]
-
-              md:h-[38px]
-              md:w-[38px]
-            "
-          >
-            <LuEye
-              className="
-                h-[16px]
-                w-[16px]
-                sm:h-[18px]
-                sm:w-[18px]
-                md:h-[19px]
-                md:w-[19px]
-              "
-            />
-          </button>
-
           {/* Wishlist */}
-
           <button
             type="button"
-            onClick={() => handleAddWishlist(product)}
-            disabled={wishlistLoading}
+            onClick={handleWishlistClick}
+            disabled={wishlistLoading || isWishlisted}
             className="
               flex
               h-[30px]
@@ -250,67 +230,83 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
               transition-transform
               duration-200
               hover:scale-105
-
               sm:h-[34px]
               sm:w-[34px]
-
               md:h-[38px]
               md:w-[38px]
             "
           >
-            <CiHeart
-              className="
-                h-[18px]
-                w-[18px]
-                sm:h-[20px]
-                sm:w-[20px]
-                md:h-[22px]
-                md:w-[22px]
-              "
-            />
+            {isWishlisted ? (
+              <FaHeart
+                className="
+                  h-[16px]
+                  w-[16px]
+                  text-red-500
+                  transition-all
+                  duration-200
+                  sm:h-[18px]
+                  sm:w-[18px]
+                  md:h-[20px]
+                  md:w-[20px]
+                "
+              />
+            ) : (
+              <CiHeart
+                className="
+                  h-[18px]
+                  w-[18px]
+                  text-black
+                  transition-all
+                  duration-200
+                  sm:h-[20px]
+                  sm:w-[20px]
+                  md:h-[22px]
+                  md:w-[22px]
+                "
+              />
+            )}
           </button>
         </div>
 
+        {/* Select Options */}
         <Link to={`/productdetail/${product._id}`}>
           <button
             type="button"
             className="
-            absolute
-            bottom-[8px]
-            left-1/2
-            w-[calc(100%-16px)]
-            -translate-x-1/2
-            rounded-full
-            bg-black
-            py-[9px]
-            text-[10px]
-            font-medium
-            text-white
-            transition-all
-            duration-300
-            hover:bg-[#de5922]
-
-            sm:bottom-[10px]
-            sm:w-[calc(100%-20px)]
-            sm:py-[10px]
-            sm:text-[11px]
-
-            md:bottom-[12px]
-            md:w-[90%]
-            md:translate-y-[16px]
-            md:opacity-0
-            md:group-hover:translate-y-0
-            md:group-hover:opacity-100
-
-            lg:py-[11px]
-            lg:text-[12px]
-          "
+              absolute
+              bottom-[8px]
+              left-1/2
+              w-[calc(100%-16px)]
+              -translate-x-1/2
+              rounded-full
+              bg-black
+              py-[9px]
+              text-[10px]
+              font-medium
+              text-white
+              transition-all
+              duration-300
+              hover:bg-[#de5922]
+              sm:bottom-[10px]
+              sm:w-[calc(100%-20px)]
+              sm:py-[10px]
+              sm:text-[11px]
+              md:bottom-[12px]
+              md:w-[90%]
+              md:translate-y-[16px]
+              md:opacity-0
+              md:group-hover:translate-y-0
+              md:group-hover:opacity-100
+              lg:py-[11px]
+              lg:text-[12px]
+            "
           >
             Select Options
           </button>
         </Link>
       </div>
 
+      {/* Product Information */}
       <div
         className="
           flex
@@ -320,12 +316,10 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
           px-[3px]
           pb-[7px]
           pt-[9px]
-
           sm:gap-[4px]
           sm:px-[4px]
           sm:pb-[9px]
           sm:pt-[11px]
-
           md:gap-[5px]
           md:px-[5px]
           md:pb-[10px]
@@ -339,11 +333,8 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
             text-[13px]
             font-bold
             leading-tight
-
             sm:text-[15px]
-
             md:text-[17px]
-
             lg:text-[18px]
           "
         >
@@ -355,11 +346,8 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
             text-[12px]
             leading-tight
             text-black/70
-
             sm:text-[13px]
-
             md:text-[15px]
-
             lg:text-[16px]
           "
         >
