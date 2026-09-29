@@ -7,6 +7,7 @@ import { FiEye, FiEyeOff, FiMail, FiLock } from "react-icons/fi";
 import { useAddLoginMutation, useGetProfileQuery } from "../redux/authApi";
 
 import { useAddToCartMutation } from "../redux/cartApi";
+import { toast } from "react-toastify";
 
 const Login = () => {
   // ==========================================
@@ -70,6 +71,8 @@ const Login = () => {
 
       console.log("LOGIN_RESPONSE:", response);
 
+      toast.success(response?.message || "Login successful!");
+
       // -------------------------------
       // IMPORTANT
       // REFRESH PROFILE AFTER LOGIN
@@ -91,6 +94,8 @@ const Login = () => {
 
         await addToCart(cartData).unwrap();
 
+        toast.success("Product added to cart!");
+
         navigate("/cart");
         return;
       }
@@ -102,6 +107,9 @@ const Login = () => {
       navigate("/");
     } catch (error) {
       console.log("LOGIN_ERROR:", error);
+      toast.error(
+        error?.data?.message || error?.error || "Invalid email or password",
+      );
     }
   };
 

@@ -11,6 +11,7 @@ const ProductSection = ({ queryParams }) => {
 
   const handleAddWishlist = async (product) => {
     console.log("PRODUCT:", product);
+
     const wishlistData = {
       item: {
         productId: product._id,
@@ -20,16 +21,20 @@ const ProductSection = ({ queryParams }) => {
       },
     };
 
-    const response = await addToWishlist(wishlistData).unwrap();
+    try {
+      const response = await addToWishlist(wishlistData).unwrap();
 
-    alert(response?.message || "Product added successfully");
+      console.log("WISHLIST_DATA:", response);
 
-    console.log("WISHLIST_DATA:", response);
+      alert(response?.message || "Product added successfully");
 
-    return true;
+      return true;
+    } catch (error) {
+      console.log("WISHLIST_ERROR:", error);
 
-    console.log("WISHLIST_ERROR:", error);
-    return true;
+      // Important: pass the error to handleWishlistClick
+      throw error;
+    }
   };
 
   const { data, isLoading, isError } = useGetProductsQuery(queryParams);
@@ -100,7 +105,7 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
   const secondImage = product?.images?.[1]?.url || firstImage;
 
   const handleWishlistClick = async () => {
-    // Prevent adding again if already wishlisted
+    // Already added
     if (isWishlisted) {
       return;
     }
@@ -113,7 +118,18 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
       }
     } catch (error) {
       console.log("WISHLIST CLICK ERROR:", error);
-      navigate("/login");
+
+      // Navigate only when authentication failed
+      if (
+        error?.status === 401 ||
+        (error?.status === 400 && error?.data?.message === "Login First")
+      ) {
+        navigate("/login");
+        return;
+      }
+
+      // Other wishlist errors should NOT redirect to login
+      console.log("Wishlist API error:", error);
     }
   };
 

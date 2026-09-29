@@ -11,10 +11,24 @@ import Profile from "./pages/Profile";
 import OrderPage from "./pages/OrderPage";
 import Order_Success from "./pages/Order-Success";
 import WishlistSection from "./pages/WishlistSection";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={1500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        transition={Bounce}
+      />
       <Navbar />
       <Routes>
         <Route path="/" element={<HeroPage />} />
