@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAddLogoutMutation, useGetProfileQuery } from "../redux/authApi";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -14,6 +14,8 @@ import { toast } from "react-toastify";
 
 const ProfileSection = () => {
   const navigate = useNavigate();
+
+  const [activePopup, setActivePopup] = useState(null);
 
   const {
     data: profileData,
@@ -112,6 +114,7 @@ const ProfileSection = () => {
             <div className="space-y-2">
               <button
                 type="button"
+                onClick={() => setActivePopup("personal")}
                 className="w-full flex items-center justify-between p-3 rounded-md hover:bg-gray-50 transition"
               >
                 <div className="flex items-center gap-3">
@@ -155,6 +158,7 @@ const ProfileSection = () => {
 
               <button
                 type="button"
+                onClick={() => setActivePopup("addresses")}
                 className="w-full flex items-center justify-between p-3 rounded-md hover:bg-gray-50 transition"
               >
                 <div className="flex items-center gap-3">
@@ -274,6 +278,89 @@ const ProfileSection = () => {
           </div>
         </div>
       </div>
+
+      {/* ================= POPUP ================= */}
+      {activePopup && (
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 px-4"
+          onMouseDown={(e) => {
+            if (e.target === e.currentTarget) {
+              setActivePopup(null);
+            }
+          }}
+        >
+          <div className="w-full max-w-lg bg-white rounded-xl shadow-xl">
+            {/* Popup Header */}
+            <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+              <div>
+                <h2 className="text-xl font-medium">
+                  {activePopup === "personal"
+                    ? "Personal Information"
+                    : "My Addresses"}
+                </h2>
+
+                <p className="text-sm text-gray-500 mt-1">
+                  {activePopup === "personal"
+                    ? "View your personal account information."
+                    : "Manage your delivery addresses."}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setActivePopup(null)}
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500 text-xl"
+              >
+                ×
+              </button>
+            </div>
+
+            {/* Popup Content */}
+            <div className="p-6">
+              {/* Personal Information */}
+              {activePopup === "personal" && (
+                <div className="space-y-5">
+                  <div>
+                    <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
+                      Full Name
+                    </label>
+
+                    <div className="border border-gray-200 rounded-lg px-4 py-3 text-sm">
+                      {profile?.name}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs uppercase tracking-wider text-gray-400 mb-2">
+                      Email Address
+                    </label>
+
+                    <div className="border border-gray-200 rounded-lg px-4 py-3 text-sm break-all">
+                      {profile?.email}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Addresses */}
+              {activePopup === "addresses" && (
+                <div>
+                  <p className="text-sm text-gray-500">
+                    Your saved addresses will appear here.
+                  </p>
+
+                  <button
+                    type="button"
+                    className="mt-5 w-full h-11 bg-black text-white rounded-md text-sm hover:bg-gray-800 transition"
+                  >
+                    + Add New Address
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
