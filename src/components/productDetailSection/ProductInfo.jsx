@@ -5,6 +5,7 @@ import { MdOutlineRocketLaunch } from "react-icons/md";
 import { useGetProfileQuery } from "../../redux/authApi";
 import { useAddToCartMutation } from "../../redux/cartApi";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const ProductInfo = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
@@ -38,6 +39,7 @@ const ProductInfo = ({ product }) => {
     }
 
     if (isError || !profileData?.success) {
+      toast.error("Please login to add products to your cart.");
       navigate("/login", {
         state: {
           addToCart: true,
@@ -55,9 +57,25 @@ const ProductInfo = ({ product }) => {
 
       const response = await addToCart(cartData).unwrap();
 
+      toast.success(response?.message || "Product added to cart!");
+
       navigate("/cart");
     } catch (error) {
       console.log(error);
+      if (
+        error?.data?.message?.toLowerCase()?.includes("already exists") ||
+        error?.data?.message?.toLowerCase()?.includes("already in cart")
+      ) {
+        toast.info("This product is already in your cart.");
+        navigate("/cart");
+        return;
+      }
+
+      toast.error(
+        error?.data?.message ||
+          error?.error ||
+          "Unable to add product to cart.",
+      );
     }
   };
 
