@@ -5,6 +5,7 @@ import {
   useGetAllWishlistQuery,
 } from "../redux/wishlistApi";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Wishlist = () => {
   const [deleteItem, { isLoading: itemDeleteLoading }] =
@@ -16,10 +17,16 @@ const Wishlist = () => {
     try {
       const response = await deleteItem(id).unwrap();
 
+      toast.success(response?.message || "Product removed from wishlist!");
+
       console.log("DELETE_WISHLIST:", response);
     } catch (error) {
       console.log("DELETE_WISHLIST_ERROR:", error);
-      error?.message?.data;
+      toast.error(
+        error?.data?.message ||
+          error?.error ||
+          "Unable to remove product from wishlist.",
+      );
     }
   };
 
@@ -34,7 +41,11 @@ const Wishlist = () => {
   }
 
   if (isError) {
-    return <p>Unable to fetch data</p>;
+    return (
+      <p className="w-full h-screen flex items-center justify-center">
+        Unable to fetch data
+      </p>
+    );
   }
 
   const wishlist = data?.data?.[0]?.item || [];

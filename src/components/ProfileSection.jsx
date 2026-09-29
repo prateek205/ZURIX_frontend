@@ -25,7 +25,7 @@ const ProfileSection = () => {
 
   const handleLogout = async () => {
     try {
-      await logout().unwrap();
+      const response =  await logout().unwrap();
 
       toast.success(response?.message || "Logged out successfully!");
 
