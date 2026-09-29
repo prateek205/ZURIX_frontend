@@ -123,7 +123,7 @@ const ProfileSection = () => {
                 <FiChevronRight size={16} />
               </button>
 
-              <Link to="/order">
+              <Link to="/orderHistory">
                 <button
                   type="button"
                   className="w-full flex items-center justify-between p-3 rounded-md hover:bg-gray-50 transition"
