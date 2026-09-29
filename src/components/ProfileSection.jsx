@@ -10,6 +10,7 @@ import {
   FiMapPin,
   FiChevronRight,
 } from "react-icons/fi";
+import { toast } from "react-toastify";
 
 const ProfileSection = () => {
   const navigate = useNavigate();
@@ -26,9 +27,16 @@ const ProfileSection = () => {
     try {
       await logout().unwrap();
 
+      toast.success(response?.message || "Logged out successfully!");
+
       navigate("/login");
     } catch (error) {
       console.log("Logout error:", error);
+      toast.error(
+        error?.data?.message ||
+          error?.error ||
+          "Unable to logout. Please try again.",
+      );
     }
   };
 

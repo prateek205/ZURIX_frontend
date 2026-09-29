@@ -11,7 +11,7 @@ import Profile from "./pages/Profile";
 import OrderPage from "./pages/OrderPage";
 import Order_Success from "./pages/Order-Success";
 import WishlistSection from "./pages/WishlistSection";
-import { ToastContainer } from "react-toastify";
+import { Bounce, ToastContainer } from "react-toastify";
 
 const App = () => {
   return (
