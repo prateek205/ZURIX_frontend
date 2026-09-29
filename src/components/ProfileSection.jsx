@@ -11,6 +11,7 @@ import {
   FiChevronRight,
 } from "react-icons/fi";
 import { toast } from "react-toastify";
+import { useGetAllAddressQuery } from "../redux/addressApi";
 
 const ProfileSection = () => {
   const navigate = useNavigate();
@@ -24,6 +25,12 @@ const ProfileSection = () => {
   } = useGetProfileQuery();
 
   const [logout, { isLoading: logoutLoading }] = useAddLogoutMutation();
+
+  const {
+  data: addressData,
+  isLoading: addressLoading,
+  isError: addressError,
+} = useGetAllAddressQuery({});
 
   const handleLogout = async () => {
     try {
@@ -344,17 +351,62 @@ const ProfileSection = () => {
 
               {/* Addresses */}
               {activePopup === "addresses" && (
-                <div>
-                  <p className="text-sm text-gray-500">
-                    Your saved addresses will appear here.
-                  </p>
+                <div className="space-y-4">
+                  {addressLoading ? (
+                    <div className="flex justify-center py-8">
+                      <div className="w-7 h-7 border-2 border-gray-300 border-t-black rounded-full animate-spin"></div>
+                    </div>
+                  ) : addressError ? (
+                    <p className="text-sm text-red-500 text-center py-6">
+                      Unable to fetch addresses.
+                    </p>
+                  ) : addressData?.data?.length > 0 ? (
+                    addressData.data.map((address) => (
+                      <div
+                        key={address._id}
+                        className="border border-gray-200 rounded-lg p-4 hover:border-black transition"
+                      >
+                        <div className="flex items-start gap-3">
+                          <FiMapPin
+                            size={18}
+                            className="text-gray-500 mt-1 flex-shrink-0"
+                          />
 
-                  <button
-                    type="button"
-                    className="mt-5 w-full h-11 bg-black text-white rounded-md text-sm hover:bg-gray-800 transition"
-                  >
-                    + Add New Address
-                  </button>
+                          <div className="text-sm text-gray-600 leading-6">
+                            <p className="font-medium text-black capitalize">
+                              {address.name}
+                            </p>
+
+                            <p>{address.address}</p>
+
+                            <p>
+                              {address.city}, {address.state} -{" "}
+                              {address.pincode}
+                            </p>
+
+                            <p>{address.country}</p>
+
+                            {address.phone && (
+                              <p className="text-gray-500 mt-1">
+                                Phone: {address.phone}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-8">
+                      <FiMapPin
+                        size={28}
+                        className="mx-auto text-gray-300 mb-3"
+                      />
+
+                      <p className="text-sm text-gray-500">
+                        No saved addresses found.
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
