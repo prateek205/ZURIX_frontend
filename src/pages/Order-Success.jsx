@@ -1,5 +1,5 @@
 import React from "react";
-import OrderSuccess from "../components/OrderSuccess";
+import OrderSuccess from "../components/orders/OrderSuccess";
 
 const Order_Success = () => {
   return (

@@ -109,7 +109,7 @@ const OrderSuccess = () => {
           </Link>
 
           <Link
-            to="/orders"
+            to="/orderHistory"
             className="w-full border border-black text-black text-center py-3 rounded-md font-semibold hover:bg-black hover:text-white transition font-zurixFont"
           >
             View My Orders
