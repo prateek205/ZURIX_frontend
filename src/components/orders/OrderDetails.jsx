@@ -1,243 +1,272 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import { FaTimes, FaBoxOpen } from "react-icons/fa";
-import { useGetOrderByIdQuery } from "../../redux/orderApi";
 
-const OrderDetails = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-
-  const { data, isLoading, isError } = useGetOrderByIdQuery(id);
-
-  const order = data?.data;
-
-  // Close popup
-  const handleClose = () => {
-    navigate(-1);
-  };
-
-  if (isLoading) {
-    return (
-      <section className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm">
-        <div className="w-full max-w-3xl bg-white p-10 text-center">
-          <p className="text-sm text-gray-500">Loading order details...</p>
-        </div>
-      </section>
-    );
-  }
-
-  if (isError || !order) {
-    return (
-      <section className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm">
-        <div className="relative w-full max-w-md bg-white p-8 text-center">
-          <button
-            onClick={handleClose}
-            className="absolute right-4 top-4 text-gray-500 transition hover:text-black"
-          >
-            <FaTimes />
-          </button>
-
-          <FaBoxOpen className="mx-auto mb-4 text-4xl text-gray-400" />
-
-          <h2 className="mb-2 text-lg font-semibold">Order Not Found</h2>
-
-          <p className="text-sm text-gray-500">
-            Unable to fetch the order details.
-          </p>
-        </div>
-      </section>
-    );
-  }
+const OrderDetails = ({ order, onClose }) => {
+  if (!order) return null;
 
   const items = order?.items || [];
 
-  const subtotal =
-    order?.subtotal ??
-    items.reduce((total, item) => {
-      const price = item?.productId?.salePrice || item?.productId?.price || 0;
+  // Calculate subtotal from order items
+  const subtotal = items.reduce((total, item) => {
+    const product = item?.productId;
 
-      return total + Number(price) * Number(item?.quantity || 0);
-    }, 0);
+    const price = Number(product?.salePrice) || Number(product?.price) || 0;
 
-  const shipping = order?.shipping ?? 0;
+    const quantity = Number(item?.quantity) || 0;
 
-  const total = order?.finalAmount ?? subtotal + Number(shipping);
+    return total + price * quantity;
+  }, 0);
+
+  // Use backend total if available
+  const totalAmount = Number(order?.totalAmount) || 0;
+
+  // If you have shippingAmount in backend, it will use it
+  const shipping = Number(order?.shippingAmount) || 0;
 
   return (
-    <section
+    <div
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 px-4 py-6 backdrop-blur-sm"
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) {
-          handleClose();
-        }
-      }}
+      onClick={onClose}
     >
-      <div className="relative flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden bg-white shadow-2xl">
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-200 px-6 py-5">
+      {/* Modal */}
+      <div
+        className="relative flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden bg-white shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* ================= HEADER ================= */}
+        <div className="flex items-center justify-between border-b border-gray-200 px-5 py-5 sm:px-7">
           <div>
-            <h1 className="text-lg font-semibold uppercase tracking-wide">
+            <h2 className="text-lg font-semibold uppercase tracking-[0.12em]">
               Order Details
-            </h1>
+            </h2>
 
-            <p className="mt-1 text-xs text-gray-500">Order ID: {order?._id}</p>
+            <p className="mt-1 text-xs text-gray-500">
+              Order ID: #{order?._id}
+            </p>
           </div>
 
           <button
-            onClick={handleClose}
+            onClick={onClose}
             className="flex h-9 w-9 items-center justify-center border border-gray-300 text-gray-600 transition hover:border-black hover:bg-black hover:text-white"
           >
             <FaTimes className="text-sm" />
           </button>
         </div>
 
-        {/* Order Information */}
-        <div className="grid grid-cols-2 gap-4 border-b border-gray-200 px-6 py-5 sm:grid-cols-4">
+        {/* ================= ORDER INFO ================= */}
+        <div className="grid grid-cols-2 gap-5 border-b border-gray-200 px-5 py-5 sm:grid-cols-4 sm:px-7">
+          {/* Order Date */}
           <div>
-            <p className="text-[10px] uppercase tracking-wider text-gray-400">
+            <p className="text-[10px] uppercase tracking-[0.16em] text-gray-400">
               Order Date
             </p>
 
-            <p className="mt-1 text-sm font-medium">
+            <p className="mt-1 text-xs font-medium text-black">
               {order?.createdAt
-                ? new Date(order.createdAt).toLocaleDateString()
+                ? new Date(order.createdAt).toLocaleDateString("en-IN", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                  })
                 : "-"}
             </p>
           </div>
 
+          {/* Status */}
           <div>
-            <p className="text-[10px] uppercase tracking-wider text-gray-400">
+            <p className="text-[10px] uppercase tracking-[0.16em] text-gray-400">
               Status
             </p>
 
-            <p className="mt-1 text-sm font-medium capitalize">
-              {order?.status || "Processing"}
+            <p className="mt-1 text-xs font-medium uppercase text-black">
+              {order?.orderStatus || "PENDING"}
             </p>
           </div>
 
+          {/* Payment */}
           <div>
-            <p className="text-[10px] uppercase tracking-wider text-gray-400">
-              Items
+            <p className="text-[10px] uppercase tracking-[0.16em] text-gray-400">
+              Payment
             </p>
 
-            <p className="mt-1 text-sm font-medium">{items.length}</p>
+            <p className="mt-1 text-xs font-medium uppercase text-black">
+              {order?.paymentMethod || "-"}
+            </p>
           </div>
 
+          {/* Payment Status */}
           <div>
-            <p className="text-[10px] uppercase tracking-wider text-gray-400">
-              Total
+            <p className="text-[10px] uppercase tracking-[0.16em] text-gray-400">
+              Payment Status
             </p>
 
-            <p className="mt-1 text-sm font-semibold">
-              ₹{Number(total).toLocaleString()}
+            <p className="mt-1 text-xs font-medium uppercase text-black">
+              {order?.paymentStatus || "-"}
             </p>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto px-6 py-6">
-          <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.12em]">
-            Products
-          </h2>
+        {/* ================= SCROLLABLE CONTENT ================= */}
+        <div className="flex-1 overflow-y-auto px-5 py-6 sm:px-7">
+          {/* Products Heading */}
+          <div className="mb-5 flex items-center justify-between">
+            <h3 className="text-sm font-semibold uppercase tracking-[0.14em]">
+              Ordered Products
+            </h3>
 
-          <div className="space-y-4">
-            {items.map((item, index) => {
-              const product = item?.productId;
-
-              const price = product?.salePrice || product?.price || 0;
-
-              const quantity = item?.quantity || 1;
-
-              const itemTotal = Number(price) * Number(quantity);
-
-              return (
-                <div
-                  key={item?._id || index}
-                  className="flex gap-4 border border-gray-200 p-4"
-                >
-                  {/* Product Image */}
-                  <div className="h-24 w-20 shrink-0 overflow-hidden bg-gray-100">
-                    <img
-                      src={product?.images?.[0]}
-                      alt={product?.name || "Product"}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-
-                  {/* Product Details */}
-                  <div className="flex flex-1 flex-col justify-between sm:flex-row sm:items-center">
-                    <div>
-                      <h3 className="text-sm font-medium">
-                        {product?.name || "Product"}
-                      </h3>
-
-                      <div className="mt-2 space-y-1 text-xs text-gray-500">
-                        <p>
-                          Quantity:{" "}
-                          <span className="text-black">{quantity}</span>
-                        </p>
-
-                        {item?.size && (
-                          <p>
-                            Size:{" "}
-                            <span className="text-black">{item.size}</span>
-                          </p>
-                        )}
-
-                        {item?.color && (
-                          <p>
-                            Color:{" "}
-                            <span className="text-black">{item.color}</span>
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Price */}
-                    <div className="mt-3 text-right sm:mt-0">
-                      <p className="text-xs text-gray-500">
-                        ₹{Number(price).toLocaleString()} × {quantity}
-                      </p>
-
-                      <p className="mt-1 text-sm font-semibold">
-                        ₹{Number(itemTotal).toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            <span className="text-xs text-gray-500">
+              {items.length} {items.length === 1 ? "Item" : "Items"}
+            </span>
           </div>
 
-          {/* Price Summary */}
-          <div className="mt-8 ml-auto w-full max-w-md border-t border-gray-200 pt-5">
-            <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.12em]">
-              Price Summary
-            </h2>
+          {/* ================= PRODUCTS ================= */}
+          <div className="space-y-4">
+            {items.length > 0 ? (
+              items.map((item, index) => {
+                const product = item?.productId;
 
-            <div className="space-y-3 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-500">Subtotal</span>
+                const price =
+                  Number(product?.salePrice) || Number(product?.price) || 0;
 
-                <span>₹{Number(subtotal).toLocaleString()}</span>
+                const quantity = Number(item?.quantity) || 1;
+
+                const itemTotal = price * quantity;
+
+                return (
+                  <div
+                    key={item?._id || index}
+                    className="flex gap-4 border border-gray-200 p-4"
+                  >
+                    {/* Product Image */}
+                    <div className="h-24 w-20 shrink-0 overflow-hidden bg-gray-100 sm:h-28 sm:w-24">
+                      {product?.images?.[0]?.url ? (
+                        <img
+                          src={product.images[0].url}
+                          alt={product?.name || "Product"}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center">
+                          <FaBoxOpen className="text-xl text-gray-300" />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Product Information */}
+                    <div className="flex flex-1 flex-col justify-between sm:flex-row sm:items-center">
+                      <div>
+                        {/* Category */}
+                        <p className="text-[10px] uppercase tracking-[0.16em] text-gray-400">
+                          {product?.category?.name || "Product"}
+                        </p>
+
+                        {/* Product Name */}
+                        <h4 className="mt-1 text-sm font-medium uppercase tracking-wide text-black">
+                          {product?.name || "Product"}
+                        </h4>
+
+                        {/* Product Options */}
+                        <div className="mt-3 flex flex-wrap gap-3 text-xs text-gray-500">
+                          <span>
+                            Qty:{" "}
+                            <span className="font-medium text-black">
+                              {quantity}
+                            </span>
+                          </span>
+
+                          {item?.size && (
+                            <span>
+                              Size:{" "}
+                              <span className="font-medium text-black">
+                                {item.size}
+                              </span>
+                            </span>
+                          )}
+
+                          {item?.color && (
+                            <span>
+                              Color:{" "}
+                              <span className="font-medium text-black">
+                                {item.color}
+                              </span>
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Product Price */}
+                      <div className="mt-4 text-left sm:mt-0 sm:text-right">
+                        <p className="text-xs text-gray-500">
+                          ₹{price.toLocaleString("en-IN")} × {quantity}
+                        </p>
+
+                        <p className="mt-1 text-sm font-semibold text-black">
+                          ₹{itemTotal.toLocaleString("en-IN")}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="py-10 text-center">
+                <FaBoxOpen className="mx-auto text-3xl text-gray-300" />
+
+                <p className="mt-3 text-sm text-gray-500">
+                  No products found in this order.
+                </p>
               </div>
+            )}
+          </div>
 
-              <div className="flex justify-between">
-                <span className="text-gray-500">Shipping</span>
+          {/* ================= PRICE SUMMARY ================= */}
+          <div className="mt-8 border-t border-gray-200 pt-6">
+            <div className="ml-auto w-full max-w-md">
+              <h3 className="mb-5 text-sm font-semibold uppercase tracking-[0.14em]">
+                Price Summary
+              </h3>
 
-                <span>
-                  {shipping === 0
-                    ? "Free"
-                    : `₹${Number(shipping).toLocaleString()}`}
-                </span>
-              </div>
+              <div className="space-y-3 text-sm">
+                {/* Subtotal */}
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500">Subtotal</span>
 
-              <div className="border-t border-gray-200 pt-3">
-                <div className="flex justify-between">
-                  <span className="font-semibold">Total</span>
+                  <span className="font-medium text-black">
+                    ₹{subtotal.toLocaleString("en-IN")}
+                  </span>
+                </div>
 
-                  <span className="text-base font-semibold">
-                    ₹{Number(total).toLocaleString()}
+                {/* Shipping */}
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-500">Shipping</span>
+
+                  <span className="font-medium text-black">
+                    {shipping === 0
+                      ? "Free"
+                      : `₹${shipping.toLocaleString("en-IN")}`}
+                  </span>
+                </div>
+
+                {/* Discount */}
+                {order?.discount > 0 && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-500">Discount</span>
+
+                    <span className="font-medium text-black">
+                      -₹
+                      {Number(order.discount).toLocaleString("en-IN")}
+                    </span>
+                  </div>
+                )}
+
+                {/* Total */}
+                <div className="mt-4 flex items-center justify-between border-t border-gray-200 pt-4">
+                  <span className="font-semibold uppercase tracking-wide">
+                    Total
+                  </span>
+
+                  <span className="text-lg font-semibold">
+                    ₹{totalAmount.toLocaleString("en-IN")}
                   </span>
                 </div>
               </div>
@@ -245,17 +274,17 @@ const OrderDetails = () => {
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="flex justify-end border-t border-gray-200 px-6 py-4">
+        {/* ================= FOOTER ================= */}
+        <div className="flex justify-end border-t border-gray-200 px-5 py-4 sm:px-7">
           <button
-            onClick={handleClose}
-            className="border border-black bg-black px-6 py-3 text-xs font-medium uppercase tracking-[0.14em] text-white transition hover:bg-white hover:text-black"
+            onClick={onClose}
+            className="border border-black bg-black px-7 py-3 text-xs font-medium uppercase tracking-[0.14em] text-white transition hover:bg-white hover:text-black"
           >
             Close
           </button>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
