@@ -25,7 +25,7 @@ const ProfileSection = () => {
 
   const handleLogout = async () => {
     try {
-      const response =  await logout().unwrap();
+      const response = await logout().unwrap();
 
       toast.success(response?.message || "Logged out successfully!");
 
@@ -138,18 +138,20 @@ const ProfileSection = () => {
                 </button>
               </Link>
 
-              <button
-                type="button"
-                className="w-full flex items-center justify-between p-3 rounded-md hover:bg-gray-50 transition"
-              >
-                <div className="flex items-center gap-3">
-                  <FiHeart size={18} />
+              <Link to="/wishlist">
+                <button
+                  type="button"
+                  className="w-full flex items-center justify-between p-3 rounded-md hover:bg-gray-50 transition"
+                >
+                  <div className="flex items-center gap-3">
+                    <FiHeart size={18} />
 
-                  <span className="text-sm">Wishlist</span>
-                </div>
+                    <span className="text-sm">Wishlist</span>
+                  </div>
 
-                <FiChevronRight size={16} />
-              </button>
+                  <FiChevronRight size={16} />
+                </button>
+              </Link>
 
               <button
                 type="button"
