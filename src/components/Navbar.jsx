@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 
 import { useGetProfileQuery } from "../redux/authApi";
 import { useGetAllCartsQuery } from "../redux/cartApi";
+import { useGetAllWishlistQuery } from "../redux/wishlistApi";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -69,6 +70,14 @@ const Navbar = () => {
         return total + Number(item?.quantity || 0);
       }, 0)
     : 0;
+
+  // ========================================== // WISHLIST // ==========================================
+  const { data: wishlistData } = useGetAllWishlistQuery(undefined, {
+    skip: !isLoggedIn,
+  });
+  wishlistData?.data?.[0]?.item;
+  const wishlistItems = isLoggedIn ? wishlistData?.data?.[0]?.item || [] : [];
+  const wishlistCount = wishlistItems.length;
 
   return (
     <nav
