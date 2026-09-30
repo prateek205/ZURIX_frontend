@@ -29,6 +29,8 @@ const SortSection = ({ queryParams, setQueryParams, productCount = 0 }) => {
     },
   ];
 
+  const showCountOptions = [12, 15, 30];
+
   /* =====================================================
       SORT CHANGE
   ====================================================== */
@@ -132,7 +134,7 @@ const SortSection = ({ queryParams, setQueryParams, productCount = 0 }) => {
             Show
           </span>
 
-          {[12, 15, 30].map((number) => (
+          {showCountOptions.map((number) => (
             <button
               key={number}
               type="button"
