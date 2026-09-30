@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { useGetAllCategoryQuery } from "../../redux/categoryApi";
 
 const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
   const [openSection, setOpenSection] = useState("categories");
+  const { data: categoryData, isLoading: categoryLoading } =
+    useGetAllCategoryQuery();
 
   /* =====================================================
       FIXED FILTER DATA
@@ -27,15 +30,23 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
   const categoryMap = new Map();
 
   products.forEach((product) => {
-    if (product?.category?._id && product?.category?.name) {
-      categoryMap.set(product.category._id, product.category.name);
+    if (product?.category?._id && product?.category?.gender) {
+      categoryMap.set(product.category.gender, product.category.gender);
     }
   });
 
-  const categories = Array.from(categoryMap, ([value, label]) => ({
-    value,
-    label,
-  }));
+  const categories =
+    categoryData?.data?.map((item) => ({
+      value: item._id,
+      label:
+        item.gender === "mens"
+          ? "Men"
+          : item.gender === "womens"
+            ? "Women"
+            : "Kids",
+    })) || [];
+
+  console.log("CATEGORIES:", categories);
 
   /* =====================================================
       RESET FILTERS
@@ -54,7 +65,7 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
   const isFilterApplied =
     queryParams?.category ||
     queryParams?.size ||
-    queryParams?.colors||
+    queryParams?.colors ||
     queryParams?.minPrice ||
     queryParams?.maxPrice;
 
