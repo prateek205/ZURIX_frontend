@@ -7,24 +7,7 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
     useGetAllCategoryQuery();
 
   /* =====================================================
-      FIXED FILTER DATA
-  ====================================================== */
-
-  // Sizes
-  const sizes = ["Small", "Medium", "Large", "X-Large"];
-
-  // Colors
-  const colors = ["Red", "Green", "Blue", "Violet"];
-
-  // Price Range
-  const priceRange = [
-    [0, 500, "₹0 — ₹500"],
-    [500, 1000, "₹500 — ₹1,000"],
-    [1000, 5000, "₹1,000 — ₹5,000"],
-  ];
-
-  /* =====================================================
-      DYNAMIC CATEGORIES
+      DYNAMICALLY FILTER DATA
   ====================================================== */
 
   const categoryMap = new Map();
@@ -47,6 +30,43 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
     })) || [];
 
   console.log("CATEGORIES:", categories);
+
+  // Sizes
+  const sizeSet = new Set();
+
+  products.forEach((product) => {
+    if (product?.size?.length) {
+      product.size.forEach((size) => {
+        sizeSet.add(size);
+      });
+    }
+  });
+
+  const sizes = Array.from(sizeSet);
+
+  console.log("DYNAMIC SIZES:", sizes);
+
+  // Colors
+  const colorSet = new Set();
+
+  products.forEach((product) => {
+    if (product?.colors?.length) {
+      product.colors.forEach((color) => {
+        colorSet.add(color);
+      });
+    }
+  });
+
+  const colors = Array.from(colorSet);
+
+  console.log("DYNAMIC COLORS:", colors);
+
+  // Price Range
+  const priceRange = [
+    [0, 500, "₹0 — ₹500"],
+    [500, 1000, "₹500 — ₹1,000"],
+    [1000, 5000, "₹1,000 — ₹5,000"],
+  ];
 
   /* =====================================================
       RESET FILTERS
@@ -303,16 +323,16 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
           type="button"
           onClick={() => toggleSection("color")}
           className="
-            flex
-            min-h-[52px]
-            w-full
-            items-center
-            justify-between
-            py-[14px]
-            sm:min-h-[58px]
-            sm:py-[18px]
-            md:py-[22px]
-          "
+      flex
+      min-h-[52px]
+      w-full
+      items-center
+      justify-between
+      py-[14px]
+      sm:min-h-[58px]
+      sm:py-[18px]
+      md:py-[22px]
+    "
         >
           <span className="text-[16px] font-normal sm:text-[18px] md:text-[20px]">
             Color
@@ -330,21 +350,21 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
                 <label
                   key={color}
                   className="
-                    flex
-                    min-h-[36px]
-                    cursor-pointer
-                    items-center
-                    gap-[8px]
-                    text-[13px]
-                    sm:gap-[10px]
-                    sm:text-[14px]
-                    md:text-[15px]
-                  "
+              flex
+              min-h-[36px]
+              cursor-pointer
+              items-center
+              gap-[8px]
+              text-[13px]
+              sm:gap-[10px]
+              sm:text-[14px]
+              md:text-[15px]
+            "
                 >
                   <input
                     type="radio"
                     name="color"
-                    checked={queryParams.colors.color}
+                    checked={queryParams.colors === color}
                     onChange={() => handleColorChange(color)}
                     className="h-[15px] w-[15px] shrink-0"
                   />

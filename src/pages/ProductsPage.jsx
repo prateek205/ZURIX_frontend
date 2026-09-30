@@ -117,6 +117,7 @@ const ProductsPage = () => {
               <FilterSection
                 queryParams={queryParams}
                 setQueryParams={setQueryParams}
+                products={data?.data || []}
               />
             </div>
           </div>
