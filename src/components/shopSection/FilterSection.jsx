@@ -8,62 +8,56 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
   ====================================================== */
 
   // Dynamic Categories
-  const categories = useMemo(() => {
-    const categoryMap = new Map();
+  const categoryMap = new Map();
 
-    products.forEach((product) => {
-      if (product?.category?._id && product?.category?.name) {
-        categoryMap.set(product.category._id, product.category.name);
-      }
-    });
+  products.forEach((product) => {
+    if (product?.category?._id && product?.category?.name) {
+      categoryMap.set(product.category._id, product.category.name);
+    }
+  });
 
-    return Array.from(categoryMap, ([value, label]) => ({
-      value,
-      label,
-    }));
-  }, [products]);
+  const categories = Array.from(categoryMap, ([value, label]) => ({
+    value,
+    label,
+  }));
 
   // Dynamic Colors
-  const colors = useMemo(() => {
-    const colorSet = new Set();
+  const colorSet = new Set();
 
-    products.forEach((product) => {
-      product?.colors?.forEach((color) => {
-        if (color) {
-          colorSet.add(color);
-        }
-      });
+  products.forEach((product) => {
+    product?.colors?.forEach((color) => {
+      if (color) {
+        colorSet.add(color);
+      }
     });
+  });
 
-    return Array.from(colorSet);
-  }, [products]);
+  const colors = Array.from(colorSet);
 
   // Dynamic Sizes
-  const sizes = useMemo(() => {
-    const sizeSet = new Set();
+  const sizeSet = new Set();
 
-    products.forEach((product) => {
-      product?.size?.forEach((size) => {
-        if (size) {
-          sizeSet.add(size);
-        }
-      });
+  products.forEach((product) => {
+    product?.size?.forEach((size) => {
+      if (size) {
+        sizeSet.add(size);
+      }
     });
+  });
 
-    return Array.from(sizeSet);
-  }, [products]);
+  const sizes = Array.from(sizeSet);
 
-  /* =====================================================
-      ACCORDION
-  ====================================================== */
+  // =====================================================
+  // ACCORDION
+  // =====================================================
 
   const toggleSection = (section) => {
     setOpenSection((prev) => (prev === section ? "" : section));
   };
 
-  /* =====================================================
-      CATEGORY
-  ====================================================== */
+  // =====================================================
+  // CATEGORY
+  // =====================================================
 
   const handleCategoryChange = (category) => {
     setQueryParams((prev) => ({
@@ -72,9 +66,9 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
     }));
   };
 
-  /* =====================================================
-      COLOR
-  ====================================================== */
+  // =====================================================
+  // COLOR
+  // =====================================================
 
   const handleColorChange = (color) => {
     setQueryParams((prev) => ({
@@ -83,9 +77,9 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
     }));
   };
 
-  /* =====================================================
-      SIZE
-  ====================================================== */
+  // =====================================================
+  // SIZE
+  // =====================================================
 
   const handleSizeChange = (size) => {
     setQueryParams((prev) => ({
@@ -94,9 +88,9 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
     }));
   };
 
-  /* =====================================================
-      PRICE
-  ====================================================== */
+  // =====================================================
+  // PRICE
+  // =====================================================
 
   const handlePriceChange = (minPrice, maxPrice) => {
     setQueryParams((prev) => ({
@@ -106,11 +100,17 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
     }));
   };
 
+  const priceRange = [
+    [0, 500, "₹0 — ₹500"],
+    [500, 1000, "₹500 — ₹1,000"],
+    [1000, 5000, "₹1,000 — ₹5,000"],
+  ];
+
   return (
     <div className="w-full bg-white">
-      {/* =================================================
+      {/* ==============
           CATEGORIES
-      ================================================== */}
+      ================== */}
 
       <div className="border-b border-[#e5e5e5]">
         <button
@@ -205,9 +205,9 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
         )}
       </div>
 
-      {/* =================================================
+      {/* ==============
           PRICE
-      ================================================== */}
+      ================== */}
 
       <div className="border-b border-[#e5e5e5]">
         <button
@@ -277,11 +277,7 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
                 md:gap-[10px]
               "
             >
-              {[
-                [0, 500, "₹0 — ₹500"],
-                [500, 1000, "₹500 — ₹1,000"],
-                [1000, 5000, "₹1,000 — ₹5,000"],
-              ].map(([min, max, label]) => (
+              {priceRange.map(([min, max, label]) => (
                 <button
                   key={label}
                   type="button"
@@ -305,9 +301,9 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
         )}
       </div>
 
-      {/* =================================================
+      {/* =============
           COLOR
-      ================================================== */}
+      ================= */}
 
       <div className="border-b border-[#e5e5e5]">
         <button
@@ -382,9 +378,9 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
         )}
       </div>
 
-      {/* =================================================
+      {/* =============
           SIZE
-      ================================================== */}
+      ================= */}
 
       <div className="border-b border-[#e5e5e5]">
         <button
@@ -456,56 +452,6 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
                 </button>
               ))}
             </div>
-          </div>
-        )}
-      </div>
-
-      {/* =================================================
-          TAGS
-      ================================================== */}
-
-      <div className="border-b border-[#e5e5e5]">
-        <button
-          type="button"
-          onClick={() => toggleSection("tags")}
-          className="
-            flex
-            min-h-[52px]
-            w-full
-            items-center
-            justify-between
-            py-[14px]
-            sm:min-h-[58px]
-            sm:py-[18px]
-            md:py-[22px]
-          "
-        >
-          <span
-            className="
-              text-[16px]
-              font-normal
-              sm:text-[18px]
-              md:text-[20px]
-            "
-          >
-            Tags
-          </span>
-
-          <span
-            className="
-              text-[18px]
-              leading-none
-              sm:text-[19px]
-              md:text-[20px]
-            "
-          >
-            {openSection === "tags" ? "−" : "+"}
-          </span>
-        </button>
-
-        {openSection === "tags" && (
-          <div className="pb-[20px] sm:pb-[22px] md:pb-[25px]">
-            <div className="text-sm text-gray-500">No tags available.</div>
           </div>
         )}
       </div>
