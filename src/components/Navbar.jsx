@@ -211,9 +211,10 @@ const Navbar = () => {
 
     console.log("SEARCH:", value);
 
-    // Later:
-    // navigate(`/products?search=${value}`);
+    // Navigate to products page with search query
+    navigate(`/products?search=${encodeURIComponent(value)}`);
 
+    // Close search overlay
     closeSearch();
   };
 
@@ -249,11 +250,15 @@ const Navbar = () => {
             items-center
             justify-between
             px-2
+
             sm:min-h-[75px]
             sm:w-[92%]
+
             md:min-h-[80px]
             md:w-[90%]
+
             lg:w-[85%]
+
             xl:max-w-[1400px]
           "
         >
@@ -268,6 +273,7 @@ const Navbar = () => {
               gap-5
               text-[14px]
               font-semibold
+
               md:flex
               lg:gap-7
               lg:text-[15px]
@@ -372,6 +378,7 @@ const Navbar = () => {
               items-center
               justify-center
               text-[26px]
+
               md:hidden
               sm:text-[28px]
             "
@@ -400,6 +407,7 @@ const Navbar = () => {
                 font-bold
                 uppercase
                 tracking-[-1px]
+
                 sm:text-[28px]
                 md:text-[32px]
                 lg:text-[36px]
@@ -421,10 +429,13 @@ const Navbar = () => {
               items-center
               gap-2
               text-[20px]
+
               sm:gap-3
               sm:text-[22px]
+
               md:gap-4
               md:text-[23px]
+
               lg:gap-5
               lg:text-[24px]
             "
@@ -453,6 +464,7 @@ const Navbar = () => {
                     truncate
                     text-[13px]
                     font-semibold
+
                     sm:text-[14px]
                     md:text-[15px]
                   "
@@ -503,22 +515,22 @@ const Navbar = () => {
               {isLoggedIn && wishlistCount > 0 && (
                 <span
                   className="
-                    absolute
-                    -right-2
-                    -top-2
-                    flex
-                    h-[17px]
-                    min-w-[17px]
-                    items-center
-                    justify-center
-                    rounded-full
-                    bg-red-500
-                    px-1
-                    text-[10px]
-                    font-bold
-                    leading-none
-                    text-white
-                  "
+                      absolute
+                      -right-2
+                      -top-2
+                      flex
+                      h-[17px]
+                      min-w-[17px]
+                      items-center
+                      justify-center
+                      rounded-full
+                      bg-red-500
+                      px-1
+                      text-[10px]
+                      font-bold
+                      leading-none
+                      text-white
+                    "
                 >
                   {wishlistCount > 99 ? "99+" : wishlistCount}
                 </span>
@@ -583,6 +595,7 @@ const Navbar = () => {
             duration-500
             ease-in-out
             md:hidden
+
             ${isMenuOpen ? "max-h-[500px] border-t border-white/20" : "max-h-0"}
           `}
         >
@@ -603,7 +616,10 @@ const Navbar = () => {
               <Link
                 to="/"
                 onClick={closeMenu}
-                className="transition-colors hover:text-gray-400"
+                className="
+                  transition-colors
+                  hover:text-gray-400
+                "
               >
                 Home
               </Link>
@@ -613,7 +629,10 @@ const Navbar = () => {
               <Link
                 to="/products"
                 onClick={closeMenu}
-                className="transition-colors hover:text-gray-400"
+                className="
+                  transition-colors
+                  hover:text-gray-400
+                "
               >
                 Shop
               </Link>
@@ -693,6 +712,7 @@ const Navbar = () => {
               px-6
               py-8
               shadow-2xl
+
               sm:px-8
               sm:py-10
             "
@@ -780,6 +800,7 @@ const Navbar = () => {
                   text-black
                   outline-none
                   placeholder:text-gray-400
+
                   sm:text-lg
                 "
               />
@@ -797,6 +818,7 @@ const Navbar = () => {
                   text-black
                   transition-colors
                   hover:text-red-500
+
                   sm:text-sm
                 "
               >

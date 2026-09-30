@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import FilterSection from "../components/shopSection/FilterSection";
 import SortSection from "../components/shopSection/SortSection";
 
 import { useGetProductsQuery } from "../redux/productApi";
 import ProductSection from "../components/shopSection/ProductSection";
+import { useSearchParams } from "react-router-dom";
 
 const ProductsPage = () => {
+  const [searchParams] = useSearchParams();
+
   const [queryParams, setQueryParams] = useState({
     sort: "",
     search: "",
@@ -25,6 +28,15 @@ const ProductsPage = () => {
   ====================================================== */
 
   const { data, isLoading, isError } = useGetProductsQuery(queryParams);
+
+  useEffect(() => {
+    const search = searchParams.get("search") || "";
+
+    setQueryParams((prev) => ({
+      ...prev,
+      search,
+    }));
+  }, [searchParams]);
 
   return (
     <section className="h-full w-full">
