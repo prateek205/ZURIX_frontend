@@ -1,7 +1,57 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
-const FilterSection = ({ queryParams, setQueryParams }) => {
+const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
   const [openSection, setOpenSection] = useState("categories");
+
+  /* =====================================================
+      DYNAMIC FILTER DATA
+  ====================================================== */
+
+  // Dynamic Categories
+  const categories = useMemo(() => {
+    const categoryMap = new Map();
+
+    products.forEach((product) => {
+      if (product?.category?._id && product?.category?.name) {
+        categoryMap.set(product.category._id, product.category.name);
+      }
+    });
+
+    return Array.from(categoryMap, ([value, label]) => ({
+      value,
+      label,
+    }));
+  }, [products]);
+
+  // Dynamic Colors
+  const colors = useMemo(() => {
+    const colorSet = new Set();
+
+    products.forEach((product) => {
+      product?.colors?.forEach((color) => {
+        if (color) {
+          colorSet.add(color);
+        }
+      });
+    });
+
+    return Array.from(colorSet);
+  }, [products]);
+
+  // Dynamic Sizes
+  const sizes = useMemo(() => {
+    const sizeSet = new Set();
+
+    products.forEach((product) => {
+      product?.size?.forEach((size) => {
+        if (size) {
+          sizeSet.add(size);
+        }
+      });
+    });
+
+    return Array.from(sizeSet);
+  }, [products]);
 
   /* =====================================================
       ACCORDION
@@ -63,7 +113,6 @@ const FilterSection = ({ queryParams, setQueryParams }) => {
       ================================================== */}
 
       <div className="border-b border-[#e5e5e5]">
-        {/* Header */}
         <button
           type="button"
           onClick={() => toggleSection("categories")}
@@ -103,16 +152,32 @@ const FilterSection = ({ queryParams, setQueryParams }) => {
           </span>
         </button>
 
-        {/* Content */}
         {openSection === "categories" && (
           <div className="pb-[18px] sm:pb-[20px]">
             <div className="flex flex-col gap-[10px] sm:gap-[12px] md:gap-[14px]">
-              {[
-                { label: "All Categories", value: "" },
-                { label: "Shirts", value: "shirts" },
-                { label: "Blazers", value: "blazers" },
-                { label: "Trousers", value: "trousers" },
-              ].map((category) => (
+              {/* All Categories */}
+              <button
+                type="button"
+                onClick={() => handleCategoryChange("")}
+                className={`
+                  min-h-[36px]
+                  text-left
+                  text-[13px]
+                  transition-colors
+                  sm:text-[14px]
+                  md:text-[15px]
+                  ${
+                    !queryParams.category
+                      ? "font-medium text-black"
+                      : "text-gray-500 hover:text-black"
+                  }
+                `}
+              >
+                All Categories
+              </button>
+
+              {/* Dynamic Categories */}
+              {categories.map((category) => (
                 <button
                   key={category.value}
                   type="button"
@@ -121,6 +186,7 @@ const FilterSection = ({ queryParams, setQueryParams }) => {
                     min-h-[36px]
                     text-left
                     text-[13px]
+                    capitalize
                     transition-colors
                     sm:text-[14px]
                     md:text-[15px]
@@ -144,7 +210,6 @@ const FilterSection = ({ queryParams, setQueryParams }) => {
       ================================================== */}
 
       <div className="border-b border-[#e5e5e5]">
-        {/* Header */}
         <button
           type="button"
           onClick={() => toggleSection("price")}
@@ -183,55 +248,8 @@ const FilterSection = ({ queryParams, setQueryParams }) => {
           </span>
         </button>
 
-        {/* Content */}
         {openSection === "price" && (
           <div className="pb-[20px] sm:pb-[22px] md:pb-[25px]">
-            {/* Slider */}
-            <div className="relative mt-[8px] h-[20px] sm:mt-[10px]">
-              {/* Track */}
-              <div
-                className="
-                  absolute
-                  left-[8px]
-                  right-[8px]
-                  top-[9px]
-                  h-[3px]
-                  bg-black
-                  sm:left-[10px]
-                  sm:right-[10px]
-                "
-              />
-
-              {/* Left Circle */}
-              <div
-                className="
-                  absolute
-                  left-[1px]
-                  top-[3px]
-                  h-[15px]
-                  w-[15px]
-                  rounded-full
-                  bg-black
-                  sm:left-[3px]
-                "
-              />
-
-              {/* Right Circle */}
-              <div
-                className="
-                  absolute
-                  right-[1px]
-                  top-[3px]
-                  h-[15px]
-                  w-[15px]
-                  rounded-full
-                  bg-black
-                  sm:right-[3px]
-                "
-              />
-            </div>
-
-            {/* Price Text */}
             <p
               className="
                 mt-[10px]
@@ -243,11 +261,10 @@ const FilterSection = ({ queryParams, setQueryParams }) => {
                 md:text-[15px]
               "
             >
-              Price: ${queryParams.minPrice || 10}
-              {" — "}${queryParams.maxPrice || 200}
+              Price: ₹{queryParams.minPrice || 0}
+              {" — "}₹{queryParams.maxPrice || 1000}
             </p>
 
-            {/* Price Buttons */}
             <div
               className="
                 mt-[14px]
@@ -261,9 +278,9 @@ const FilterSection = ({ queryParams, setQueryParams }) => {
               "
             >
               {[
-                [10, 50, "$10 — $50"],
-                [50, 100, "$50 — $100"],
-                [100, 200, "$100 — $200"],
+                [0, 500, "₹0 — ₹500"],
+                [500, 1000, "₹500 — ₹1,000"],
+                [1000, 5000, "₹1,000 — ₹5,000"],
               ].map(([min, max, label]) => (
                 <button
                   key={label}
@@ -293,7 +310,6 @@ const FilterSection = ({ queryParams, setQueryParams }) => {
       ================================================== */}
 
       <div className="border-b border-[#e5e5e5]">
-        {/* Header */}
         <button
           type="button"
           onClick={() => toggleSection("color")}
@@ -332,11 +348,10 @@ const FilterSection = ({ queryParams, setQueryParams }) => {
           </span>
         </button>
 
-        {/* Content */}
         {openSection === "color" && (
           <div className="pb-[20px] sm:pb-[22px] md:pb-[25px]">
             <div className="flex flex-col gap-[8px] sm:gap-[10px] md:gap-[14px]">
-              {["black", "white", "blue", "red"].map((color) => (
+              {colors.map((color) => (
                 <label
                   key={color}
                   className="
@@ -354,7 +369,7 @@ const FilterSection = ({ queryParams, setQueryParams }) => {
                   <input
                     type="radio"
                     name="color"
-                    checked={queryParams.colors.includes(color)}
+                    checked={queryParams.colors?.includes(color)}
                     onChange={() => handleColorChange(color)}
                     className="h-[15px] w-[15px] shrink-0"
                   />
@@ -372,7 +387,6 @@ const FilterSection = ({ queryParams, setQueryParams }) => {
       ================================================== */}
 
       <div className="border-b border-[#e5e5e5]">
-        {/* Header */}
         <button
           type="button"
           onClick={() => toggleSection("size")}
@@ -411,26 +425,25 @@ const FilterSection = ({ queryParams, setQueryParams }) => {
           </span>
         </button>
 
-        {/* Content */}
         {openSection === "size" && (
           <div className="pb-[20px] sm:pb-[22px] md:pb-[25px]">
             <div className="flex flex-wrap gap-[7px] sm:gap-[8px]">
-              {["S", "M", "L", "XL"].map((size) => (
+              {sizes.map((size) => (
                 <button
                   key={size}
                   type="button"
                   onClick={() => handleSizeChange(size)}
                   className={`
                     flex
-                    h-[38px]
-                    w-[38px]
+                    h-[42px]
+                    min-w-[60px]
                     items-center
                     justify-center
                     border
+                    px-2
                     text-[12px]
                     transition
-                    sm:h-[40px]
-                    sm:w-[40px]
+                    sm:h-[44px]
                     sm:text-[13px]
                     ${
                       queryParams.size === size
@@ -452,7 +465,6 @@ const FilterSection = ({ queryParams, setQueryParams }) => {
       ================================================== */}
 
       <div className="border-b border-[#e5e5e5]">
-        {/* Header */}
         <button
           type="button"
           onClick={() => toggleSection("tags")}
@@ -491,35 +503,9 @@ const FilterSection = ({ queryParams, setQueryParams }) => {
           </span>
         </button>
 
-        {/* Content */}
         {openSection === "tags" && (
           <div className="pb-[20px] sm:pb-[22px] md:pb-[25px]">
-            <div className="flex flex-wrap gap-[6px] sm:gap-[8px]">
-              {["New", "Sale", "Trending", "Featured"].map((tag) => (
-                <button
-                  key={tag}
-                  type="button"
-                  className="
-                    min-h-[34px]
-                    rounded-full
-                    border
-                    border-[#e5e5e5]
-                    px-[11px]
-                    py-[6px]
-                    text-[11px]
-                    transition
-                    hover:border-black
-                    sm:px-[13px]
-                    sm:text-[12px]
-                    md:px-[14px]
-                    md:py-[7px]
-                    md:text-[13px]
-                  "
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
+            <div className="text-sm text-gray-500">No tags available.</div>
           </div>
         )}
       </div>
