@@ -1,26 +1,59 @@
 import React, { useState } from "react";
+
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 import { TfiLayoutGrid4Alt } from "react-icons/tfi";
 import { BsGrid3X3GapFill } from "react-icons/bs";
 
-const SortSection = ({ queryParams, setQueryParams }) => {
+const SortSection = ({ queryParams, setQueryParams, productCount = 0 }) => {
   const [showCount, setShowCount] = useState(12);
   const [sortBy, setSortBy] = useState("Default sorting");
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [view, setView] = useState("grid");
 
+  /* =====================================================
+      SORT OPTIONS
+  ====================================================== */
+
   const sortOptions = [
-    "Default sorting",
-    "Sort by popularity",
-    "Sort by average rating",
-    "Sort by latest",
-    "Sort by price: low to high",
-    "Sort by price: high to low",
+    {
+      label: "Sort by latest",
+      value: "-createdAt",
+    },
+    {
+      label: "Sort by price: low to high",
+      value: "price",
+    },
+    {
+      label: "Sort by price: high to low",
+      value: "-price",
+    },
   ];
 
+  /* =====================================================
+      SORT CHANGE
+  ====================================================== */
+
   const handleSortChange = (option) => {
-    setSortBy(option);
+    setSortBy(option.label);
     setIsSortOpen(false);
+
+    setQueryParams((prev) => ({
+      ...prev,
+      sort: option.value,
+    }));
+  };
+
+  /* =====================================================
+      SHOW PRODUCT COUNT
+  ====================================================== */
+
+  const handleShowCount = (number) => {
+    setShowCount(number);
+
+    setQueryParams((prev) => ({
+      ...prev,
+      limit: number,
+    }));
   };
 
   return (
@@ -31,10 +64,8 @@ const SortSection = ({ queryParams, setQueryParams }) => {
         flex-col
         gap-[16px]
         py-[12px]
-
         sm:gap-[18px]
         sm:py-[14px]
-
         md:flex-row
         md:items-center
         md:justify-between
@@ -54,7 +85,7 @@ const SortSection = ({ queryParams, setQueryParams }) => {
           md:text-[14px]
         "
       >
-        Showing all 12 results
+        Showing {productCount} {productCount === 1 ? "result" : "results"}
       </div>
 
       {/* =================================================
@@ -69,10 +100,8 @@ const SortSection = ({ queryParams, setQueryParams }) => {
           items-center
           justify-between
           gap-[8px]
-
           sm:justify-end
           sm:gap-[10px]
-
           md:w-auto
           md:gap-[8px]
         "
@@ -83,23 +112,20 @@ const SortSection = ({ queryParams, setQueryParams }) => {
 
         <div
           className="
+            mr-0
             flex
             items-center
             gap-[9px]
-            mr-0
-
-            sm:gap-[12px]
             sm:mr-[5px]
-
-            md:gap-[14px]
+            sm:gap-[12px]
             md:mr-[12px]
+            md:gap-[14px]
           "
         >
           <span
             className="
               text-[11px]
               font-medium
-
               sm:text-[12px]
             "
           >
@@ -110,7 +136,7 @@ const SortSection = ({ queryParams, setQueryParams }) => {
             <button
               key={number}
               type="button"
-              onClick={() => setShowCount(number)}
+              onClick={() => handleShowCount(number)}
               className="
                 relative
                 min-h-[36px]
@@ -118,16 +144,13 @@ const SortSection = ({ queryParams, setQueryParams }) => {
                 px-[2px]
                 py-[6px]
                 text-[11px]
-
                 sm:min-h-[38px]
                 sm:text-[12px]
-
                 md:min-h-[40px]
               "
             >
               {number}
 
-              {/* Active underline */}
               {showCount === number && (
                 <span
                   className="
@@ -148,16 +171,12 @@ const SortSection = ({ queryParams, setQueryParams }) => {
             SORT DROPDOWN
         ================================================== */}
 
-        <div
-          className="
-            relative
-            min-w-0
-          "
-        >
+        <div className="relative min-w-0">
           {/* Dropdown Button */}
+
           <button
             type="button"
-            onClick={() => setIsSortOpen(!isSortOpen)}
+            onClick={() => setIsSortOpen((prev) => !prev)}
             className="
               flex
               h-[38px]
@@ -175,12 +194,10 @@ const SortSection = ({ queryParams, setQueryParams }) => {
               text-black
               transition-colors
               hover:border-black
-
               sm:h-[40px]
               sm:w-[165px]
               sm:px-[11px]
               sm:text-[11px]
-
               md:w-[180px]
               md:px-[12px]
               md:text-[12px]
@@ -210,6 +227,7 @@ const SortSection = ({ queryParams, setQueryParams }) => {
           </button>
 
           {/* Dropdown Menu */}
+
           {isSortOpen && (
             <div
               className="
@@ -222,14 +240,13 @@ const SortSection = ({ queryParams, setQueryParams }) => {
                 rounded-[6px]
                 bg-white
                 shadow-[0px_8px_20px_rgba(0,0,0,0.08)]
-
                 sm:top-[46px]
                 sm:w-[200px]
               "
             >
               {sortOptions.map((option) => (
                 <button
-                  key={option}
+                  key={option.label}
                   type="button"
                   onClick={() => handleSortChange(option)}
                   className={`
@@ -241,22 +258,20 @@ const SortSection = ({ queryParams, setQueryParams }) => {
                     text-left
                     text-[10px]
                     transition-colors
-
                     sm:min-h-[48px]
                     sm:px-[13px]
                     sm:text-[11px]
-
                     md:h-[51px]
                     md:text-[12px]
 
                     ${
-                      sortBy === option
+                      sortBy === option.label
                         ? "bg-[#e6531c] text-white"
                         : "bg-white text-black hover:bg-gray-100"
                     }
                   `}
                 >
-                  {option}
+                  {option.label}
                 </button>
               ))}
             </div>
@@ -281,7 +296,6 @@ const SortSection = ({ queryParams, setQueryParams }) => {
             rounded-[6px]
             border
             transition-all
-
             sm:h-[40px]
             sm:w-[40px]
 
@@ -319,7 +333,6 @@ const SortSection = ({ queryParams, setQueryParams }) => {
             rounded-[6px]
             border
             transition-all
-
             sm:h-[40px]
             sm:w-[40px]
 

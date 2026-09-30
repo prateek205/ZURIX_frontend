@@ -4,6 +4,8 @@ import FilterSection from "../components/shopSection/FilterSection";
 import SortSection from "../components/shopSection/SortSection";
 import ProductSection from "../components/shopSection/ProductSection";
 
+import { useGetProductsQuery } from "../redux/productApi";
+
 const ProductsPage = () => {
   const [queryParams, setQueryParams] = useState({
     sort: "",
@@ -11,10 +13,16 @@ const ProductsPage = () => {
     filter: "",
     minPrice: "",
     maxPrice: "",
-    colors: [],
+    colors: "",
     size: "",
     category: "",
   });
+
+  /* =====================================================
+      GET PRODUCTS
+  ====================================================== */
+
+  const { data, isLoading, isError } = useGetProductsQuery(queryParams);
 
   return (
     <section className="h-full w-full">
@@ -41,15 +49,12 @@ const ProductsPage = () => {
             w-[92%]
             rounded-[12px]
             object-cover
-
             sm:h-[280px]
             sm:w-[90%]
             sm:rounded-[15px]
-
             md:h-[340px]
             md:w-[89%]
             md:rounded-[18px]
-
             lg:h-[400px]
             lg:w-[87%]
             lg:rounded-[20px]
@@ -66,13 +71,10 @@ const ProductsPage = () => {
           mx-auto
           w-[94%]
           py-[20px]
-
           sm:w-[92%]
           sm:py-[25px]
-
           md:w-[90%]
           md:py-[30px]
-
           lg:w-[88%]
           lg:py-[35px]
         "
@@ -83,9 +85,7 @@ const ProductsPage = () => {
             w-full
             flex-col
             gap-[20px]
-
             md:gap-[25px]
-
             lg:flex-row
             lg:gap-[15px]
           "
@@ -99,9 +99,7 @@ const ProductsPage = () => {
               w-full
               px-0
               py-0
-
               md:px-[5px]
-
               lg:w-[25%]
               lg:px-[8px]
               lg:py-1
@@ -110,7 +108,6 @@ const ProductsPage = () => {
             <div
               className="
                 w-full
-
                 lg:sticky
                 lg:top-[20px]
               "
@@ -133,9 +130,7 @@ const ProductsPage = () => {
               min-w-0
               flex-col
               gap-[8px]
-
               md:gap-[12px]
-
               lg:w-[75%]
               lg:gap-3
             "
@@ -148,6 +143,7 @@ const ProductsPage = () => {
               <SortSection
                 queryParams={queryParams}
                 setQueryParams={setQueryParams}
+                productCount={data?.count || 0}
               />
             </div>
 
