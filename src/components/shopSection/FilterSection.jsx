@@ -1,13 +1,29 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 
 const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
   const [openSection, setOpenSection] = useState("categories");
 
   /* =====================================================
-      DYNAMIC FILTER DATA
+      FIXED FILTER DATA
   ====================================================== */
 
-  // Dynamic Categories
+  // Sizes
+  const sizes = ["Small", "Medium", "Large", "X-Large"];
+
+  // Colors
+  const colors = ["Red", "Green", "Blue", "Violet"];
+
+  // Price Range
+  const priceRange = [
+    [0, 500, "₹0 — ₹500"],
+    [500, 1000, "₹500 — ₹1,000"],
+    [1000, 5000, "₹1,000 — ₹5,000"],
+  ];
+
+  /* =====================================================
+      DYNAMIC CATEGORIES
+  ====================================================== */
+
   const categoryMap = new Map();
 
   products.forEach((product) => {
@@ -21,43 +37,38 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
     label,
   }));
 
-  // Dynamic Colors
-  const colorSet = new Set();
+  /* =====================================================
+      RESET FILTERS
+  ====================================================== */
 
-  products.forEach((product) => {
-    product?.colors?.forEach((color) => {
-      if (color) {
-        colorSet.add(color);
-      }
+  const handleResetFilters = () => {
+    setQueryParams({
+      category: "",
+      colors: "",
+      size: "",
+      minPrice: "",
+      maxPrice: "",
     });
-  });
+  };
 
-  const colors = Array.from(colorSet);
+  const isFilterApplied =
+    queryParams?.category ||
+    queryParams?.size ||
+    queryParams?.colors||
+    queryParams?.minPrice ||
+    queryParams?.maxPrice;
 
-  // Dynamic Sizes
-  const sizeSet = new Set();
-
-  products.forEach((product) => {
-    product?.size?.forEach((size) => {
-      if (size) {
-        sizeSet.add(size);
-      }
-    });
-  });
-
-  const sizes = Array.from(sizeSet);
-
-  // =====================================================
-  // ACCORDION
-  // =====================================================
+  /* =====================================================
+      ACCORDION
+  ====================================================== */
 
   const toggleSection = (section) => {
     setOpenSection((prev) => (prev === section ? "" : section));
   };
 
-  // =====================================================
-  // CATEGORY
-  // =====================================================
+  /* =====================================================
+      CATEGORY
+  ====================================================== */
 
   const handleCategoryChange = (category) => {
     setQueryParams((prev) => ({
@@ -66,20 +77,21 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
     }));
   };
 
-  // =====================================================
-  // COLOR
-  // =====================================================
+  /* =====================================================
+      COLOR
+  ====================================================== */
 
   const handleColorChange = (color) => {
+    console.log("SELECTED COLOR:", color);
     setQueryParams((prev) => ({
       ...prev,
-      colors: [color],
+      colors: color,
     }));
   };
 
-  // =====================================================
-  // SIZE
-  // =====================================================
+  /* =====================================================
+      SIZE
+  ====================================================== */
 
   const handleSizeChange = (size) => {
     setQueryParams((prev) => ({
@@ -88,9 +100,9 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
     }));
   };
 
-  // =====================================================
-  // PRICE
-  // =====================================================
+  /* =====================================================
+      PRICE
+  ====================================================== */
 
   const handlePriceChange = (minPrice, maxPrice) => {
     setQueryParams((prev) => ({
@@ -100,17 +112,38 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
     }));
   };
 
-  const priceRange = [
-    [0, 500, "₹0 — ₹500"],
-    [500, 1000, "₹500 — ₹1,000"],
-    [1000, 5000, "₹1,000 — ₹5,000"],
-  ];
-
   return (
     <div className="w-full bg-white">
-      {/* ==============
+      {/* =====================================================
+          RESET FILTER BUTTON
+      ====================================================== */}
+
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-[16px] font-medium sm:text-[18px]">Filters</h2>
+
+        {isFilterApplied && (
+          <button
+            type="button"
+            onClick={handleResetFilters}
+            className="
+              text-[13px]
+              font-medium
+              text-gray-500
+              underline
+              underline-offset-4
+              transition-colors
+              hover:text-black
+              sm:text-[14px]
+            "
+          >
+            Reset
+          </button>
+        )}
+      </div>
+
+      {/* =====================================================
           CATEGORIES
-      ================== */}
+      ====================================================== */}
 
       <div className="border-b border-[#e5e5e5]">
         <button
@@ -128,26 +161,11 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
             md:py-[20px]
           "
         >
-          <span
-            className="
-              text-[16px]
-              font-normal
-              sm:text-[18px]
-              md:text-[20px]
-            "
-          >
+          <span className="text-[16px] font-normal sm:text-[18px] md:text-[20px]">
             Categories
           </span>
 
-          <span
-            className="
-              text-[18px]
-              font-medium
-              leading-none
-              sm:text-[19px]
-              md:text-[20px]
-            "
-          >
+          <span className="text-[18px] font-medium leading-none">
             {openSection === "categories" ? "−" : "+"}
           </span>
         </button>
@@ -205,9 +223,9 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
         )}
       </div>
 
-      {/* ==============
+      {/* =====================================================
           PRICE
-      ================== */}
+      ====================================================== */}
 
       <div className="border-b border-[#e5e5e5]">
         <button
@@ -225,73 +243,37 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
             md:py-[20px]
           "
         >
-          <span
-            className="
-              text-[16px]
-              font-normal
-              sm:text-[18px]
-              md:text-[20px]
-            "
-          >
+          <span className="text-[16px] font-normal sm:text-[18px] md:text-[20px]">
             Price
           </span>
 
-          <span
-            className="
-              text-[18px]
-              leading-none
-              sm:text-[19px]
-              md:text-[20px]
-            "
-          >
+          <span className="text-[18px] leading-none">
             {openSection === "price" ? "−" : "+"}
           </span>
         </button>
 
         {openSection === "price" && (
           <div className="pb-[20px] sm:pb-[22px] md:pb-[25px]">
-            <p
-              className="
-                mt-[10px]
-                pl-[8px]
-                text-[13px]
-                sm:mt-[12px]
-                sm:pl-[10px]
-                sm:text-[14px]
-                md:text-[15px]
-              "
-            >
-              Price: ₹{queryParams.minPrice || 0}
-              {" — "}₹{queryParams.maxPrice || 1000}
-            </p>
-
-            <div
-              className="
-                mt-[14px]
-                flex
-                flex-col
-                gap-[6px]
-                sm:mt-[16px]
-                sm:gap-[8px]
-                md:mt-[18px]
-                md:gap-[10px]
-              "
-            >
+            <div className="mt-[14px] flex flex-col gap-[6px] sm:mt-[16px] sm:gap-[8px] md:mt-[18px] md:gap-[10px]">
               {priceRange.map(([min, max, label]) => (
                 <button
                   key={label}
                   type="button"
                   onClick={() => handlePriceChange(min, max)}
-                  className="
+                  className={`
                     min-h-[36px]
                     text-left
                     text-[12px]
-                    text-gray-500
                     transition-colors
-                    hover:text-black
                     sm:text-[13px]
                     md:text-[14px]
-                  "
+                    ${
+                      queryParams.minPrice === min &&
+                      queryParams.maxPrice === max
+                        ? "font-medium text-black"
+                        : "text-gray-500 hover:text-black"
+                    }
+                  `}
                 >
                   {label}
                 </button>
@@ -301,9 +283,9 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
         )}
       </div>
 
-      {/* =============
-          COLOR
-      ================= */}
+      {/* =====================================================
+          COLORS
+      ====================================================== */}
 
       <div className="border-b border-[#e5e5e5]">
         <button
@@ -321,25 +303,11 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
             md:py-[22px]
           "
         >
-          <span
-            className="
-              text-[16px]
-              font-normal
-              sm:text-[18px]
-              md:text-[20px]
-            "
-          >
+          <span className="text-[16px] font-normal sm:text-[18px] md:text-[20px]">
             Color
           </span>
 
-          <span
-            className="
-              text-[18px]
-              leading-none
-              sm:text-[19px]
-              md:text-[20px]
-            "
-          >
+          <span className="text-[18px] leading-none">
             {openSection === "color" ? "−" : "+"}
           </span>
         </button>
@@ -365,7 +333,7 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
                   <input
                     type="radio"
                     name="color"
-                    checked={queryParams.colors?.includes(color)}
+                    checked={queryParams.colors.color}
                     onChange={() => handleColorChange(color)}
                     className="h-[15px] w-[15px] shrink-0"
                   />
@@ -378,9 +346,9 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
         )}
       </div>
 
-      {/* =============
-          SIZE
-      ================= */}
+      {/* =====================================================
+          SIZES
+      ====================================================== */}
 
       <div className="border-b border-[#e5e5e5]">
         <button
@@ -398,25 +366,11 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
             md:py-[22px]
           "
         >
-          <span
-            className="
-              text-[16px]
-              font-normal
-              sm:text-[18px]
-              md:text-[20px]
-            "
-          >
+          <span className="text-[16px] font-normal sm:text-[18px] md:text-[20px]">
             Size
           </span>
 
-          <span
-            className="
-              text-[18px]
-              leading-none
-              sm:text-[19px]
-              md:text-[20px]
-            "
-          >
+          <span className="text-[18px] leading-none">
             {openSection === "size" ? "−" : "+"}
           </span>
         </button>
