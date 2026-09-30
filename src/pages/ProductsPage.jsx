@@ -2,9 +2,9 @@ import React, { useState } from "react";
 
 import FilterSection from "../components/shopSection/FilterSection";
 import SortSection from "../components/shopSection/SortSection";
-import ProductSection from "../components/shopSection/ProductSection";
 
 import { useGetProductsQuery } from "../redux/productApi";
+import ProductSection from "../components/shopSection/ProductSection";
 
 const ProductsPage = () => {
   const [queryParams, setQueryParams] = useState({
@@ -17,6 +17,8 @@ const ProductsPage = () => {
     size: "",
     category: "",
   });
+
+  const [view, setView] = useState("grid");
 
   /* =====================================================
       GET PRODUCTS
@@ -144,6 +146,8 @@ const ProductsPage = () => {
                 queryParams={queryParams}
                 setQueryParams={setQueryParams}
                 productCount={data?.count || 0}
+                view={view}
+                setView={setView}
               />
             </div>
 
@@ -152,7 +156,7 @@ const ProductsPage = () => {
             ================================================== */}
 
             <div className="w-full min-w-0">
-              <ProductSection queryParams={queryParams} />
+              <ProductSection queryParams={queryParams} view={view} />
             </div>
           </div>
         </div>

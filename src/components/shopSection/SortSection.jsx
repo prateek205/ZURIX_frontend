@@ -3,12 +3,18 @@ import React, { useState } from "react";
 import { IoChevronDown, IoChevronUp } from "react-icons/io5";
 import { TfiLayoutGrid4Alt } from "react-icons/tfi";
 import { BsGrid3X3GapFill } from "react-icons/bs";
+import { FaBars } from "react-icons/fa";
 
-const SortSection = ({ queryParams, setQueryParams, productCount = 0 }) => {
+const SortSection = ({
+  queryParams,
+  setQueryParams,
+  productCount = 0,
+  view,
+  setView,
+}) => {
   const [showCount, setShowCount] = useState(12);
   const [sortBy, setSortBy] = useState("Default sorting");
   const [isSortOpen, setIsSortOpen] = useState(false);
-  const [view, setView] = useState("grid");
 
   /* =====================================================
       SORT OPTIONS
@@ -345,7 +351,7 @@ const SortSection = ({ queryParams, setQueryParams, productCount = 0 }) => {
             }
           `}
         >
-          <TfiLayoutGrid4Alt
+          <FaBars
             className="
               text-[20px]
               sm:text-[23px]

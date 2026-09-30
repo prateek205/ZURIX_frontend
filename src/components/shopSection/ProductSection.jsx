@@ -6,7 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCreateWishlistMutation } from "../../redux/wishlistApi";
 import { toast } from "react-toastify";
 
-const ProductSection = ({ queryParams }) => {
+const ProductSection = ({ queryParams, view }) => {
   const [addToWishlist, { isLoading: wishlistLoading }] =
     useCreateWishlistMutation();
 
@@ -66,21 +66,21 @@ const ProductSection = ({ queryParams }) => {
 
   return (
     <section
-      className="
-        grid
-        grid-cols-2
-        gap-[8px]
-        p-[4px]
-        sm:gap-[12px]
-        sm:p-[6px]
-        md:grid-cols-2
-        md:gap-[14px]
-        md:p-[8px]
-        lg:grid-cols-3
-        lg:gap-[16px]
-        xl:grid-cols-4
-        xl:gap-[18px]
-      "
+      className={`
+    ${
+      view === "grid"
+        ? "grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+        : "flex flex-col"
+    }
+    gap-[8px]
+    p-[4px]
+    sm:gap-[12px]
+    sm:p-[6px]
+    md:gap-[14px]
+    md:p-[8px]
+    lg:gap-[16px]
+    xl:gap-[18px]
+  `}
     >
       {products.map((product) => (
         <ProductCard
@@ -88,13 +88,14 @@ const ProductSection = ({ queryParams }) => {
           product={product}
           handleAddWishlist={handleAddWishlist}
           wishlistLoading={wishlistLoading}
+          view={view}
         />
       ))}
     </section>
   );
 };
 
-const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
+const ProductCard = ({ product, handleAddWishlist, wishlistLoading, view }) => {
   const navigate = useNavigate();
 
   const [isHovered, setIsHovered] = useState(false);
@@ -126,12 +127,14 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
         (error?.status === 400 && error?.data?.message === "Login First")
       ) {
         toast.error("Please login to add products to your wishlist.");
+
         navigate("/login");
         return;
       }
 
       // Other wishlist errors should NOT redirect to login
       console.log("Wishlist API error:", error);
+
       toast.error(
         error?.data?.message ||
           error?.error ||
@@ -142,34 +145,63 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
 
   return (
     <div
-      className="
+      className={`
         group
-        w-full
         min-w-0
+        overflow-hidden
         rounded-[10px]
         bg-[rgb(91,91,91,0.1)]
         p-[5px]
         transition-all
         duration-300
+
         sm:rounded-[12px]
         sm:p-[7px]
+
         md:rounded-[14px]
         md:p-[8px]
-      "
+
+        ${view === "list" ? "flex w-full flex-row items-center" : "w-full"}
+      `}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {/* =================================================
+          PRODUCT IMAGE
+      ================================================== */}
+
       <div
-        className="
+        className={`
           relative
-          aspect-[3/4]
-          w-full
           overflow-hidden
           rounded-[7px]
           bg-gray-100
+
           sm:rounded-[9px]
           md:rounded-[10px]
-        "
+
+          ${
+            view === "list"
+              ? `
+                h-[160px]
+                w-[140px]
+                shrink-0
+
+                sm:h-[190px]
+                sm:w-[170px]
+
+                md:h-[220px]
+                md:w-[200px]
+
+                lg:h-[240px]
+                lg:w-[220px]
+              `
+              : `
+                aspect-[3/4]
+                w-full
+              `
+          }
+        `}
       >
         {/* First Image */}
         <img
@@ -184,7 +216,9 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
             transition-opacity
             duration-500
             ease-in-out
+
             md:group-hover:opacity-0
+
             ${isHovered ? "opacity-0 md:opacity-0" : "opacity-100"}
           `}
         />
@@ -203,7 +237,9 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
               transition-opacity
               duration-500
               ease-in-out
+
               md:group-hover:opacity-100
+
               ${
                 isHovered
                   ? "opacity-100 md:opacity-100"
@@ -213,28 +249,34 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
           />
         )}
 
-        {/* Action Buttons */}
+        {/* =================================================
+            ACTION BUTTONS
+        ================================================== */}
+
         <div
-          className="
+          className={`
             absolute
             right-[7px]
             top-[7px]
             flex
             flex-col
             gap-[6px]
+
             sm:right-[10px]
             sm:top-[10px]
             sm:gap-[8px]
+
             md:right-[12px]
             md:top-[12px]
             md:gap-[10px]
+
             md:translate-y-[-8px]
             md:opacity-0
             md:transition-all
             md:duration-300
             md:group-hover:translate-y-0
             md:group-hover:opacity-100
-          "
+          `}
         >
           {/* Wishlist */}
           <button
@@ -253,8 +295,10 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
               transition-transform
               duration-200
               hover:scale-105
+
               sm:h-[34px]
               sm:w-[34px]
+
               md:h-[38px]
               md:w-[38px]
             "
@@ -267,8 +311,10 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
                   text-red-500
                   transition-all
                   duration-200
+
                   sm:h-[18px]
                   sm:w-[18px]
+
                   md:h-[20px]
                   md:w-[20px]
                 "
@@ -281,8 +327,10 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
                   text-black
                   transition-all
                   duration-200
+
                   sm:h-[20px]
                   sm:w-[20px]
+
                   md:h-[22px]
                   md:w-[22px]
                 "
@@ -291,11 +339,14 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
           </button>
         </div>
 
-        {/* Select Options */}
+        {/* =================================================
+            SELECT OPTIONS
+        ================================================== */}
+
         <Link to={`/productdetail/${product._id}`}>
           <button
             type="button"
-            className="
+            className={`
               absolute
               bottom-[8px]
               left-1/2
@@ -310,69 +361,126 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading }) => {
               transition-all
               duration-300
               hover:bg-[#de5922]
+
               sm:bottom-[10px]
               sm:w-[calc(100%-20px)]
               sm:py-[10px]
               sm:text-[11px]
+
               md:bottom-[12px]
               md:w-[90%]
               md:translate-y-[16px]
               md:opacity-0
               md:group-hover:translate-y-0
               md:group-hover:opacity-100
+
               lg:py-[11px]
               lg:text-[12px]
-            "
+            `}
           >
             Select Options
           </button>
         </Link>
       </div>
 
-      {/* Product Information */}
+      {/* =================================================
+          PRODUCT INFORMATION
+      ================================================== */}
+
       <div
-        className="
+        className={`
           flex
           min-w-0
           flex-col
-          gap-[3px]
-          px-[3px]
-          pb-[7px]
-          pt-[9px]
-          sm:gap-[4px]
-          sm:px-[4px]
-          sm:pb-[9px]
-          sm:pt-[11px]
-          md:gap-[5px]
-          md:px-[5px]
-          md:pb-[10px]
-          md:pt-[13px]
-        "
+
+          ${
+            view === "list"
+              ? `
+                flex-1
+                justify-center
+                gap-[6px]
+                px-[12px]
+                py-[10px]
+
+                sm:gap-[8px]
+                sm:px-[18px]
+
+                md:gap-[10px]
+                md:px-[24px]
+              `
+              : `
+                gap-[3px]
+                px-[3px]
+                pb-[7px]
+                pt-[9px]
+
+                sm:gap-[4px]
+                sm:px-[4px]
+                sm:pb-[9px]
+                sm:pt-[11px]
+
+                md:gap-[5px]
+                md:px-[5px]
+                md:pb-[10px]
+                md:pt-[13px]
+              `
+          }
+        `}
       >
+        {/* Product Name */}
         <h1
-          className="
-            truncate
+          className={`
             font-zurixFont
-            text-[13px]
             font-bold
             leading-tight
-            sm:text-[15px]
-            md:text-[17px]
-            lg:text-[18px]
-          "
+
+            ${
+              view === "list"
+                ? `
+                  text-[15px]
+
+                  sm:text-[17px]
+                  md:text-[19px]
+                  lg:text-[21px]
+                `
+                : `
+                  truncate
+                  text-[13px]
+
+                  sm:text-[15px]
+                  md:text-[17px]
+                  lg:text-[18px]
+                `
+            }
+          `}
         >
           {product.name}
         </h1>
 
+        {/* Price */}
         <p
-          className="
-            text-[12px]
+          className={`
             leading-tight
             text-black/70
-            sm:text-[13px]
-            md:text-[15px]
-            lg:text-[16px]
-          "
+
+            ${
+              view === "list"
+                ? `
+                  text-[13px]
+
+                  sm:text-[14px]
+                  md:text-[16px]
+                  lg:text-[17px]
+                `
+                : `
+                  text-[12px]
+
+                  sm:text-[13px]
+                  md:text-[15px]
+                  lg:text-[16px]
+                `
+            }
+          `}
         >
           ${product.price}
         </p>
