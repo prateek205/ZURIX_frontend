@@ -3,9 +3,10 @@ import { baseApi } from "./baseApi";
 const paymentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     createRazorpayOrder: builder.mutation({
-      query: () => ({
+      query: (paymentData) => ({
         url: "/payment/create-order",
         method: "POST",
+        body:paymentData
       }),
     }),
 

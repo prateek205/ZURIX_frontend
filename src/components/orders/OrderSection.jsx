@@ -125,7 +125,9 @@ const OrderSection = () => {
       }
 
       if (paymentMethod === "ONLINE") {
-        const razorpayResponse = await createRazorpayOrder().unwrap();
+        const razorpayResponse = await createRazorpayOrder({
+          couponCode : couponData?.couponCode || null
+        }).unwrap();
 
         console.log("RAZORPAY ORDER RESPONSE:", razorpayResponse);
 
