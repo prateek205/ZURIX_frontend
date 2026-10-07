@@ -126,7 +126,7 @@ const OrderSection = () => {
 
       if (paymentMethod === "ONLINE") {
         const razorpayResponse = await createRazorpayOrder({
-          couponCode : couponData?.couponCode || null
+          couponCode: couponData?.couponCode || null,
         }).unwrap();
 
         console.log("RAZORPAY ORDER RESPONSE:", razorpayResponse);
@@ -222,9 +222,8 @@ const OrderSection = () => {
   const mainPrice = cartItem.reduce((total, item) => {
     const product = item.productId;
     const orginalPrice = product?.price || 0;
-    const quantity = item.quantity || 0;
 
-    return total + Number(orginalPrice) * Number(quantity);
+    return total + Number(orginalPrice);
   }, 0);
 
   const sellingPrice = cartItem.reduce((total, item) => {
@@ -597,10 +596,14 @@ const OrderSection = () => {
                           Color: {item.color}
                         </p>
                       </div>
-
-                      <p className="font-semibold font-zurixFont">
-                        ₹{product.price}
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <p className="font-semibold font-zurixFont">
+                          ₹{product.salePrice}
+                        </p>
+                        <p className="font-semibold text-sm line-through text-gray-600 font-zurixFont">
+                          ₹{product.price}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 );
@@ -609,8 +612,8 @@ const OrderSection = () => {
               {/* Price Details */}
               <div className="flex flex-col gap-4 py-6 border-b border-gray-200">
                 <div className="flex justify-between">
-                  <span className="text-gray-600 font-zurixFont">
-                    Main Price
+                  <span className="text-black font-bold font-zurixFont">
+                    Original Price
                   </span>
 
                   <span className="font-medium font-zurixFont">

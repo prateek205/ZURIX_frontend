@@ -131,10 +131,10 @@ const CartSection = () => {
   // ---------------------------------------
 
   const handleCheckout = () => {
-    navigate("/order",{
-      state:{
-        couponData
-      }
+    navigate("/order", {
+      state: {
+        couponData,
+      },
     });
   };
 
@@ -154,9 +154,8 @@ const CartSection = () => {
     const product = item?.productId;
 
     const originalPrice = product?.price || 0;
-    const quantity = item?.quantity || 0;
 
-    return total + Number(originalPrice) * Number(quantity);
+    return total + Number(originalPrice);
   }, 0);
 
   // ---------------------------------------
@@ -358,13 +357,13 @@ const CartSection = () => {
 
                       {/* Price */}
 
-                      <div className="text-right">
-                        <p className="text-base font-medium text-gray-900">
-                          ${product?.salePrice}
+                      <div className="text-right flex items-center gap-2">
+                        <p className="text-xl font-medium text-gray-900">
+                          ₹{product?.salePrice}
                         </p>
 
-                        <p className="text-xs text-gray-400 line-through">
-                          ${product?.price}
+                        <p className="text-md text-gray-500 line-through">
+                          ₹{product?.price}
                         </p>
                       </div>
                     </div>
@@ -402,15 +401,17 @@ const CartSection = () => {
               {/* Main Price */}
 
               <div className="flex justify-between text-gray-600">
-                <span>Main Price</span>
+                <span className="text-black font-bold">Original Price</span>
 
-                <span className="text-gray-900">₹{mainPrice.toFixed(2)}</span>
+                <span className="text-gray-900 font-bold">
+                  ₹{mainPrice.toFixed(2)}
+                </span>
               </div>
 
               {/* Sale Price */}
 
               <div className="flex justify-between text-gray-600">
-                <span>Sale Price</span>
+                <span>Salling Price</span>
 
                 <span className="text-gray-900">
                   ₹{sellingPrice.toFixed(2)}
