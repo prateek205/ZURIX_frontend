@@ -6,7 +6,7 @@ import {
   usePostAddressMutation,
 } from "../../redux/addressApi";
 import countryStateData from "../../data/countryStateData";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   useCreateRazorpayOrderMutation,
   useVerifyRazorpayPaymentMutation,
@@ -14,6 +14,7 @@ import {
 
 const OrderSection = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const {
     data,
@@ -47,6 +48,8 @@ const OrderSection = () => {
 
   const [paymentMethod, setPaymentMethod] = useState("COD");
   const [selectAddress, setSelectAddress] = useState(null);
+
+  const couponData = location.state?.couponData;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -233,7 +236,9 @@ const OrderSection = () => {
 
   const shipping = sellingPrice >= 1000 ? 0 : 100;
 
-  const total = sellingPrice + shipping;
+  const couponDiscount = couponData?.discountAmount || 0;
+
+  const total = sellingPrice - couponDiscount + shipping;
 
   return (
     <section className="w-[92%] md:w-[90%] lg:w-[85%] mx-auto py-8 md:py-10">
@@ -598,41 +603,6 @@ const OrderSection = () => {
                 );
               })}
 
-              {/* Coupon */}
-              <div className="flex gap-2 py-6 border-b border-gray-200">
-                <input
-                  type="text"
-                  placeholder="Discount code"
-                  className="
-                    min-w-0
-                    flex-1
-                    border
-                    border-gray-300
-                    rounded-md
-                    px-3
-                    py-3
-                    outline-none
-                    focus:border-black
-                    font-zurixFont
-                  "
-                />
-
-                <button
-                  className="
-                    px-4
-                    py-3
-                    bg-gray-100
-                    rounded-md
-                    font-medium
-                    font-zurixFont
-                    hover:bg-gray-200
-                    transition
-                  "
-                >
-                  Apply
-                </button>
-              </div>
-
               {/* Price Details */}
               <div className="flex flex-col gap-4 py-6 border-b border-gray-200">
                 <div className="flex justify-between">
@@ -641,7 +611,7 @@ const OrderSection = () => {
                   </span>
 
                   <span className="font-medium font-zurixFont">
-                    ${mainPrice}
+                    ₹{mainPrice.toFixed(2)}
                   </span>
                 </div>
 
@@ -651,7 +621,7 @@ const OrderSection = () => {
                   </span>
 
                   <span className="font-medium font-zurixFont">
-                    ${sellingPrice}
+                    ₹{sellingPrice.toFixed(2)}
                   </span>
                 </div>
 
@@ -659,9 +629,19 @@ const OrderSection = () => {
                   <span className="text-gray-600 font-zurixFont">Discount</span>
 
                   <span className="font-medium font-zurixFont">
-                    -${discount}
+                    -₹{discount.toFixed(2)}
                   </span>
                 </div>
+
+                {couponData && (
+                  <div className="flex justify-between text-gray-600">
+                    <span>Coupon Discount</span>
+
+                    <span className="text-gray-900">
+                      -₹{couponDiscount.toFixed(2)}
+                    </span>
+                  </div>
+                )}
 
                 <div className="flex justify-between">
                   <span className="text-gray-600 font-zurixFont">Shipping</span>
@@ -677,7 +657,7 @@ const OrderSection = () => {
                 </span>
 
                 <span className="text-2xl font-bold font-zurixFont">
-                  ${total}
+                  ₹{total.toFixed(2)}
                 </span>
               </div>
 

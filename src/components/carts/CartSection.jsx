@@ -131,7 +131,11 @@ const CartSection = () => {
   // ---------------------------------------
 
   const handleCheckout = () => {
-    navigate("/order");
+    navigate("/order",{
+      state:{
+        couponData
+      }
+    });
   };
 
   // ---------------------------------------
@@ -184,7 +188,7 @@ const CartSection = () => {
   // TOTAL
   // ---------------------------------------
 
-  const couponDiscount = couponCode?.discountAmount || 0;
+  const couponDiscount = couponData?.discountAmount || 0;
 
   const total = sellingPrice - couponDiscount + shipping;
 
@@ -193,16 +197,14 @@ const CartSection = () => {
   // ---------------------------------------
 
   const handleApplyCoupon = async () => {
-    if (!couponCode.toUpperCase()) {
+    if (!couponCode.trim()) {
       toast.error("please enter the coupen code");
       return;
     }
 
     try {
-      setCouponError = "";
-
       const response = await applyCoupon({
-        code: code.toUpperCase(),
+        code: couponCode.trim(),
         subtotal: sellingPrice,
       }).unwrap();
 
@@ -217,12 +219,7 @@ const CartSection = () => {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setCouponCode((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setCouponCode(e.target.value);
   };
 
   return (
@@ -407,7 +404,7 @@ const CartSection = () => {
               <div className="flex justify-between text-gray-600">
                 <span>Main Price</span>
 
-                <span className="text-gray-900">₹{mainPrice}</span>
+                <span className="text-gray-900">₹{mainPrice.toFixed(2)}</span>
               </div>
 
               {/* Sale Price */}
@@ -415,7 +412,9 @@ const CartSection = () => {
               <div className="flex justify-between text-gray-600">
                 <span>Sale Price</span>
 
-                <span className="text-gray-900">₹{sellingPrice}</span>
+                <span className="text-gray-900">
+                  ₹{sellingPrice.toFixed(2)}
+                </span>
               </div>
 
               {/* Discount */}
@@ -423,7 +422,7 @@ const CartSection = () => {
               <div className="flex justify-between text-gray-600">
                 <span>Discount</span>
 
-                <span className="text-gray-900">-₹{discount}</span>
+                <span className="text-gray-900">-₹{discount.toFixed(2)}</span>
               </div>
 
               {/* Coupon Discount */}
@@ -431,7 +430,9 @@ const CartSection = () => {
                 <div className="flex justify-between text-gray-600">
                   <span>Coupon Discount</span>
 
-                  <span className="text-gray-900">-₹{couponDiscount}</span>
+                  <span className="text-gray-900">
+                    -₹{couponDiscount.toFixed(2)}
+                  </span>
                 </div>
               )}
 
@@ -453,7 +454,7 @@ const CartSection = () => {
                 </span>
 
                 <span className="text-xl font-semibold text-gray-900">
-                  ${total}
+                  ₹{total.toFixed(2)}
                 </span>
               </div>
             </div>
@@ -468,7 +469,7 @@ const CartSection = () => {
                 placeholder="Coupon code"
                 onChange={handleChange}
                 value={couponCode}
-                name={couponCode}
+                name="couponCode"
                 className="w-full border border-gray-300 px-3 py-3 text-sm outline-none focus:border-black"
               />
 
