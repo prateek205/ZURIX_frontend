@@ -150,6 +150,7 @@ const OrderSection = () => {
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature,
                 shippingAddress: selectAddress,
+                couponCode: couponData?.couponCode || null,
               }).unwrap();
 
               console.log("PAYMENT VERIFIED:", verifyResponse);
@@ -598,7 +599,7 @@ const OrderSection = () => {
                       </div>
 
                       <p className="font-semibold font-zurixFont">
-                        ${product.price}
+                        ₹{product.price}
                       </p>
                     </div>
                   </div>
