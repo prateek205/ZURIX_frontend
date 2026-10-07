@@ -62,4 +62,4 @@ export const {
   useApplyCouponCodeMutation,
   useUpdateCouponCodeMutation,
   useDeleteCouponCodeMutation,
-};
+} = couponApi;

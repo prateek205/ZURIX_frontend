@@ -1,15 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   useGetAllCartsQuery,
   useUpdateCartMutation,
 } from "../../redux/cartApi";
 import { useNavigate } from "react-router-dom";
+import { useApplyCouponCodeMutation } from "../../redux/couponApi";
+import { toast } from "react-toastify";
 
 const CartSection = () => {
   const navigate = useNavigate();
 
   const { data, isLoading, isError } = useGetAllCartsQuery();
   const [updateCart] = useUpdateCartMutation();
+
+  const [applyCoupon, { isLoading: couponLoading }] =
+    useApplyCouponCodeMutation();
+
+  const [couponCode, setCouponCode] = useState("");
+  const [couponData, setCouponData] = useState(null);
+  const [couponError, setCouponError] = useState("");
 
   // Loading state
   if (isLoading) {
@@ -175,7 +184,46 @@ const CartSection = () => {
   // TOTAL
   // ---------------------------------------
 
-  const total = sellingPrice + shipping;
+  const couponDiscount = couponCode?.discountAmount || 0;
+
+  const total = sellingPrice - couponDiscount + shipping;
+
+  // ---------------------------------------
+  // COUPON CODE
+  // ---------------------------------------
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.toUpperCase()) {
+      toast.error("please enter the coupen code");
+      return;
+    }
+
+    try {
+      setCouponError = "";
+
+      const response = await applyCoupon({
+        code: code.toUpperCase(),
+        subtotal: sellingPrice,
+      }).unwrap();
+
+      console.log("COUPON_DATA:", response);
+
+      setCouponData(response.data);
+      toast.success("Coupon Added Successfully!!!");
+    } catch (error) {
+      console.log("COUPON_APPLY_ERROR:", error);
+      toast.error(error?.data?.message);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setCouponCode((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   return (
     <section className="w-[90%] max-w-[1400px] mx-auto py-10">
@@ -359,7 +407,7 @@ const CartSection = () => {
               <div className="flex justify-between text-gray-600">
                 <span>Main Price</span>
 
-                <span className="text-gray-900">${mainPrice}</span>
+                <span className="text-gray-900">₹{mainPrice}</span>
               </div>
 
               {/* Sale Price */}
@@ -367,7 +415,7 @@ const CartSection = () => {
               <div className="flex justify-between text-gray-600">
                 <span>Sale Price</span>
 
-                <span className="text-gray-900">${sellingPrice}</span>
+                <span className="text-gray-900">₹{sellingPrice}</span>
               </div>
 
               {/* Discount */}
@@ -375,8 +423,17 @@ const CartSection = () => {
               <div className="flex justify-between text-gray-600">
                 <span>Discount</span>
 
-                <span className="text-gray-900">-${discount}</span>
+                <span className="text-gray-900">-₹{discount}</span>
               </div>
+
+              {/* Coupon Discount */}
+              {couponCode && (
+                <div className="flex justify-between text-gray-600">
+                  <span>Coupon Discount</span>
+
+                  <span className="text-gray-900">-₹{couponDiscount}</span>
+                </div>
+              )}
 
               {/* Shipping */}
 
@@ -409,11 +466,18 @@ const CartSection = () => {
               <input
                 type="text"
                 placeholder="Coupon code"
+                onChange={handleChange}
+                value={couponCode}
+                name={couponCode}
                 className="w-full border border-gray-300 px-3 py-3 text-sm outline-none focus:border-black"
               />
 
-              <button className="px-5 bg-black text-white text-sm hover:bg-gray-800 transition">
-                Apply
+              <button
+                onClick={handleApplyCoupon}
+                disabled={couponLoading}
+                className="px-5 bg-black text-white text-sm hover:bg-gray-800 transition"
+              >
+                {couponLoading ? "Applying code..." : "Applied"}
               </button>
             </div>
 
