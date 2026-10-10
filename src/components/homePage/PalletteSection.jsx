@@ -435,11 +435,32 @@ const PaletteEdit = () => {
                   {product.name}
                 </h3>
 
-                <p
-                  className="
+                <div className="flex items-center gap-2">
+                  <p
+                    className="
+                    mt-[4px]
+                    text-[12px]
+                    font-bold
+                    text-orange-600
+
+                    sm:mt-[5px]
+                    sm:text-[13px]
+
+                    md:text-[14px]
+
+                    lg:text-[18px]
+                  "
+                  >
+                    ₹{product.salePrice}
+                  </p>
+
+                  <p
+                    className="
                     mt-[4px]
                     text-[12px]
                     font-medium
+                    text-gray-500
+                    line-through
 
                     sm:mt-[5px]
                     sm:text-[13px]
@@ -448,9 +469,10 @@ const PaletteEdit = () => {
 
                     lg:text-[15px]
                   "
-                >
-                  ₹{product.price}
-                </p>
+                  >
+                    ₹{product.price}
+                  </p>
+                </div>
               </div>
             </div>
           ))}

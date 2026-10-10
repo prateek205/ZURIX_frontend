@@ -532,47 +532,6 @@ const Category = () => {
                           group-hover:scale-105
                         "
                       />
-
-                      {/* Count */}
-
-                      <div
-                        className="
-                          absolute
-                          bottom-[7px]
-                          right-[7px]
-                          flex
-                          h-[28px]
-                          w-[28px]
-                          items-center
-                          justify-center
-                          rounded-full
-                          bg-white
-                          text-[9px]
-                          font-semibold
-                          text-black
-                          shadow-sm
-
-                          sm:bottom-[8px]
-                          sm:right-[8px]
-                          sm:h-[30px]
-                          sm:w-[30px]
-                          sm:text-[10px]
-
-                          md:bottom-[9px]
-                          md:right-[9px]
-                          md:h-[32px]
-                          md:w-[32px]
-                          md:text-[11px]
-
-                          lg:bottom-[10px]
-                          lg:right-[10px]
-                          lg:h-[34px]
-                          lg:w-[34px]
-                          lg:text-[12px]
-                        "
-                      >
-                        {category.count || 0}
-                      </div>
                     </div>
 
                     {/* =========================

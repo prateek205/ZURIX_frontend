@@ -457,11 +457,13 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading, view }) => {
           {product.name}
         </h1>
 
-        {/* Price */}
-        <p
-          className={`
+        <div className="flex items-center gap-2">
+          {/* Price */}
+          <p
+            className={`
             leading-tight
-            text-black/70
+            text-orange-600
+            font-bold
 
             ${
               view === "list"
@@ -470,20 +472,49 @@ const ProductCard = ({ product, handleAddWishlist, wishlistLoading, view }) => {
 
                   sm:text-[14px]
                   md:text-[16px]
-                  lg:text-[17px]
+                  lg:text-[18px]
                 `
                 : `
                   text-[12px]
 
                   sm:text-[13px]
                   md:text-[15px]
-                  lg:text-[16px]
+                  lg:text-[18px]
                 `
             }
           `}
-        >
-          ${product.price}
-        </p>
+          >
+            ₹{product.salePrice}
+          </p>
+
+          <p
+            className={`
+            leading-tight
+            text-gray-500
+            line-through
+
+            ${
+              view === "list"
+                ? `
+                  text-[13px]
+
+                  sm:text-[13px]
+                  md:text-[14px]
+                  lg:text-[16px]
+                `
+                : `
+                  text-[12px]
+
+                  sm:text-[12px]
+                  md:text-[13px]
+                  lg:text-[15px]
+                `
+            }
+          `}
+          >
+            ₹{product.price}
+          </p>
+        </div>
       </div>
     </div>
   );

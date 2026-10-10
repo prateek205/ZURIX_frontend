@@ -618,43 +618,43 @@ const TrendingProducts = () => {
                   {product.name}
                 </h3>
 
-                <div
-                  className="
-                    mt-[5px]
-                    flex
-                    items-center
-                    gap-[5px]
-                    text-[11px]
-
-                    sm:mt-[6px]
-                    sm:gap-[7px]
-                    sm:text-[12px]
-
-                    md:text-[13px]
-
-                    lg:text-[14px]
-                  "
-                >
-                  {product.oldPrice && (
-                    <span className="text-gray-400 line-through">
-                      ₹{product.oldPrice}
-                    </span>
-                  )}
-
-                  <span
+                <div className="flex items-center gap-2">
+                  <p
                     className="
-                      text-[12px]
-                      font-medium
+                    mt-[4px]
+                    text-[12px]
+                    font-bold
+                    text-orange-600
 
-                      sm:text-[13px]
+                    sm:mt-[5px]
+                    sm:text-[13px]
 
-                      md:text-[14px]
+                    md:text-[14px]
 
-                      lg:text-[15px]
-                    "
+                    lg:text-[18px]
+                  "
+                  >
+                    ₹{product.salePrice}
+                  </p>
+
+                  <p
+                    className="
+                    mt-[4px]
+                    text-[12px]
+                    font-medium
+                    text-gray-500
+                    line-through
+
+                    sm:mt-[5px]
+                    sm:text-[13px]
+
+                    md:text-[14px]
+
+                    lg:text-[15px]
+                  "
                   >
                     ₹{product.price}
-                  </span>
+                  </p>
                 </div>
               </div>
             </div>
