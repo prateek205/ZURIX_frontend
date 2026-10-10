@@ -12,22 +12,24 @@ const FilterSection = ({ queryParams, setQueryParams, products = [] }) => {
 
   const categoryMap = new Map();
 
-  products.forEach((product) => {
-    if (product?.category?._id && product?.category?.gender) {
-      categoryMap.set(product.category.gender, product.category.gender);
+  categoryData?.data?.forEach((item) => {
+    if (item?.gender) {
+      const gender = item.gender;
+
+      const label =
+        gender === "mens" ? "Men" : gender === "womens" ? "Women" : "Unisex";
+
+      // Map stores only one entry for each gender
+      if (!categoryMap.has(gender)) {
+        categoryMap.set(gender, {
+          value: gender,
+          label: label,
+        });
+      }
     }
   });
 
-  const categories =
-    categoryData?.data?.map((item) => ({
-      value: item._id,
-      label:
-        item.gender === "mens"
-          ? "Men"
-          : item.gender === "womens"
-            ? "Women"
-            : "Kids",
-    })) || [];
+  const categories = Array.from(categoryMap.values());
 
   console.log("CATEGORIES:", categories);
 
