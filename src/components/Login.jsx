@@ -1,37 +1,21 @@
 import React, { useState } from "react";
-
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
 import { FiEye, FiEyeOff, FiMail, FiLock } from "react-icons/fi";
-
 import { useAddLoginMutation, useGetProfileQuery } from "../redux/authApi";
-
 import { useAddToCartMutation } from "../redux/cartApi";
 import { toast } from "react-toastify";
 
 const Login = () => {
-  // ==========================================
   // LOGIN API
-  // ==========================================
-
   const [login, { isLoading }] = useAddLoginMutation();
 
-  // ==========================================
   // PROFILE API
-  // ==========================================
-
   const { refetch: refetchProfile } = useGetProfileQuery();
 
-  // ==========================================
   // CART API
-  // ==========================================
-
   const [addToCart] = useAddToCartMutation();
 
-  // ==========================================
   // STATES
-  // ==========================================
-
   const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -42,10 +26,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // ==========================================
   // INPUT CHANGE
-  // ==========================================
-
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -55,37 +36,23 @@ const Login = () => {
     }));
   };
 
-  // ==========================================
   // LOGIN SUBMIT
-  // ==========================================
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // -------------------------------
-      // LOGIN
-      // -------------------------------
-
       const response = await login(formData).unwrap();
 
       console.log("LOGIN_RESPONSE:", response);
 
       toast.success(response?.message || "Login successful!");
 
-      // -------------------------------
-      // IMPORTANT
-      // REFRESH PROFILE AFTER LOGIN
-      // -------------------------------
-
+      // Refresh profile after login
       const profileResponse = await refetchProfile();
 
       console.log("PROFILE_AFTER_LOGIN:", profileResponse?.data);
 
-      // -------------------------------
-      // ADD PRODUCT TO CART
-      // -------------------------------
-
+      // Add product to cart if redirected from a product page
       if (location.state?.addToCart) {
         const cartData = {
           productId: location.state.productId,
@@ -100,13 +67,11 @@ const Login = () => {
         return;
       }
 
-      // -------------------------------
-      // NORMAL LOGIN
-      // -------------------------------
-
+      // Normal login
       navigate("/");
     } catch (error) {
       console.log("LOGIN_ERROR:", error);
+
       toast.error(
         error?.data?.message || error?.error || "Invalid email or password",
       );
@@ -116,15 +81,12 @@ const Login = () => {
   return (
     <section className="min-h-screen flex items-center justify-center px-4 py-10 bg-gray-50">
       <div className="w-full max-w-6xl min-h-[600px] flex flex-col md:flex-row bg-white rounded-xl overflow-hidden shadow-lg border border-gray-200">
-        {/* ================= LEFT SECTION ================= */}
-
+        {/* LEFT SECTION */}
         <div className="hidden md:flex md:w-[50%] bg-black text-white p-10 flex-col justify-between">
-          {/* Logo */}
           <div>
             <h1 className="text-3xl font-semibold font-zurixFont">ZURIX</h1>
           </div>
 
-          {/* Content */}
           <div className="max-w-md">
             <p className="text-sm uppercase tracking-[4px] text-gray-400 mb-4">
               Welcome Back
@@ -142,7 +104,6 @@ const Login = () => {
             </p>
           </div>
 
-          {/* Bottom */}
           <div>
             <p className="text-xs text-gray-500">
               © {new Date().getFullYear()} ZURIX. All rights reserved.
@@ -150,11 +111,10 @@ const Login = () => {
           </div>
         </div>
 
-        {/* ================= RIGHT SECTION ================= */}
-
+        {/* RIGHT SECTION */}
         <div className="w-full md:w-[50%] flex items-center justify-center p-6 sm:p-10 lg:p-14">
           <div className="w-full max-w-md">
-            {/* Heading */}
+            {/* HEADING */}
             <div className="mb-8">
               <h2 className="text-3xl font-semibold font-zurixFont mb-2">
                 Welcome Back
@@ -165,11 +125,9 @@ const Login = () => {
               </p>
             </div>
 
-            {/* Login Form */}
-
+            {/* LOGIN FORM */}
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Email */}
-
+              {/* EMAIL */}
               <div>
                 <label
                   htmlFor="email"
@@ -191,14 +149,14 @@ const Login = () => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="Enter your email"
+                    autoComplete="email"
                     required
                     className="w-full h-12 pl-10 pr-4 border border-gray-300 rounded-md outline-none text-sm focus:border-black transition-colors"
                   />
                 </div>
               </div>
 
-              {/* Password */}
-
+              {/* PASSWORD */}
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label
@@ -229,13 +187,17 @@ const Login = () => {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="Enter your password"
+                    autoComplete="current-password"
                     required
                     className="w-full h-12 pl-10 pr-11 border border-gray-300 rounded-md outline-none text-sm focus:border-black transition-colors"
                   />
 
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black"
                   >
                     {showPassword ? (
@@ -247,8 +209,7 @@ const Login = () => {
                 </div>
               </div>
 
-              {/* Remember Me */}
-
+              {/* REMEMBER ME */}
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -264,28 +225,28 @@ const Login = () => {
                 </label>
               </div>
 
-              {/* Login Button */}
-
+              {/* LOGIN BUTTON */}
               <button
                 type="submit"
                 disabled={isLoading}
-                className="
-                  w-full
-                  h-12
-                  bg-black
-                  text-white
-                  rounded-md
-                  text-sm
-                  font-medium
-                  hover:bg-gray-800
-                  transition-colors
-                  disabled:opacity-50
-                  disabled:cursor-not-allowed
-                "
+                className="w-full h-12 bg-black text-white rounded-md text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? "Signing In..." : "Sign In"}
               </button>
             </form>
+
+            {/* REGISTER LINK */}
+            <div className="mt-6 text-center">
+              <p className="text-sm text-gray-500">
+                Don't have an account?{" "}
+                <Link
+                  to="/register"
+                  className="font-semibold text-black underline underline-offset-4 hover:text-gray-600 transition-colors"
+                >
+                  Create Account
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
       </div>
