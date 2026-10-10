@@ -13,6 +13,7 @@ import Order_Success from "./pages/Order-Success";
 import WishlistSection from "./pages/WishlistSection";
 import { Slide, ToastContainer } from "react-toastify";
 import OrderHistory from "./components/orders/OrderHistory";
+import RegisterPage from "./pages/RegisterPage";
 
 const App = () => {
   return (
@@ -33,13 +34,14 @@ const App = () => {
       <Navbar />
       <Routes>
         <Route path="/" element={<HeroPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/products" element={<ProductsPage />} />
         <Route path="/productDetail/:id" element={<ProductDetails />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/order" element={<OrderPage />} />
-        <Route path="/orderHistory" element={<OrderHistory/>}/>
+        <Route path="/orderHistory" element={<OrderHistory />} />
         <Route path="/order-success" element={<Order_Success />} />
         <Route path="/wishlist" element={<WishlistSection />} />
       </Routes>
