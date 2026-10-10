@@ -187,7 +187,7 @@ const CartSection = () => {
   const mainPrice = cartData.reduce((total, item) => {
     const product = item?.productId;
     const originalPrice = Number(product?.price) || 0;
-    
+
     return total + originalPrice;
   }, 0);
 
@@ -457,11 +457,7 @@ const CartSection = () => {
                         {product?.salePrice != null &&
                           Number(product.salePrice) < Number(product.price) && (
                             <p className="text-sm text-gray-500 line-through">
-                              ₹
-                              {(
-                                Number(product.price) *
-                                (Number(item?.quantity) || 0)
-                              ).toFixed(2)}
+                              ₹{Number(product.price).toFixed(2)}
                             </p>
                           )}
                       </div>
