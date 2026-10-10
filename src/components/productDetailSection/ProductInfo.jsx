@@ -145,14 +145,26 @@ const ProductInfo = ({ product }) => {
         </h1>
 
         {/* PRICE */}
-        <p
-          className="
+        <div className="flex items-center gap-4">
+          <p
+            className="
             font-zurixFont text-[20px] font-medium text-orange-600
             sm:text-[22px] md:text-[24px] lg:text-[26px]
           "
-        >
-          $ {product?.salePrice ?? product?.price}
-        </p>
+          >
+            ₹{product?.salePrice}
+          </p>
+
+          {/* PRICE */}
+          <p
+            className="
+            font-zurixFont text-[20px] font-medium text-gray-400 line-through
+            sm:text-[15px] md:text-[18px] lg:text-[20px]
+          "
+          >
+            ₹{product?.price}
+          </p>
+        </div>
 
         {/* DESCRIPTION */}
         <p
