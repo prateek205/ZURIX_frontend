@@ -22,6 +22,14 @@ const Category = () => {
     (category) => category.gender?.toLowerCase() === "womens",
   ).length;
 
+  const kidsCount = categories.filter(
+    (category) => category.gender?.toLowerCase() === "kids",
+  ).length;
+
+  const unisexCount = categories.filter(
+    (category) => category.gender?.toLowerCase() === "unisex",
+  ).length;
+
   return (
     <section
       className="
@@ -257,6 +265,71 @@ const Category = () => {
               `}
             >
               {mensCount}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab("unisex")}
+            className={`
+              flex
+              items-center
+              justify-center
+              gap-[7px]
+              rounded-full
+              border
+              px-[14px]
+              py-[7px]
+              text-[12px]
+              font-semibold
+              transition-all
+              duration-300
+
+              sm:px-[17px]
+              sm:py-[8px]
+              sm:text-[13px]
+
+              md:px-[20px]
+              md:py-[9px]
+              md:text-[14px]
+
+              lg:text-[15px]
+
+              ${
+                activeTab === "unisex"
+                  ? "border-black bg-black text-white"
+                  : "border-[#e5e5e5] bg-white text-black hover:border-black"
+              }
+            `}
+          >
+            <span>Unisex</span>
+
+            <span
+              className={`
+                flex
+                h-[21px]
+                w-[21px]
+                items-center
+                justify-center
+                rounded-full
+                text-[9px]
+
+                sm:h-[23px]
+                sm:w-[23px]
+                sm:text-[10px]
+
+                md:h-[25px]
+                md:w-[25px]
+                md:text-[11px]
+
+                ${
+                  activeTab === "unisex"
+                    ? "bg-[rgb(222,89,34)] text-white"
+                    : "bg-[#eef0f4] text-gray-600"
+                }
+              `}
+            >
+              {unisexCount}
             </span>
           </button>
         </div>
